@@ -1,0 +1,1 @@
+export const grayCodeOrder = [0, 1, 3, 2];
