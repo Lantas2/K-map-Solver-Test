@@ -1863,10 +1863,12 @@ function LampSymbol({ x, y, active }) {
     </g>
   );
 }
+
 function InteractiveLogicGateLab() {
   const [gate, setGate] = useState("AND");
   const [a, setA] = useState(0);
   const [b, setB] = useState(0);
+
   const [labZoom, setLabZoom] = useState(1);
   const [electricZoom, setElectricZoom] = useState(1);
 
@@ -1891,6 +1893,7 @@ function InteractiveLogicGateLab() {
             key={item}
             className={gate === item ? "gate-pill active" : "gate-pill"}
             onClick={() => setGate(item)}
+            type="button"
           >
             {item}
           </button>
@@ -1898,34 +1901,43 @@ function InteractiveLogicGateLab() {
       </div>
 
       <div className="lab-toolbar">
-  <div className="zoom-controls">
-    <button
-      type="button"
-      onClick={() => setLabZoom((prev) => Math.max(0.6, Number((prev - 0.1).toFixed(1))))}
-    >
-      −
-    </button>
+        <div className="zoom-controls">
+          <button
+            type="button"
+            onClick={() =>
+              setLabZoom((prev) =>
+                Math.max(0.6, Number((prev - 0.1).toFixed(1)))
+              )
+            }
+          >
+            −
+          </button>
 
-    <span>{Math.round(labZoom * 100)}%</span>
+          <span>{Math.round(labZoom * 100)}%</span>
 
-    <button
-      type="button"
-      onClick={() => setLabZoom((prev) => Math.min(1.6, Number((prev + 0.1).toFixed(1))))}
-    >
-      +
-    </button>
+          <button
+            type="button"
+            onClick={() =>
+              setLabZoom((prev) =>
+                Math.min(1.8, Number((prev + 0.1).toFixed(1)))
+              )
+            }
+          >
+            +
+          </button>
 
-    <button type="button" onClick={() => setLabZoom(1)}>
-      Reset
-    </button>
-  </div>
-</div>
- 
+          <button type="button" onClick={() => setLabZoom(1)}>
+            Reset
+          </button>
+        </div>
+      </div>
+
       <div className="logic-lab-card">
         <div className="gate-controls">
           <div className="input-control">
             <span>A</span>
             <button
+              type="button"
               className={a ? "toggle active" : "toggle"}
               onClick={() => setA(a ? 0 : 1)}
             >
@@ -1938,6 +1950,7 @@ function InteractiveLogicGateLab() {
             <div className="input-control">
               <span>B</span>
               <button
+                type="button"
                 className={b ? "toggle active" : "toggle"}
                 onClick={() => setB(b ? 0 : 1)}
               >
@@ -1950,58 +1963,91 @@ function InteractiveLogicGateLab() {
 
         <div
           className="gate-svg-wrap"
-          style={{ "--lab-zoom": labZoom }}
+          style={{
+            "--lab-zoom": labZoom,
+          }}
         >
-          <svg viewBox="0 0 720 340" className="gate-svg">
-            <text x="40" y="72" className="lab-label">Input</text>
+          <div
+            className="gate-zoom-canvas"
+            style={{
+              width: `${labZoom * 100}%`,
+              minWidth: `${720 * labZoom}px`,
+            }}
+          >
+            <svg viewBox="0 0 720 340" className="gate-svg">
+              <text x="40" y="72" className="lab-label">
+                Input
+              </text>
 
-            <text x="105" y={isSingleInput ? 177 : 132} className="lab-input-label">
-              A
-            </text>
+              <text
+                x="105"
+                y={isSingleInput ? 177 : 132}
+                className="lab-input-label"
+              >
+                A
+              </text>
 
-            <path
-              d={isSingleInput ? "M140 170 H275" : "M140 125 H260"}
-              className={a ? "lab-wire active" : "lab-wire"}
-            />
+              <path
+                d={isSingleInput ? "M140 170 H275" : "M140 125 H260"}
+                className={a ? "lab-wire active" : "lab-wire"}
+              />
 
-            {!isSingleInput && (
-              <>
-                <text x="105" y="212" className="lab-input-label">
-                  B
-                </text>
+              {!isSingleInput && (
+                <>
+                  <text x="105" y="212" className="lab-input-label">
+                    B
+                  </text>
 
-                <path
-                  d="M140 205 H260"
-                  className={b ? "lab-wire active" : "lab-wire"}
-                />
-              </>
-            )}
-            <GateShape gate={gate} />
+                  <path
+                    d="M140 205 H260"
+                    className={b ? "lab-wire active" : "lab-wire"}
+                  />
+                </>
+              )}
 
-            <text x="315" y="285" className="lab-gate-name">{gate}</text>
+              <GateShape gate={gate} />
 
-            <path
-              d={gate === "AND" || gate === "OR" || gate === "XOR" ? "M410 170 H575" : "M430 170 H575"}
-              className={output ? "lab-wire active output" : "lab-wire output"}
-            />
+              <text x="315" y="285" className="lab-gate-name">
+                {gate}
+              </text>
 
-            <text x="630" y="148" className="lab-output-label" textAnchor="middle">
-              Q
-            </text>
+              <path
+                d={
+                  gate === "AND" || gate === "OR" || gate === "XOR"
+                    ? "M410 170 H595"
+                    : "M430 170 H595"
+                }
+                className={output ? "lab-wire active output" : "lab-wire output"}
+              />
 
-            <rect
-              x="595"
-              y="154"
-              width="70"
-              height="32"
-              rx="16"
-              className={output ? "output-indicator active" : "output-indicator"}
-            />
+              <text
+                x="630"
+                y="148"
+                className="lab-output-label"
+                textAnchor="middle"
+              >
+                Q
+              </text>
 
-            <text x="630" y="222" className="lab-output-number" textAnchor="middle">
-              {output}
-            </text>
-          </svg>
+              <rect
+                x="595"
+                y="154"
+                width="70"
+                height="32"
+                rx="16"
+                className={output ? "output-indicator active" : "output-indicator"}
+              />
+
+              <text
+                x="630"
+                y="222"
+                className="lab-output-number"
+                textAnchor="middle"
+              >
+                {output}
+              </text>
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -2016,27 +2062,47 @@ function InteractiveLogicGateLab() {
               <th>Q</th>
             </tr>
           </thead>
+
           <tbody>
-            {isSingleInput
-              ? [0, 1].map((va) => (
-                  <tr key={va} className={va === a ? "current-row" : ""}>
-                    <td>{va}</td>
-                    <td>{evalGate(gate, va, 0) ? 1 : 0}</td>
+            {isSingleInput ? (
+              [0, 1].map((valueA) => {
+                const q = evalGate(gate, valueA, 0) ? 1 : 0;
+                const isCurrent = valueA === a;
+
+                return (
+                  <tr key={valueA} className={isCurrent ? "current-row" : ""}>
+                    <td>{valueA}</td>
+                    <td>{q}</td>
                   </tr>
-                ))
-              : [0, 1].flatMap((va) =>
-                  [0, 1].map((vb) => (
-                    <tr key={`${va}-${vb}`} className={va === a && vb === b ? "current-row" : ""}>
-                      <td>{va}</td>
-                      <td>{vb}</td>
-                      <td>{evalGate(gate, va, vb) ? 1 : 0}</td>
-                    </tr>
-                  ))
-                )}
+                );
+              })
+            ) : (
+              [
+                [0, 0],
+                [0, 1],
+                [1, 0],
+                [1, 1],
+              ].map(([valueA, valueB]) => {
+                const q = evalGate(gate, valueA, valueB) ? 1 : 0;
+                const isCurrent = valueA === a && valueB === b;
+
+                return (
+                  <tr
+                    key={`${valueA}-${valueB}`}
+                    className={isCurrent ? "current-row" : ""}
+                  >
+                    <td>{valueA}</td>
+                    <td>{valueB}</td>
+                    <td>{q}</td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
-            <details className="lab-accordion">
+
+      <details className="lab-accordion">
         <summary>
           <span>Electric Circuit Analogy</span>
           <b>{gate}</b>

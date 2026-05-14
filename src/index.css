@@ -1914,3 +1914,58 @@ text.wire-d,
     justify-content: space-between;
   }
 }
+
+.lab-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.gate-svg-wrap {
+  width: 100%;
+  overflow: auto;
+  border-radius: 20px;
+}
+
+.gate-zoom-canvas {
+  transform-origin: top left;
+}
+
+.gate-svg {
+  width: 100%;
+  display: block;
+}
+
+.electric-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.electric-svg-wrap {
+  width: 100%;
+  overflow: auto;
+  border-radius: 18px;
+}
+
+.electric-zoom-canvas {
+  transform-origin: top left;
+}
+
+.electric-svg {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .lab-toolbar,
+  .electric-toolbar {
+    justify-content: stretch;
+  }
+
+  .lab-toolbar .zoom-controls,
+  .electric-toolbar .zoom-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
