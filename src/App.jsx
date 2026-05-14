@@ -418,11 +418,1280 @@ function sampleFor(variableCount) {
   return [0, 2, 5, 7, 8, 10, 13, 15];
 }
 
+function literalFromBit(variableName, bit) {
+  return bit === 1 ? variableName : `${variableName}'`;
+}
+
+function canonicalTerm(minterm, config) {
+  const bits = binaryOf(minterm, config.variableCount);
+
+  return bits
+    .map((bit, index) => literalFromBit(config.variables[index], bit))
+    .join("");
+}
+
+function canonicalExpression(activeMinterms, config) {
+  if (activeMinterms.length === 0) return "0";
+
+  return activeMinterms
+    .map((minterm) => canonicalTerm(minterm, config))
+    .join(" + ");
+}
+
+function commonAndChangingLiterals(group, config) {
+  const binaries = group.minterms.map((m) => binaryOf(m, config.variableCount));
+
+  const common = [];
+  const changing = [];
+
+  for (let i = 0; i < config.variableCount; i++) {
+    const values = new Set(binaries.map((bits) => bits[i]));
+
+    if (values.size === 1) {
+      common.push(literalFromBit(config.variables[i], binaries[0][i]));
+    } else {
+      changing.push(config.variables[i]);
+    }
+  }
+
+  return { common, changing };
+}
+
+function groupedFactorExpression(group, config) {
+  const { common, changing } = commonAndChangingLiterals(group, config);
+
+  const commonText = common.join("");
+  const changingText =
+    changing.length === 0
+      ? ""
+      : changing.map((variableName) => `${variableName}' + ${variableName}`).join(")(");
+
+  if (changing.length === 0) {
+    return group.term;
+  }
+
+  if (changing.length === 1) {
+    return `${commonText}(${changingText})`;
+  }
+
+  return `${commonText}(${changingText})`;
+}
+
+function generateAlgebraTraceForGroup(group, config, index) {
+  const canonicalGroupExpression = group.minterms
+    .map((minterm) => canonicalTerm(minterm, config))
+    .join(" + ");
+
+  const { common, changing } = commonAndChangingLiterals(group, config);
+
+  const steps = [];
+
+  steps.push({
+    title: `Group ${index + 1}: bentuk awal`,
+    expression: canonicalGroupExpression,
+    reason: `Minterm ${group.minterms.join(", ")} ditulis dulu dalam bentuk SOP lengkap.`,
+  });
+
+  if (group.size === 1 || changing.length === 0) {
+    steps.push({
+      title: `Group ${index + 1}: tidak bisa difaktorkan lagi`,
+      expression: group.term,
+      reason: `Group ini hanya berisi satu cell, jadi tidak ada pasangan variabel komplemen yang bisa disederhanakan.`,
+    });
+
+    return steps;
+  }
+
+  steps.push({
+    title: `Group ${index + 1}: faktorkan literal yang sama`,
+    expression: `${canonicalGroupExpression} = ${groupedFactorExpression(group, config)}`,
+    reason: `Literal yang sama pada group ini adalah ${common.join(", ") || "tidak ada"}. Literal yang berubah adalah ${changing.join(", ")}.`,
+  });
+
+  const oneExpression =
+    changing.length === 1
+      ? `${common.join("")}(1)`
+      : `${common.join("")}${changing.map(() => "(1)").join("")}`;
+
+  steps.push({
+    title: `Group ${index + 1}: gunakan hukum komplemen`,
+    expression: `${groupedFactorExpression(group, config)} = ${oneExpression}`,
+    reason: `Karena berlaku hukum komplemen: X + X' = 1. Jadi bagian yang berubah dapat diganti menjadi 1.`,
+  });
+
+  steps.push({
+    title: `Group ${index + 1}: gunakan hukum identitas`,
+    expression: `${oneExpression} = ${group.term}`,
+    reason: `Karena X·1 = X, maka hasil sederhana dari group ini adalah ${group.term}.`,
+  });
+
+  return steps;
+}
+
+function generateBooleanSteps(activeMinterms, result, config) {
+  const steps = [];
+  const originalExpression = canonicalExpression(activeMinterms, config);
+
+  if (activeMinterms.length === 0) {
+    steps.push({
+      title: "Bentuk awal",
+      expression: "F = 0",
+      reason: "Belum ada minterm aktif, jadi fungsi bernilai 0.",
+    });
+
+    return steps;
+  }
+
+  steps.push({
+    title: "Bentuk SOP awal dari minterm",
+    expression: `F = ${originalExpression}`,
+    reason:
+      "Setiap minterm aktif diubah menjadi bentuk perkalian literal. Nilai 1 ditulis sebagai variabel biasa, sedangkan nilai 0 ditulis sebagai komplemen.",
+  });
+
+  result.selectedGroups.forEach((group, index) => {
+    const groupTrace = generateAlgebraTraceForGroup(group, config, index);
+    steps.push(...groupTrace);
+  });
+
+  const groupedTerms = result.selectedGroups
+    .map((group) => group.term)
+    .join(" + ");
+
+  steps.push({
+    title: "Gabungkan hasil penyederhanaan semua group",
+    expression: `F = ${groupedTerms || "0"}`,
+    reason:
+      "Setelah setiap group disederhanakan, semua hasil group digabung menggunakan OR atau tanda '+'.",
+  });
+
+  steps.push({
+    title: "Hasil akhir",
+    expression: `F = ${result.expression}`,
+    reason:
+      "Ini adalah bentuk SOP sederhana yang dihasilkan dari grouping K-Map. Hasil ini valid jika coverage validation menyatakan semua minterm sudah ter-cover.",
+  });
+
+  return steps;
+}
+
+function getCircuitTerms(mode, activeMinterms, result, config) {
+  if (mode === "original") {
+    return activeMinterms.map((minterm) => canonicalTerm(minterm, config));
+  }
+
+  return result.selectedGroups.map((group) => group.term);
+}
+
+function parseTermToLiterals(term) {
+  if (term === "0" || term === "1") return [];
+
+  const matches = term.match(/[A-D]'?/g);
+  return matches || [];
+}
+
+function literalInfo(literal) {
+  return {
+    variable: literal[0],
+    inverted: literal.includes("'"),
+    label: literal,
+  };
+}
+
+function variableWireClass(variable) {
+  switch (variable) {
+    case "A":
+      return "wire-a";
+    case "B":
+      return "wire-b";
+    case "C":
+      return "wire-c";
+    case "D":
+      return "wire-d";
+    default:
+      return "";
+  }
+}
+
+function BufferGate({ x, y, inverted = false }) {
+  if (inverted) {
+    return (
+      <g>
+        <polygon
+          points={`${x - 20},${y - 16} ${x - 20},${y + 16} ${x + 8},${y}`}
+          className="buffer-gate-shape"
+        />
+        <circle cx={x + 14} cy={y} r="5.5" className="not-bubble" />
+      </g>
+    );
+  }
+
+  return (
+    <polygon
+      points={`${x - 18},${y - 14} ${x - 18},${y + 14} ${x + 10},${y}`}
+      className="buffer-gate-shape"
+    />
+  );
+}
+
+function AndGate({ x, y, width = 72, height = 54 }) {
+  const left = x - width / 2;
+  const top = y - height / 2;
+  const midX = left + width / 2;
+
+  const d = [
+    `M ${left} ${top}`,
+    `H ${midX}`,
+    `A ${width / 2} ${height / 2} 0 0 1 ${midX} ${top + height}`,
+    `H ${left}`,
+    "Z",
+  ].join(" ");
+
+  return <path d={d} className="and-gate-shape" />;
+}
+
+function OrGate({ x, y, width = 96, height = 74 }) {
+  const left = x - width / 2;
+  const top = y - height / 2;
+  const bottom = y + height / 2;
+  const right = x + width / 2;
+
+  const d = [
+    `M ${left} ${top}`,
+    `Q ${left + 16} ${y} ${left} ${bottom}`,
+    `Q ${left + 40} ${bottom} ${right} ${y}`,
+    `Q ${left + 40} ${top} ${left} ${top}`,
+    "Z",
+  ].join(" ");
+
+  return <path d={d} className="or-gate-shape" />;
+}
+
+function LogicCircuit({ activeMinterms, result, config, mode, zoom }) {
+  const terms = getCircuitTerms(mode, activeMinterms, result, config);
+
+  if (terms.length === 0) {
+    return (
+      <div className="circuit-empty">
+        Belum ada circuit. Klik cell K-Map terlebih dahulu.
+      </div>
+    );
+  }
+
+  if (mode === "simplified" && result.expression === "1") {
+    return (
+      <div className="circuit-one">
+        <div className="constant-box">1</div>
+        <div className="wire-text">F = 1</div>
+      </div>
+    );
+  }
+
+  const parsedTerms = terms.map((term) => ({
+    term,
+    literals: parseTermToLiterals(term).map(literalInfo),
+  }));
+
+  function formatProductTerm(term) {
+    if (term === "0" || term === "1") return term;
+
+    const literals = parseTermToLiterals(term);
+    return literals.join("·");
+  }
+
+  function formatSopExpression(expr) {
+    if (expr === "0" || expr === "1") return expr;
+
+    return expr
+      .split("+")
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .map((part) => formatProductTerm(part))
+      .join(" + ");
+  }
+
+  function formatLiteralLabel(literal) {
+    return literal.inverted ? `${literal.variable}'` : literal.variable;
+  }
+
+  const displayFinalExpression =
+    mode === "original"
+      ? parsedTerms.map((item) => formatProductTerm(item.term)).join(" + ")
+      : formatSopExpression(result.expression);
+
+  const leftPad = 64;
+
+const inputTitleY = 88;
+const inputStartY = 118;
+const inputGapY = 32;
+const inputLabelX = 82;
+const inputWireStartX = 130;
+
+const railStartX = 320;
+const railGap = 72;
+
+const termTopY = 390;
+const termGap = 190;
+
+const tLabelX = 96;
+const notX = 590;
+const passX = 590;
+const literalOutX = 730;
+
+const andX = 1040;
+const termOutX = 1200;
+const orX = 1540;
+const outX = 1760;
+
+  const svgWidth = 2020;
+  const lastTermY = termTopY + (parsedTerms.length - 1) * termGap;
+  const railBottomY = lastTermY + 40;
+  const svgHeight = Math.max(640, lastTermY + 180);
+  const orY = termTopY + ((parsedTerms.length - 1) * termGap) / 2;
+
+const railX = {};
+const inputY = {};
+const railBottomByVariable = {};
+const usedVariables = new Set();
+
+parsedTerms.forEach((item) => {
+  item.literals.forEach((literal) => {
+    usedVariables.add(literal.variable);
+  });
+});
+
+config.variables.forEach((variable, index) => {
+  railX[variable] = railStartX + index * railGap;
+  inputY[variable] = inputStartY + index * inputGapY;
+  railBottomByVariable[variable] = inputY[variable];
+});
+
+parsedTerms.forEach((item, termIndex) => {
+  const rowY = termTopY + termIndex * termGap;
+  const literalCount = item.literals.length;
+
+  item.literals.forEach((literal, literalIndex) => {
+    const y = gateInputY(rowY, literalCount, literalIndex);
+    const stopY = y + 8;
+
+    if (stopY > railBottomByVariable[literal.variable]) {
+      railBottomByVariable[literal.variable] = stopY;
+    }
+  });
+});
+
+parsedTerms.forEach((item, termIndex) => {
+  const rowY = termTopY + termIndex * termGap;
+  const literalCount = item.literals.length;
+
+  item.literals.forEach((literal, literalIndex) => {
+    const y = gateInputY(rowY, literalCount, literalIndex);
+
+    if (y > railBottomByVariable[literal.variable]) {
+      railBottomByVariable[literal.variable] = y;
+    }
+  });
+});
+
+function getLiteralGap(count) {
+  if (count >= 4) return 42;
+  if (count === 3) return 52;
+  if (count === 2) return 64;
+  return 0;
+}
+
+function gateInputY(rowY, count, index) {
+  if (count === 1) return rowY;
+
+  const gap = getLiteralGap(count);
+  return rowY - ((count - 1) * gap) / 2 + index * gap;
+}
+
+ function horizontalJumpPath(x1, y, x2, sourceVariable) {
+  const startX = Math.min(x1, x2);
+  const endX = Math.max(x1, x2);
+  const direction = x2 >= x1 ? 1 : -1;
+
+  const crossings = config.variables
+    .filter((variable) => variable !== sourceVariable)
+    .filter((variable) => {
+      const railStartY = inputY[variable];
+      const railEndY = railBottomByVariable[variable];
+
+      return y >= railStartY && y <= railEndY;
+    })
+    .map((variable) => railX[variable])
+    .filter((x) => x > startX + 10 && x < endX - 10)
+    .sort((a, b) => (direction === 1 ? a - b : b - a));
+
+  let d = `M ${x1} ${y}`;
+
+  crossings.forEach((crossX) => {
+    const beforeX = crossX - 12 * direction;
+    const afterX = crossX + 12 * direction;
+
+    d += ` H ${beforeX}`;
+    d += ` C ${crossX - 8 * direction} ${y - 14}, ${crossX + 8 * direction} ${y - 14}, ${afterX} ${y}`;
+  });
+
+  d += ` H ${x2}`;
+
+  return d;
+}
+
+  function elbowPath(x1, y1, x2, y2, midX) {
+    return `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`;
+  }
+
+  function wireLabel(text, x, y, extraClass = "") {
+    return (
+      <text x={x} y={y} className={`expr-wire-label ${extraClass}`}>
+        {text}
+      </text>
+    );
+  }
+
+  return (
+    <div className="circuit-wrapper">
+      <div
+        className="circuit-scroll rail-expression-scroll"
+        style={{ "--circuit-zoom": zoom }}
+      >
+        <svg
+          className="logic-circuit rail-expression-circuit"
+          viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+          role="img"
+          aria-label="Rail expression circuit visualization"
+        >
+          <text x={leftPad} y="34" className="circuit-title">
+            Rail Expression Circuit
+          </text>
+
+          <text x={leftPad} y="58" className="expr-subtitle">
+            Input berasal dari kiri. Dot berarti tersambung. Lengkungan berarti kabel hanya melewati.
+          </text>
+
+          <text x={leftPad} y={inputTitleY} className="circuit-title">
+            Inputs
+          </text>
+
+          {config.variables.map((variable) => (
+            <g key={variable}>
+              {!usedVariables.has(variable) && (
+              <text
+                x={railX[variable] + 18}
+                y={inputY[variable] - 10}
+                className="unused-variable-label"
+              >
+                unused
+              </text>
+            )}
+              <text
+                x={inputLabelX}
+                y={inputY[variable] + 5}
+                className={`input-stack-label ${variableWireClass(variable)}`}
+              >
+                {variable}
+              </text>
+
+              <path
+                d={`M ${inputWireStartX} ${inputY[variable]} H ${railX[variable]} V ${railBottomByVariable[variable]}`}
+                className={`circuit-wire rail-main ${variableWireClass(variable)}`}
+              />
+              <circle
+                cx={railX[variable]}
+                cy={inputY[variable]}
+                r="5.8"
+                className={`source-dot ${variableWireClass(variable)}`}
+              />
+            </g>
+          ))}
+
+          <text x={leftPad} y={termTopY - 84} className="circuit-title">
+            Product Terms
+          </text>
+
+          {parsedTerms.map((item, termIndex) => {
+            const rowY = termTopY + termIndex * termGap;
+            const literalCount = item.literals.length;
+
+            return (
+              <g key={`${item.term}-${termIndex}`}>
+                <text x={tLabelX} y={rowY + 5} className="term-row-label">
+                  T{termIndex + 1}
+                </text>
+
+                {item.literals.map((literal, literalIndex) => {
+                  const sourceX = railX[literal.variable];
+                  const variableClass = variableWireClass(literal.variable);
+                  const currentInputY = gateInputY(rowY, literalCount, literalIndex);
+                  const literalDisplay = formatLiteralLabel(literal);
+
+                  const staggerX = literalIndex * 22;
+
+                  const gateX = literal.inverted ? notX + staggerX : passX + staggerX;
+                  const gateInputX = gateX - 34;
+                  const gateOutputX = literal.inverted ? gateX + 38 : gateX + 22;
+
+                  const localLiteralOutX = Math.max(literalOutX, gateOutputX + 120);
+
+                  const labelX = gateOutputX + 34;
+                  const labelY = currentInputY - 24;
+
+                  const andEntryGap = 24;
+                  const andEntryY =
+                    literalCount === 1
+                      ? rowY
+                      : rowY - ((literalCount - 1) * andEntryGap) / 2 + literalIndex * andEntryGap;
+
+                  const bendX = andX - 112;
+                  const andInputX = andX - 50;
+
+                  return (
+                    <g key={`${item.term}-${literal.label}-${literalIndex}`}>
+                      <circle
+                        cx={sourceX}
+                        cy={currentInputY}
+                        r="5.6"
+                        className={`source-dot ${variableClass}`}
+                      />
+
+                      <path
+                        d={horizontalJumpPath(
+                          sourceX,
+                          currentInputY,
+                          gateInputX,
+                          literal.variable
+                        )}
+                        className={`circuit-wire branch-wire ${variableClass}`}
+                      />
+
+                      <BufferGate x={gateX} y={currentInputY} inverted={literal.inverted} />
+
+                      <path
+                        d={`M ${gateOutputX} ${currentInputY} H ${localLiteralOutX}`}
+                        className={`circuit-wire branch-wire ${variableClass}`}
+                      />
+
+                      <g>
+                        <rect
+                          x={labelX - 10}
+                          y={labelY - 18}
+                          width={literalDisplay.length * 15 + 24}
+                          height="27"
+                          rx="8"
+                          className="wire-label-bg"
+                        />
+
+                        {wireLabel(literalDisplay, labelX, labelY, variableClass)}
+                      </g>
+
+                    {literalCount === 1 ? (
+                      <path
+                        d={`M ${localLiteralOutX} ${currentInputY} H ${termOutX}`}
+                        className={`circuit-wire branch-wire ${variableClass}`}
+                      />
+                    ) : (
+                      <path
+                        d={`M ${localLiteralOutX} ${currentInputY} H ${bendX} V ${andEntryY} H ${andInputX}`}
+                        className={`circuit-wire branch-wire ${variableClass}`}
+                      />
+                    )}
+                    </g>
+                  );
+                })}
+
+                {literalCount > 1 && (
+                  <>
+                    <AndGate x={andX} y={rowY} />
+
+                    <text
+                      x={andX + 2}
+                      y={rowY + 5}
+                      className="gate-text"
+                      textAnchor="middle"
+                    >
+                      AND
+                    </text>
+
+                    <path
+                      d={`M ${andX + 48} ${rowY} H ${termOutX}`}
+                      className="circuit-wire term-output-wire"
+                    />
+                  </>
+                )}
+
+                <text x={termOutX + 18} y={rowY - 18} className="term-label">
+                  {formatProductTerm(item.term)}
+                </text>
+
+                <path
+                  d={elbowPath(termOutX, rowY, orX - 58, orY, termOutX + 96)}
+                  className="circuit-wire term-to-or"
+                />
+              </g>
+            );
+          })}
+
+          <OrGate x={orX} y={orY} />
+
+          <text
+            x={orX + 2}
+            y={orY + 5}
+            className="gate-text"
+            textAnchor="middle"
+          >
+            OR
+          </text>
+
+          <path
+            d={`M ${orX + 56} ${orY} H ${outX}`}
+            className="circuit-wire output-wire"
+          />
+
+          {wireLabel("F", orX + 88, orY - 18, "final-expression-text")}
+
+          <text x={outX + 24} y={orY + 6} className="final-expression-text">
+            Output
+          </text>
+
+          <foreignObject
+            x={leftPad}
+            y={svgHeight - 64}
+            width={svgWidth - 100}
+            height="54"
+          >
+            <div
+              xmlns="http://www.w3.org/1999/xhtml"
+              className="circuit-expression-box"
+            >
+              {mode === "original" ? "Original SOP" : "Simplified SOP"}: F ={" "}
+              {displayFinalExpression}
+            </div>
+          </foreignObject>
+        </svg>
+      </div>
+    </div>
+  );
+}
+function evalGate(gate, a, b) {
+  const A = Boolean(a);
+  const B = Boolean(b);
+
+  switch (gate) {
+    case "AND":
+      return A && B;
+    case "OR":
+      return A || B;
+    case "NAND":
+      return !(A && B);
+    case "NOR":
+      return !(A || B);
+    case "XOR":
+      return A !== B;
+    case "XNOR":
+      return A === B;
+    case "NOT":
+      return !A;
+    default:
+      return false;
+  }
+}
+
+function GateShape({ gate }) {
+  if (gate === "AND" || gate === "NAND") {
+    return (
+      <g>
+        <path
+          d="M260 105 H335 A65 65 0 0 1 335 235 H260 Z"
+          className="lab-gate-shape"
+        />
+        {gate === "NAND" && <circle cx="403" cy="170" r="11" className="lab-bubble" />}
+      </g>
+    );
+  }
+
+  if (gate === "OR" || gate === "NOR" || gate === "XOR" || gate === "XNOR") {
+    return (
+      <g>
+        {gate === "XOR" || gate === "XNOR" ? (
+          <path d="M238 105 Q275 170 238 235" className="lab-gate-outline" />
+        ) : null}
+
+        <path
+          d="M250 105 Q305 170 250 235 Q330 235 410 170 Q330 105 250 105 Z"
+          className="lab-gate-shape"
+        />
+
+        {gate === "NOR" || gate === "XNOR" ? (
+          <circle cx="420" cy="170" r="11" className="lab-bubble" />
+        ) : null}
+      </g>
+    );
+  }
+
+  if (gate === "NOT") {
+    return (
+      <g>
+        <polygon points="275,120 275,220 380,170" className="lab-gate-shape" />
+        <circle cx="394" cy="170" r="11" className="lab-bubble" />
+      </g>
+    );
+  }
+
+  return null;
+}
+
+function getGateReasoning(gate, a, b, output) {
+  if (gate === "AND") {
+    return output
+      ? `AND membutuhkan semua input bernilai 1. Karena A = ${a} dan B = ${b}, kedua switch tertutup, maka arus mengalir dan Q = 1.`
+      : `AND membutuhkan semua input bernilai 1. Karena A = ${a} dan B = ${b}, masih ada switch yang terbuka, maka arus terputus dan Q = 0.`;
+  }
+
+  if (gate === "OR") {
+    return output
+      ? `OR hanya membutuhkan minimal satu input bernilai 1. Karena A = ${a} dan B = ${b}, ada jalur yang tertutup, maka arus mengalir dan Q = 1.`
+      : `OR membutuhkan minimal satu input bernilai 1. Karena A = ${a} dan B = ${b}, semua jalur terbuka, maka arus tidak mengalir dan Q = 0.`;
+  }
+
+  if (gate === "NOT") {
+    return output
+      ? `NOT membalik nilai input. Karena A = ${a}, hasil kebalikannya adalah Q = 1. Dalam analogi sederhana, jalur lampu tersambung saat input tidak aktif.`
+      : `NOT membalik nilai input. Karena A = ${a}, hasil kebalikannya adalah Q = 0. Dalam analogi sederhana, jalur lampu diputus saat input aktif.`;
+  }
+
+  if (gate === "NAND") {
+    return `NAND adalah AND yang dibalik. Pertama dihitung A AND B, lalu hasilnya dibalik. Dengan A = ${a} dan B = ${b}, maka Q = ${output}.`;
+  }
+
+  if (gate === "NOR") {
+    return `NOR adalah OR yang dibalik. Pertama dihitung A OR B, lalu hasilnya dibalik. Dengan A = ${a} dan B = ${b}, maka Q = ${output}.`;
+  }
+
+  if (gate === "XOR") {
+    return output
+      ? `XOR bernilai 1 jika input berbeda. Karena A = ${a} dan B = ${b}, input berbeda, maka Q = 1.`
+      : `XOR bernilai 0 jika input sama. Karena A = ${a} dan B = ${b}, input sama, maka Q = 0.`;
+  }
+
+  if (gate === "XNOR") {
+    return output
+      ? `XNOR bernilai 1 jika input sama. Karena A = ${a} dan B = ${b}, input sama, maka Q = 1.`
+      : `XNOR bernilai 0 jika input berbeda. Karena A = ${a} dan B = ${b}, input berbeda, maka Q = 0.`;
+  }
+
+  return "";
+}
+
+function ElectricCircuitAnalogy({ gate, a, b, output }) {
+  const isOn = Boolean(output);
+  const aOn = Boolean(a);
+  const bOn = Boolean(b);
+
+  if (gate === "AND") {
+    return (
+      <div className="electric-card">
+        <div className="electric-info">
+          <h3>AND = dua switch seri</h3>
+          <p>Lampu hanya menyala jika switch A dan switch B sama-sama tertutup.</p>
+        </div>
+
+        <svg viewBox="0 0 760 300" className="electric-svg">
+          <rect x="40" y="80" width="56" height="140" rx="18" className="battery-body" />
+          <text x="68" y="122" className="battery-mark" textAnchor="middle">+</text>
+          <text x="68" y="198" className="battery-mark" textAnchor="middle">−</text>
+
+          <path d="M96 110 H170" className={aOn ? "electric-wire active" : "electric-wire"} />
+          <SwitchSymbol x={190} y={110} label="A" active={aOn} />
+
+          <path d="M230 110 H330" className={aOn && bOn ? "electric-wire active" : "electric-wire"} />
+          <SwitchSymbol x={350} y={110} label="B" active={bOn} />
+
+          <path d="M390 110 H560 V145" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <LampSymbol x={560} y={170} active={isOn} />
+
+          <path d="M560 195 V230 H68 V220" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+          <text x="190" y="260" className="electric-status">
+            A: {aOn ? "closed" : "open"} • B: {bOn ? "closed" : "open"} • Lamp: {isOn ? "ON" : "OFF"}
+          </text>
+        </svg>
+      </div>
+    );
+  }
+
+  if (gate === "OR") {
+    return (
+      <div className="electric-card">
+        <div className="electric-info">
+          <h3>OR = dua switch paralel</h3>
+          <p>Lampu menyala jika minimal salah satu switch tertutup.</p>
+        </div>
+
+        <svg viewBox="0 0 760 330" className="electric-svg">
+          <rect x="40" y="100" width="56" height="140" rx="18" className="battery-body" />
+          <text x="68" y="142" className="battery-mark" textAnchor="middle">+</text>
+          <text x="68" y="218" className="battery-mark" textAnchor="middle">−</text>
+
+          <path d="M96 130 H160 V90 H230" className={aOn ? "electric-wire active" : "electric-wire"} />
+          <SwitchSymbol x={250} y={90} label="A" active={aOn} />
+          <path d="M290 90 H430 V130" className={aOn ? "electric-wire active" : "electric-wire"} />
+
+          <path d="M160 130 V190 H230" className={bOn ? "electric-wire active" : "electric-wire"} />
+          <SwitchSymbol x={250} y={190} label="B" active={bOn} />
+          <path d="M290 190 H430 V130" className={bOn ? "electric-wire active" : "electric-wire"} />
+
+          <path d="M430 130 H560 V155" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <LampSymbol x={560} y={180} active={isOn} />
+
+          <path d="M560 205 V250 H68 V240" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+          <text x="190" y="295" className="electric-status">
+            A: {aOn ? "closed" : "open"} • B: {bOn ? "closed" : "open"} • Lamp: {isOn ? "ON" : "OFF"}
+          </text>
+        </svg>
+      </div>
+    );
+  }
+
+  if (gate === "NOT") {
+    return (
+      <div className="electric-card">
+        <div className="electric-info">
+          <h3>NOT = pembalik sederhana</h3>
+          <p>Jika input A aktif, output diputus. Jika A tidak aktif, output tersambung.</p>
+        </div>
+
+        <svg viewBox="0 0 760 300" className="electric-svg">
+          <rect x="40" y="80" width="56" height="140" rx="18" className="battery-body" />
+          <text x="68" y="122" className="battery-mark" textAnchor="middle">+</text>
+          <text x="68" y="198" className="battery-mark" textAnchor="middle">−</text>
+
+          <path d="M96 110 H210" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <SwitchSymbol x={240} y={110} label="A control" active={!aOn} />
+          <path d="M280 110 H560 V145" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+          <LampSymbol x={560} y={170} active={isOn} />
+
+          <path d="M560 195 V230 H68 V220" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+          <text x="180" y="260" className="electric-status">
+            A: {aOn ? "1 / control active" : "0 / control inactive"} • Lamp: {isOn ? "ON" : "OFF"}
+          </text>
+        </svg>
+      </div>
+    );
+  }
+
+if (gate === "NAND") {
+  const andResult = aOn && bOn;
+
+  return (
+    <div className="electric-card">
+      <div className="electric-info">
+        <h3>NAND = AND lalu dibalik</h3>
+        <p>
+          Jalur seri A dan B membentuk AND. Setelah itu hasilnya masuk ke inverter,
+          sehingga output akhirnya dibalik.
+        </p>
+      </div>
+
+      <svg viewBox="0 0 820 340" className="electric-svg">
+        <rect x="40" y="95" width="56" height="140" rx="18" className="battery-body" />
+        <text x="68" y="137" className="battery-mark" textAnchor="middle">+</text>
+        <text x="68" y="213" className="battery-mark" textAnchor="middle">−</text>
+
+        <path d="M96 125 H170" className={aOn ? "electric-wire active" : "electric-wire"} />
+        <SwitchSymbol x={190} y={125} label="A" active={aOn} />
+
+        <path d="M230 125 H330" className={andResult ? "electric-wire active" : "electric-wire"} />
+        <SwitchSymbol x={350} y={125} label="B" active={bOn} />
+
+        <path d="M390 125 H470" className={andResult ? "electric-wire active" : "electric-wire"} />
+
+        <g>
+          <rect x="470" y="95" width="92" height="60" rx="16" className="inverter-box" />
+          <text x="516" y="131" className="inverter-text" textAnchor="middle">NOT</text>
+        </g>
+
+        <path d="M562 125 H640 V160" className={isOn ? "electric-wire active" : "electric-wire"} />
+        <LampSymbol x={640} y={185} active={isOn} />
+
+        <path d="M640 210 V260 H68 V235" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+        <text x="160" y="305" className="electric-status">
+          AND result: {andResult ? 1 : 0} • after NOT: Q = {output}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+if (gate === "NOR") {
+  const orResult = aOn || bOn;
+
+  return (
+    <div className="electric-card">
+      <div className="electric-info">
+        <h3>NOR = OR lalu dibalik</h3>
+        <p>
+          Jalur paralel A dan B membentuk OR. Setelah itu hasilnya masuk ke inverter,
+          sehingga output akhirnya dibalik.
+        </p>
+      </div>
+
+      <svg viewBox="0 0 840 360" className="electric-svg">
+        <rect x="40" y="110" width="56" height="140" rx="18" className="battery-body" />
+        <text x="68" y="152" className="battery-mark" textAnchor="middle">+</text>
+        <text x="68" y="228" className="battery-mark" textAnchor="middle">−</text>
+
+        <path d="M96 140 H150 V100 H230" className={aOn ? "electric-wire active" : "electric-wire"} />
+        <SwitchSymbol x={250} y={100} label="A" active={aOn} />
+        <path d="M290 100 H430 V150" className={aOn ? "electric-wire active" : "electric-wire"} />
+
+        <path d="M150 140 V210 H230" className={bOn ? "electric-wire active" : "electric-wire"} />
+        <SwitchSymbol x={250} y={210} label="B" active={bOn} />
+        <path d="M290 210 H430 V150" className={bOn ? "electric-wire active" : "electric-wire"} />
+
+        <path d="M430 150 H500" className={orResult ? "electric-wire active" : "electric-wire"} />
+
+        <g>
+          <rect x="500" y="120" width="92" height="60" rx="16" className="inverter-box" />
+          <text x="546" y="156" className="inverter-text" textAnchor="middle">NOT</text>
+        </g>
+
+        <path d="M592 150 H660 V175" className={isOn ? "electric-wire active" : "electric-wire"} />
+        <LampSymbol x={660} y={200} active={isOn} />
+
+        <path d="M660 225 V270 H68 V250" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+        <text x="160" y="325" className="electric-status">
+          OR result: {orResult ? 1 : 0} • after NOT: Q = {output}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+if (gate === "XOR") {
+  return (
+    <div className="electric-card">
+      <div className="electric-info">
+        <h3>XOR = menyala jika input berbeda</h3>
+        <p>
+          Analogi sederhana: lampu menyala hanya saat salah satu input aktif,
+          bukan keduanya.
+        </p>
+      </div>
+
+      <svg viewBox="0 0 820 340" className="electric-svg">
+        <rect x="40" y="95" width="56" height="140" rx="18" className="battery-body" />
+        <text x="68" y="137" className="battery-mark" textAnchor="middle">+</text>
+        <text x="68" y="213" className="battery-mark" textAnchor="middle">−</text>
+
+        <path d="M96 125 H190" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+        <g>
+          <rect x="190" y="82" width="250" height="86" rx="18" className={isOn ? "xor-rule-box active" : "xor-rule-box"} />
+          <text x="315" y="118" className="xor-rule-text" textAnchor="middle">A ≠ B</text>
+          <text x="315" y="146" className="xor-rule-small" textAnchor="middle">
+            {a} berbeda dari {b} = {isOn ? "true" : "false"}
+          </text>
+        </g>
+
+        <path d="M440 125 H620 V160" className={isOn ? "electric-wire active" : "electric-wire"} />
+        <LampSymbol x={620} y={185} active={isOn} />
+
+        <path d="M620 210 V260 H68 V235" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+        <text x="160" y="305" className="electric-status">
+          XOR: A = {a}, B = {b} • Q = {output}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+if (gate === "XNOR") {
+  return (
+    <div className="electric-card">
+      <div className="electric-info">
+        <h3>XNOR = menyala jika input sama</h3>
+        <p>
+          Analogi sederhana: lampu menyala saat kedua input memiliki nilai yang sama.
+        </p>
+      </div>
+
+      <svg viewBox="0 0 820 340" className="electric-svg">
+        <rect x="40" y="95" width="56" height="140" rx="18" className="battery-body" />
+        <text x="68" y="137" className="battery-mark" textAnchor="middle">+</text>
+        <text x="68" y="213" className="battery-mark" textAnchor="middle">−</text>
+
+        <path d="M96 125 H190" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+        <g>
+          <rect x="190" y="82" width="250" height="86" rx="18" className={isOn ? "xor-rule-box active" : "xor-rule-box"} />
+          <text x="315" y="118" className="xor-rule-text" textAnchor="middle">A = B</text>
+          <text x="315" y="146" className="xor-rule-small" textAnchor="middle">
+            {a} sama dengan {b} = {isOn ? "true" : "false"}
+          </text>
+        </g>
+
+        <path d="M440 125 H620 V160" className={isOn ? "electric-wire active" : "electric-wire"} />
+        <LampSymbol x={620} y={185} active={isOn} />
+
+        <path d="M620 210 V260 H68 V235" className={isOn ? "electric-wire active" : "electric-wire"} />
+
+        <text x="160" y="305" className="electric-status">
+          XNOR: A = {a}, B = {b} • Q = {output}
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+  return (
+    <div className="electric-card">
+      <div className="electric-info">
+        <h3>{gate} analogy</h3>
+        <p>
+          Untuk gate ini, analogi listrik sederhana ditampilkan sebagai konsep:
+          hasil dasar dihitung dulu, lalu output mengikuti aturan {gate}.
+        </p>
+      </div>
+
+      <div className={isOn ? "simple-output active" : "simple-output"}>
+        <span>Q</span>
+        <b>{output}</b>
+      </div>
+    </div>
+  );
+}
+
+function SwitchSymbol({ x, y, label, active }) {
+  return (
+    <g>
+      <text x={x} y={y - 26} className="switch-label" textAnchor="middle">
+        {label}
+      </text>
+
+      <circle cx={x - 20} cy={y} r="6" className="switch-dot" />
+      <circle cx={x + 20} cy={y} r="6" className="switch-dot" />
+
+      {active ? (
+        <path d={`M ${x - 20} ${y} L ${x + 20} ${y}`} className="switch-line active" />
+      ) : (
+        <path d={`M ${x - 20} ${y} L ${x + 16} ${y - 22}`} className="switch-line" />
+      )}
+    </g>
+  );
+}
+
+function LampSymbol({ x, y, active }) {
+  return (
+    <g>
+      {active && <circle cx={x} cy={y} r="48" className="lamp-glow" />}
+
+      <circle
+        cx={x}
+        cy={y}
+        r="28"
+        className={active ? "lamp active" : "lamp"}
+      />
+
+      <path
+        d={`M ${x - 12} ${y} Q ${x} ${y - 14} ${x + 12} ${y}`}
+        className="lamp-filament"
+      />
+
+      <text
+        x={x + 52}
+        y={y + 6}
+        className={active ? "lamp-label active" : "lamp-label"}
+      >
+        Lamp: {active ? "ON" : "OFF"}
+      </text>
+    </g>
+  );
+}
+
+function InteractiveLogicGateLab() {
+  const [gate, setGate] = useState("AND");
+  const [a, setA] = useState(0);
+  const [b, setB] = useState(0);
+
+  const output = evalGate(gate, a, b) ? 1 : 0;
+  const isSingleInput = gate === "NOT";
+
+  const gates = ["AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR"];
+
+  return (
+    <section className="panel logic-lab-panel">
+      <div className="panel-title stack-title">
+        <div>
+          <h2>Interactive Logic Gate Lab</h2>
+          <p>Pilih gerbang logika, ubah input, lalu lihat output secara langsung.</p>
+        </div>
+        <span className="badge">Interactive</span>
+      </div>
+
+      <div className="gate-picker">
+        {gates.map((item) => (
+          <button
+            key={item}
+            className={gate === item ? "gate-pill active" : "gate-pill"}
+            onClick={() => setGate(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+
+      <div className="logic-lab-card">
+        <div className="gate-controls">
+          <div className="input-control">
+            <span>A</span>
+            <button
+              className={a ? "toggle active" : "toggle"}
+              onClick={() => setA(a ? 0 : 1)}
+            >
+              <i />
+            </button>
+            <b>{a}</b>
+          </div>
+
+          {!isSingleInput && (
+            <div className="input-control">
+              <span>B</span>
+              <button
+                className={b ? "toggle active" : "toggle"}
+                onClick={() => setB(b ? 0 : 1)}
+              >
+                <i />
+              </button>
+              <b>{b}</b>
+            </div>
+          )}
+        </div>
+
+        <div className="gate-svg-wrap">
+          <svg viewBox="0 0 720 340" className="gate-svg">
+            <text x="40" y="72" className="lab-label">Input</text>
+
+            <text x="105" y={isSingleInput ? 177 : 132} className="lab-input-label">
+              A
+            </text>
+
+            <path
+              d={isSingleInput ? "M140 170 H275" : "M140 125 H260"}
+              className={a ? "lab-wire active" : "lab-wire"}
+            />
+
+            {!isSingleInput && (
+              <>
+                <text x="105" y="212" className="lab-input-label">
+                  B
+                </text>
+
+                <path
+                  d="M140 205 H260"
+                  className={b ? "lab-wire active" : "lab-wire"}
+                />
+              </>
+            )}
+            <GateShape gate={gate} />
+
+            <text x="315" y="285" className="lab-gate-name">{gate}</text>
+
+            <path
+              d={gate === "AND" || gate === "OR" || gate === "XOR" ? "M410 170 H575" : "M430 170 H575"}
+              className={output ? "lab-wire active output" : "lab-wire output"}
+            />
+
+            <text x="630" y="148" className="lab-output-label" textAnchor="middle">
+              Q
+            </text>
+
+            <rect
+              x="595"
+              y="154"
+              width="70"
+              height="32"
+              rx="16"
+              className={output ? "output-indicator active" : "output-indicator"}
+            />
+
+            <text x="630" y="222" className="lab-output-number" textAnchor="middle">
+              {output}
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <div className="truth-table-box">
+        <h3>Truth Table</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>A</th>
+              {!isSingleInput && <th>B</th>}
+              <th>Q</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isSingleInput
+              ? [0, 1].map((va) => (
+                  <tr key={va} className={va === a ? "current-row" : ""}>
+                    <td>{va}</td>
+                    <td>{evalGate(gate, va, 0) ? 1 : 0}</td>
+                  </tr>
+                ))
+              : [0, 1].flatMap((va) =>
+                  [0, 1].map((vb) => (
+                    <tr key={`${va}-${vb}`} className={va === a && vb === b ? "current-row" : ""}>
+                      <td>{va}</td>
+                      <td>{vb}</td>
+                      <td>{evalGate(gate, va, vb) ? 1 : 0}</td>
+                    </tr>
+                  ))
+                )}
+          </tbody>
+        </table>
+      </div>
+            <details className="lab-accordion">
+        <summary>
+          <span>Electric Circuit Analogy</span>
+          <b>{gate}</b>
+        </summary>
+
+        <ElectricCircuitAnalogy gate={gate} a={a} b={b} output={output} />
+      </details>
+
+      <details className="lab-accordion">
+        <summary>
+          <span>Reasoning</span>
+          <b>Why Q = {output}?</b>
+        </summary>
+
+        <p className="gate-reasoning-text">
+          {getGateReasoning(gate, a, b, output)}
+        </p>
+      </details>
+    </section>
+  );
+}
+
 export default function App() {
+  const [toolMode, setToolMode] = useState("kmap");
+  const [viewKey, setViewKey] = useState(0);
   const [variableCount, setVariableCount] = useState(3);
   const [active, setActive] = useState(new Set([2, 3, 4, 5, 6]));
   const [labelMode, setLabelMode] = useState("binary");
-  const [theme, setTheme] = useState("midnight");
+  const [theme, setTheme] = useState("ocean");
+  const [circuitMode, setCircuitMode] = useState("simplified");
+  const [circuitZoom, setCircuitZoom] = useState(1);
   const [appearance, setAppearance] = useState("dark");
   const config = useMemo(() => makeConfig(variableCount), [variableCount]);
 
@@ -441,6 +1710,10 @@ export default function App() {
   const reasoning = useMemo(() => {
     return generateReasoning(activeMinterms, result, validation, config);
   }, [activeMinterms, result, validation, config]);
+
+  const booleanSteps = useMemo(() => {
+  return generateBooleanSteps(activeMinterms, result, config);
+  }, [activeMinterms, result, config]);
 
   const rowLabels =
     labelMode === "binary"
@@ -481,26 +1754,65 @@ export default function App() {
     setActive(new Set(sampleFor(variableCount)));
   }
 
+  function switchToolMode(mode) {
+  if (mode === toolMode) return;
+
+  setToolMode(mode);
+  setViewKey((prev) => prev + 1);
+}
+
   return (
     <div className={`page theme-${theme} mode-${appearance}`}>
       <div className="container">
         <header className="hero">
           <div className="hero-text">
-            <p className="eyebrow">Boolean Algebra Tool</p>
-            <h1>K-Map Solver</h1>
+            <p className="eyebrow">
+              {toolMode === "gate" ? "Digital Logic Tool" : "Boolean Algebra Tool"}
+            </p>
+
+            <h1>
+              {toolMode === "gate" ? "Logic Gate Lab" : "K-Map Solver"}
+            </h1>
+
             <p className="subtitle">
-              Solver K-Map dinamis untuk 2, 3, dan 4 variabel dengan visual grouping,
-              SOP expression, coverage validation, dan reasoning buka-tutup.
+              {toolMode === "gate"
+                ? "Simulasi gerbang logika interaktif untuk melihat cara kerja AND, OR, NOT, NAND, NOR, XOR, dan XNOR."
+                : "Solver K-Map dinamis untuk 2, 3, dan 4 variabel dengan visual grouping, SOP expression, coverage validation, dan reasoning."}
             </p>
           </div>
 
           <div className="hero-card">
-            <span>F({config.variables.join(",")})</span>
-            <strong>{result.expression}</strong>
+            <span>
+              {toolMode === "gate" ? "Interactive Mode" : `F(${config.variables.join(",")})`}
+            </span>
+
+            <strong>
+              {toolMode === "gate" ? "Gate Simulator" : result.expression}
+            </strong>
           </div>
         </header>
 
-        <div className="toolbar">
+          <div className="tool-mode-switch">
+            <button
+              className={toolMode === "kmap" ? "tool-mode active" : "tool-mode"}
+              onClick={() => switchToolMode("kmap")}
+            >
+              K-Map Solver
+            </button>
+
+            <button
+              className={toolMode === "gate" ? "tool-mode active" : "tool-mode"}
+              onClick={() => switchToolMode("gate")}
+            >
+              Logic Gate Lab
+            </button>
+          </div>
+            <div key={viewKey} className="view-transition">
+              {toolMode === "gate" ? (
+                <InteractiveLogicGateLab />
+              ) : (
+                <>
+    <div className="toolbar">
           <div className="segmented">
             {[2, 3, 4].map((count) => (
               <button
@@ -556,7 +1868,7 @@ export default function App() {
                 style={{ gridTemplateColumns: `72px repeat(${config.colCount}, 1fr)` }}
               >
                 <div className="corner">
-                  {config.rowVars.join("")}\{config.colVars.join("")}
+                  {config.rowVars.join("")}/{config.colVars.join("")}
                 </div>
 
                 {colLabels.map((label) => (
@@ -708,6 +2020,79 @@ export default function App() {
         <section className="panel">
           <div className="panel-title stack-title">
             <div>
+              <h2>Boolean Simplification</h2>
+              <p>Penyelesaian manual berbasis minterm dan grouping K-Map.</p>
+            </div>
+            <span className="badge">Step-by-step</span>
+          </div>
+
+          <div className="boolean-step-list">
+            {booleanSteps.map((step, index) => (
+              <details className="boolean-step-card" key={index} open={index === 0}>
+                <summary>
+                  <span>{index + 1}</span>
+                  <b>{step.title}</b>
+                </summary>
+
+                <div className="boolean-step-content">
+                  <code>{step.expression}</code>
+                  <p>{step.reason}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+    <section className="panel">
+      <div className="panel-title stack-title">
+        <div>
+          <h2>Logic Circuit</h2>
+          <p>Visualisasi circuit dengan bentuk gerbang logika asli dan line lurus.</p>
+        </div>
+        <span className="badge">{circuitMode === "original" ? "Original SOP" : "Simplified"}</span>
+      </div>
+
+      <div className="circuit-toolbar">
+        <div className="circuit-mode-switch">
+          <button
+            className={circuitMode === "original" ? "circuit-tab active" : "circuit-tab"}
+            onClick={() => setCircuitMode("original")}
+          >
+            Original SOP
+          </button>
+
+          <button
+            className={circuitMode === "simplified" ? "circuit-tab active" : "circuit-tab"}
+            onClick={() => setCircuitMode("simplified")}
+          >
+            Simplified
+          </button>
+        </div>
+
+        <div className="zoom-controls">
+          <button onClick={() => setCircuitZoom((z) => Math.max(0.55, Number((z - 0.1).toFixed(2))))}>
+            −
+          </button>
+          <span>{Math.round(circuitZoom * 100)}%</span>
+          <button onClick={() => setCircuitZoom((z) => Math.min(1.6, Number((z + 0.1).toFixed(2))))}>
+            +
+          </button>
+          <button onClick={() => setCircuitZoom(1)}>Reset</button>
+        </div>
+      </div>
+
+      <LogicCircuit
+        activeMinterms={activeMinterms}
+        result={result}
+        config={config}
+        mode={circuitMode}
+        zoom={circuitZoom}
+      />
+    </section>
+
+        <section className="panel">
+          <div className="panel-title stack-title">
+            <div>
               <h2>Coverage Validation</h2>
               <p>Bug prevention agar tidak ada minterm yang hilang.</p>
             </div>
@@ -715,10 +2100,10 @@ export default function App() {
           </div>
 
           <pre>
-{`original  = { ${activeMinterms.join(", ") || "-"} }
-covered   = { ${validation.covered.join(", ") || "-"} }
-uncovered = original - covered
-result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INVALID"}`}
+        {`original  = { ${activeMinterms.join(", ") || "-"} }
+        covered   = { ${validation.covered.join(", ") || "-"} }
+        uncovered = original - covered
+        result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INVALID"}`}
           </pre>
         </section>
 
@@ -743,6 +2128,9 @@ result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INV
             ))}
           </div>
         </section>
+      </>
+    )}
+</div>
       </div>
     </div>
   );
