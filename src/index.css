@@ -1969,3 +1969,21 @@ text.wire-d,
     justify-content: space-between;
   }
 }
+
+.gate-svg-wrap,
+.electric-svg-wrap {
+  width: 100%;
+  overflow: auto;
+}
+
+.gate-zoom-canvas,
+.electric-zoom-canvas {
+  transform-origin: top left;
+}
+
+.gate-svg,
+.electric-svg {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: block;
+}

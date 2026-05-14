@@ -1225,7 +1225,7 @@ function ElectricCircuitAnalogy({
           type="button"
           onClick={() =>
             setElectricZoom((prev) =>
-              Math.max(0.6, Number((prev - 0.1).toFixed(1)))
+              Math.max(0.1, Number((prev - 0.1).toFixed(1)))
             )
           }
         >
@@ -1906,7 +1906,7 @@ function InteractiveLogicGateLab() {
             type="button"
             onClick={() =>
               setLabZoom((prev) =>
-                Math.max(0.6, Number((prev - 0.1).toFixed(1)))
+                Math.max(0.1, Number((prev - 0.1).toFixed(1)))
               )
             }
           >
