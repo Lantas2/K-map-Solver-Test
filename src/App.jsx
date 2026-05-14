@@ -2261,45 +2261,84 @@ export default function App() {
                 <InteractiveLogicGateLab />
               ) : (
                 <>
-    <div className="toolbar">
-          <div className="segmented">
-            {[2, 3, 4].map((count) => (
-              <button
-                key={count}
-                className={variableCount === count ? "selected" : ""}
-                onClick={() => changeVariableCount(count)}
-              >
-                {count} Variable
-              </button>
-            ))}
-          </div>
+    <div className="kmap-control-panel">
+  <div className="control-group">
+    <div className="control-title">
+      <span>Variables</span>
+      <small>Pilih jumlah variabel untuk K-Map</small>
+    </div>
 
-          <div className="actions">
-            <button onClick={loadSample}>Load Sample</button>
-            <button onClick={clearAll}>Clear</button>
-            <button onClick={setAll}>Set All</button>
+    <div className="control-buttons variable-buttons">
+      {[2, 3, 4].map((count) => (
+        <button
+          key={count}
+          type="button"
+          className={variableCount === count ? "selected" : ""}
+          onClick={() => changeVariableCount(count)}
+        >
+          {count} Variable
+        </button>
+      ))}
+    </div>
+  </div>
 
-            <button onClick={() => setLabelMode(labelMode === "binary" ? "variable" : "binary")}>
-              Label: {labelMode === "binary" ? "Binary" : "Variable"}
-            </button>
+  <div className="control-group">
+    <div className="control-title">
+      <span>Actions</span>
+      <small>Kelola isi cell K-Map</small>
+    </div>
 
-            <button onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}>
-              Mode: {appearance === "dark" ? "Dark" : "Light"}
-            </button>
+    <div className="control-buttons action-buttons">
+      <button type="button" onClick={loadSample}>
+        Load Sample
+      </button>
 
-            <select
-              className="theme-select"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-            >
-              <option value="midnight">Midnight</option>
-              <option value="coffee">Coffee</option>
-              <option value="forest">Forest</option>
-              <option value="ocean">Ocean</option>
-              <option value="rose">Rose</option>
-            </select>
-          </div>
-        </div>
+      <button type="button" onClick={clearAll}>
+        Clear
+      </button>
+
+      <button type="button" onClick={setAll}>
+        Set All
+      </button>
+    </div>
+  </div>
+
+  <div className="control-group">
+    <div className="control-title">
+      <span>Display</span>
+      <small>Atur label, mode, dan tema tampilan</small>
+    </div>
+
+    <div className="control-buttons display-buttons">
+      <button
+        type="button"
+        onClick={() =>
+          setLabelMode(labelMode === "binary" ? "variable" : "binary")
+        }
+      >
+        Label: {labelMode === "binary" ? "Binary" : "Variable"}
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}
+      >
+        Mode: {appearance === "dark" ? "Dark" : "Light"}
+      </button>
+
+      <select
+        className="theme-select"
+        value={theme}
+        onChange={(e) => setTheme(e.target.value)}
+      >
+        <option value="coffee">Coffee</option>
+        <option value="forest">Forest</option>
+        <option value="ocean">Ocean</option>
+        <option value="rose">Rose</option>
+      </select>
+    </div>
+  </div>
+</div>
 
         <main className="main-grid">
           <section className="panel kmap-panel">
@@ -2375,7 +2414,7 @@ export default function App() {
                     >
                       <span className="cell-value">{active.has(cell.minterm) ? "1" : "0"}</span>
                       <span className="cell-label">{cell.label}</span>
-                      <small>{cell.bits}</small>
+                      <small>{cell.minterm}</small>
                     </button>
                   ))}
                 </div>

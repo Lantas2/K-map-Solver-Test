@@ -1987,3 +1987,119 @@ text.wire-d,
   min-width: 0 !important;
   display: block;
 }
+
+/* ============================= */
+/* K-MAP CONTROL PANEL */
+/* ============================= */
+
+.kmap-control-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.control-group {
+  background: var(--bg-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 16px 42px var(--shadow-main);
+}
+
+.control-title {
+  margin-bottom: 12px;
+}
+
+.control-title span {
+  display: block;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.control-title small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.control-buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.variable-buttons {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.action-buttons,
+.display-buttons {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.control-buttons button,
+.control-buttons .theme-select {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
+  color: var(--text-main);
+  padding: 12px 14px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-weight: 850;
+  transition: 0.2s;
+  text-align: center;
+}
+
+.control-buttons button:hover,
+.control-buttons .theme-select:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.control-buttons button.selected {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: color-mix(in srgb, var(--accent) 70%, white);
+  color: white;
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+@media (min-width: 900px) {
+  .kmap-control-panel {
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 620px) {
+  .kmap-control-panel {
+    gap: 12px;
+  }
+
+  .control-group {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .variable-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .action-buttons,
+  .display-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .display-buttons .theme-select {
+    grid-column: span 2;
+  }
+
+  .control-buttons button,
+  .control-buttons .theme-select {
+    min-height: 52px;
+    font-size: 14px;
+  }
+}
