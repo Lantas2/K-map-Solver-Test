@@ -1,134 +1,212 @@
 import { useMemo, useState } from "react";
 import "./index.css";
 
-const kmapCells = [
-  { minterm: 0, row: 0, col: 0, label: "m0" },
-  { minterm: 1, row: 0, col: 1, label: "m1" },
-  { minterm: 3, row: 0, col: 2, label: "m3" },
-  { minterm: 2, row: 0, col: 3, label: "m2" },
-  { minterm: 4, row: 1, col: 0, label: "m4" },
-  { minterm: 5, row: 1, col: 1, label: "m5" },
-  { minterm: 7, row: 1, col: 2, label: "m7" },
-  { minterm: 6, row: 1, col: 3, label: "m6" },
-];
+const ALL_VARIABLES = ["A", "B", "C", "D"];
 
-function binaryOf(minterm) {
-  return minterm.toString(2).padStart(3, "0").split("").map(Number);
+function grayCodes(bitCount) {
+  if (bitCount === 1) return ["0", "1"];
+  if (bitCount === 2) return ["00", "01", "11", "10"];
+  return ["0"];
 }
 
-function getCell(row, col) {
-  const fixedCol = ((col % 4) + 4) % 4;
-  return kmapCells.find((cell) => cell.row === row && cell.col === fixedCol);
+function makeConfig(variableCount) {
+  const variables = ALL_VARIABLES.slice(0, variableCount);
+  const rowVarCount = variableCount === 4 ? 2 : 1;
+  const colVarCount = variableCount - rowVarCount;
+
+  const rowVars = variables.slice(0, rowVarCount);
+  const colVars = variables.slice(rowVarCount);
+
+  const rowCodes = grayCodes(rowVarCount);
+  const colCodes = grayCodes(colVarCount);
+
+  const cells = [];
+
+  rowCodes.forEach((rowCode, row) => {
+    colCodes.forEach((colCode, col) => {
+      const bits = rowCode + colCode;
+      const minterm = parseInt(bits, 2);
+
+      cells.push({
+        row,
+        col,
+        bits,
+        minterm,
+        label: `m${minterm}`,
+      });
+    });
+  });
+
+  return {
+    variableCount,
+    variables,
+    rowVars,
+    colVars,
+    rowCodes,
+    colCodes,
+    rowCount: rowCodes.length,
+    colCount: colCodes.length,
+    cells,
+    maxMinterm: 2 ** variableCount - 1,
+  };
 }
 
-function getCellByMinterm(minterm) {
-  return kmapCells.find((cell) => cell.minterm === minterm);
+function binaryOf(minterm, variableCount) {
+  return minterm
+    .toString(2)
+    .padStart(variableCount, "0")
+    .split("")
+    .map(Number);
 }
 
-function groupKey(group) {
-  return [...group].sort((a, b) => a - b).join(",");
+function variableLabel(vars, code) {
+  return code
+    .split("")
+    .map((bit, index) => (bit === "1" ? vars[index] : `${vars[index]}'`))
+    .join("");
 }
 
-function termFromGroup(group) {
-  const binaries = group.map(binaryOf);
-  const variables = ["A", "B", "C"];
+function groupKey(minterms) {
+  return [...minterms].sort((a, b) => a - b).join(",");
+}
+
+function getCell(config, row, col) {
+  const fixedRow = ((row % config.rowCount) + config.rowCount) % config.rowCount;
+  const fixedCol = ((col % config.colCount) + config.colCount) % config.colCount;
+
+  return config.cells.find((cell) => cell.row === fixedRow && cell.col === fixedCol);
+}
+
+function termFromGroup(group, config) {
+  const binaries = group.minterms.map((m) => binaryOf(m, config.variableCount));
   const result = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < config.variableCount; i++) {
     const values = new Set(binaries.map((bits) => bits[i]));
+
     if (values.size === 1) {
       const value = binaries[0][i];
-      result.push(value === 1 ? variables[i] : `${variables[i]}'`);
+      result.push(value === 1 ? config.variables[i] : `${config.variables[i]}'`);
     }
   }
 
   return result.length === 0 ? "1" : result.join("");
 }
 
-function generateGroups(activeMinterms) {
+function powerSizes(max) {
+  const sizes = [];
+  let value = 1;
+
+  while (value <= max) {
+    sizes.push(value);
+    value *= 2;
+  }
+
+  return sizes;
+}
+
+function groupType(rect, config) {
+  const size = rect.rowSize * rect.colSize;
+
+  if (size === config.rowCount * config.colCount) return "all cells";
+  if (size === 1) return "single cell";
+  if (rect.rowSize === 1 && rect.colSize > 1) return "horizontal";
+  if (rect.rowSize > 1 && rect.colSize === 1) return "vertical";
+  return "block";
+}
+
+function isWrap(rect, config) {
+  const rowWrap = rect.rowStart + rect.rowSize > config.rowCount && rect.rowSize !== config.rowCount;
+  const colWrap = rect.colStart + rect.colSize > config.colCount && rect.colSize !== config.colCount;
+
+  return rowWrap || colWrap;
+}
+
+function generateGroups(activeMinterms, config) {
   const activeSet = new Set(activeMinterms);
   const groups = [];
   const seen = new Set();
 
-  function addGroup(values, type) {
-    const unique = [...new Set(values)].sort((a, b) => a - b);
+  const rowSizes = powerSizes(config.rowCount);
+  const colSizes = powerSizes(config.colCount);
+
+  function addGroup(rect) {
+    const minterms = [];
+
+    for (let r = 0; r < rect.rowSize; r++) {
+      for (let c = 0; c < rect.colSize; c++) {
+        const cell = getCell(config, rect.rowStart + r, rect.colStart + c);
+        minterms.push(cell.minterm);
+      }
+    }
+
+    const unique = [...new Set(minterms)].sort((a, b) => a - b);
 
     if (!unique.every((m) => activeSet.has(m))) return;
 
     const key = groupKey(unique);
     if (seen.has(key)) return;
 
-    seen.add(key);
-
-    groups.push({
+    const group = {
       minterms: unique,
-      term: termFromGroup(unique),
       size: unique.length,
-      type,
-    });
+      rect,
+      type: groupType(rect, config),
+      wrap: isWrap(rect, config),
+    };
+
+    group.term = termFromGroup(group, config);
+
+    seen.add(key);
+    groups.push(group);
   }
 
-  addGroup([0, 1, 2, 3, 4, 5, 6, 7], "8 cell");
-
-  for (let row = 0; row < 2; row++) {
-    addGroup([0, 1, 2, 3].map((col) => getCell(row, col).minterm), "4 cell row");
-  }
-
-  for (let col = 0; col < 4; col++) {
-    addGroup(
-      [
-        getCell(0, col).minterm,
-        getCell(0, col + 1).minterm,
-        getCell(1, col).minterm,
-        getCell(1, col + 1).minterm,
-      ],
-      "4 cell block"
-    );
-  }
-
-  for (let row = 0; row < 2; row++) {
-    for (let col = 0; col < 4; col++) {
-      addGroup(
-        [getCell(row, col).minterm, getCell(row, col + 1).minterm],
-        "2 cell horizontal"
-      );
+  for (const rowSize of rowSizes) {
+    for (const colSize of colSizes) {
+      for (let rowStart = 0; rowStart < config.rowCount; rowStart++) {
+        for (let colStart = 0; colStart < config.colCount; colStart++) {
+          addGroup({
+            rowStart,
+            colStart,
+            rowSize,
+            colSize,
+          });
+        }
+      }
     }
   }
 
-  for (let col = 0; col < 4; col++) {
-    addGroup([getCell(0, col).minterm, getCell(1, col).minterm], "2 cell vertical");
-  }
-
-  for (const minterm of activeMinterms) {
-    addGroup([minterm], "single cell");
-  }
-
   return groups.sort((a, b) => b.size - a.size);
+}
+
+function isSubgroup(group, other) {
+  if (other.size <= group.size) return false;
+
+  const otherSet = new Set(other.minterms);
+  return group.minterms.every((m) => otherSet.has(m));
 }
 
 function removeSubgroups(groups) {
   return groups.filter((group) => {
     return !groups.some((other) => {
       if (groupKey(group.minterms) === groupKey(other.minterms)) return false;
-      if (other.size <= group.size) return false;
-
-      const otherSet = new Set(other.minterms);
-      return group.minterms.every((m) => otherSet.has(m));
+      return isSubgroup(group, other);
     });
   });
 }
 
-function chooseGroups(activeMinterms) {
+function chooseGroups(activeMinterms, config) {
   if (activeMinterms.length === 0) {
     return {
       selectedGroups: [],
       expression: "0",
       covered: [],
       uncovered: [],
+      candidates: [],
     };
   }
 
-  const candidates = removeSubgroups(generateGroups(activeMinterms));
+  const candidates = removeSubgroups(generateGroups(activeMinterms, config));
   const selectedGroups = [];
   const covered = new Set();
 
@@ -136,11 +214,11 @@ function chooseGroups(activeMinterms) {
     const covering = candidates.filter((group) => group.minterms.includes(minterm));
 
     if (covering.length === 1) {
-      const only = covering[0];
+      const essential = covering[0];
 
-      if (!selectedGroups.some((g) => groupKey(g.minterms) === groupKey(only.minterms))) {
-        selectedGroups.push(only);
-        only.minterms.forEach((m) => covered.add(m));
+      if (!selectedGroups.some((g) => groupKey(g.minterms) === groupKey(essential.minterms))) {
+        selectedGroups.push(essential);
+        essential.minterms.forEach((m) => covered.add(m));
       }
     }
   }
@@ -150,12 +228,14 @@ function chooseGroups(activeMinterms) {
     let bestScore = -1;
 
     for (const group of candidates) {
-      if (selectedGroups.some((g) => groupKey(g.minterms) === groupKey(group.minterms))) {
-        continue;
-      }
+      const alreadySelected = selectedGroups.some(
+        (g) => groupKey(g.minterms) === groupKey(group.minterms)
+      );
+
+      if (alreadySelected) continue;
 
       const newCoverage = group.minterms.filter((m) => !covered.has(m)).length;
-      const score = newCoverage * 10 + group.size;
+      const score = newCoverage * 100 + group.size;
 
       if (score > bestScore) {
         bestScore = score;
@@ -170,13 +250,14 @@ function chooseGroups(activeMinterms) {
   }
 
   const uncovered = activeMinterms.filter((m) => !covered.has(m));
-  const expression = selectedGroups.map((group) => group.term).join(" + ");
+  const expression = selectedGroups.length === 0 ? "0" : selectedGroups.map((g) => g.term).join(" + ");
 
   return {
     selectedGroups,
     expression,
     covered: [...covered].sort((a, b) => a - b),
     uncovered,
+    candidates,
   };
 }
 
@@ -185,8 +266,8 @@ function validateCoverage(activeMinterms, selectedGroups) {
     return {
       isEmpty: true,
       isValid: false,
-      uncovered: [],
       covered: [],
+      uncovered: [],
     };
   }
 
@@ -201,220 +282,190 @@ function validateCoverage(activeMinterms, selectedGroups) {
   return {
     isEmpty: false,
     isValid: uncovered.length === 0,
-    uncovered,
     covered: [...covered].filter((m) => activeMinterms.includes(m)).sort((a, b) => a - b),
+    uncovered,
   };
 }
 
-function splitColumns(cols) {
-  const sorted = [...cols].sort((a, b) => a - b);
+function splitRange(start, size, count) {
+  if (size === count) return [[0, count - 1]];
 
-  if (sorted.length === 4) return [[0, 3]];
+  const end = start + size - 1;
 
-  if (sorted.includes(0) && sorted.includes(3)) {
-    const left = sorted.filter((c) => c === 0 || c === 1);
-    const right = sorted.filter((c) => c === 2 || c === 3);
-
-    const result = [];
-
-    if (right.length) result.push([Math.min(...right), Math.max(...right)]);
-    if (left.length) result.push([Math.min(...left), Math.max(...left)]);
-
-    return result;
+  if (end < count) {
+    return [[start, end]];
   }
 
-  return [[Math.min(...sorted), Math.max(...sorted)]];
+  return [
+    [start, count - 1],
+    [0, end % count],
+  ];
 }
 
-function getRectsForGroup(group) {
-  if (group.minterms.length === 8) {
-    return [{ rowStart: 0, rowEnd: 1, colStart: 0, colEnd: 3 }];
-  }
+function getVisualRects(group, config) {
+  const rowRanges = splitRange(group.rect.rowStart, group.rect.rowSize, config.rowCount);
+  const colRanges = splitRange(group.rect.colStart, group.rect.colSize, config.colCount);
 
-  const cells = group.minterms.map(getCellByMinterm);
-  const rows = [...new Set(cells.map((cell) => cell.row))];
-  const cols = [...new Set(cells.map((cell) => cell.col))];
+  const rects = [];
 
-  const rowStart = Math.min(...rows);
-  const rowEnd = Math.max(...rows);
-  const colRanges = splitColumns(cols);
+  rowRanges.forEach(([rowStart, rowEnd]) => {
+    colRanges.forEach(([colStart, colEnd]) => {
+      rects.push({
+        rowStart,
+        rowEnd,
+        colStart,
+        colEnd,
+      });
+    });
+  });
 
-  return colRanges.map(([colStart, colEnd]) => ({
-    rowStart,
-    rowEnd,
-    colStart,
-    colEnd,
-  }));
+  return rects;
 }
 
-function rectStyle(rect) {
+function rectStyle(rect, config) {
   return {
-    left: `${rect.colStart * 25}%`,
-    top: `${rect.rowStart * 50}%`,
-    width: `${(rect.colEnd - rect.colStart + 1) * 25}%`,
-    height: `${(rect.rowEnd - rect.rowStart + 1) * 50}%`,
+    left: `${(rect.colStart / config.colCount) * 100}%`,
+    top: `${(rect.rowStart / config.rowCount) * 100}%`,
+    width: `${((rect.colEnd - rect.colStart + 1) / config.colCount) * 100}%`,
+    height: `${((rect.rowEnd - rect.rowStart + 1) / config.rowCount) * 100}%`,
   };
 }
 
-function describeGroupReason(group) {
-  const cells = group.minterms.map(getCellByMinterm);
-  const rows = [...new Set(cells.map((cell) => cell.row))];
-  const cols = [...new Set(cells.map((cell) => cell.col))].sort((a, b) => a - b);
-
+function explainGroup(group, config) {
   const mintermText = group.minterms.join(", ");
-  const term = group.term;
+  const variableLost = config.variableCount - group.term.replace(/'/g, "").length;
 
-  if (group.size === 8) {
+  if (group.type === "all cells") {
     return {
-      question: `Kenapa semua cell bisa menjadi 1 group?`,
-      answer: `Karena seluruh 8 minterm bernilai 1. Pada K-Map 3 variabel, group 8 cell menghilangkan semua variabel A, B, dan C, sehingga hasilnya menjadi F = 1.`,
+      title: `Kenapa semua cell bisa digabung?`,
+      body: `Karena semua minterm bernilai 1. Jika seluruh K-Map aktif, semua variabel berubah, sehingga A, B, C, dan D yang relevan hilang. Hasil akhirnya menjadi F = 1.`,
     };
   }
 
-  if (group.size === 4 && rows.length === 1) {
+  if (group.type === "horizontal") {
     return {
-      question: `Kenapa group ${mintermText} dibuat horizontal?`,
-      answer: `Karena keempat minterm berada pada satu baris yang sama. Artinya nilai A tetap, sedangkan kombinasi B dan C berubah. Variabel yang berubah dihilangkan, sehingga tersisa ${term}.`,
+      title: `Kenapa group ${mintermText} dibuat horizontal?`,
+      body: group.wrap
+        ? `Karena cell tersebut bertetangga secara horizontal melalui wrap-around. Pada K-Map, sisi kiri dan kanan dianggap berdampingan karena urutan Gray Code. Group ini menghasilkan term ${group.term}.`
+        : `Karena minterm tersebut berada dalam satu baris dan berdampingan. Variabel kolom yang berubah dihilangkan, sehingga tersisa term ${group.term}.`,
     };
   }
 
-  if (group.size === 4 && rows.length === 2) {
-    const isWrap = cols.includes(0) && cols.includes(3);
-
+  if (group.type === "vertical") {
     return {
-      question: isWrap
-        ? `Kenapa group ${mintermText} boleh wrap-around?`
-        : `Kenapa group ${mintermText} dibuat sebagai kotak 2x2?`,
-      answer: isWrap
-        ? `Karena pada K-Map, kolom paling kiri dan paling kanan dianggap bertetangga akibat urutan Gray Code. Jadi group boleh melewati tepi map. Dari group ini, variabel yang berubah dihilangkan dan tersisa ${term}.`
-        : `Karena minterm tersebut membentuk kotak 2x2. Dalam K-Map, group 4 cell menghilangkan 2 variabel yang berubah, lalu menyisakan variabel tetap yaitu ${term}.`,
+      title: `Kenapa group ${mintermText} dibuat vertical, bukan horizontal?`,
+      body: group.wrap
+        ? `Karena cell tersebut bertetangga secara vertical melalui wrap-around. Pada K-Map 4 variabel, sisi atas dan bawah juga dapat dianggap adjacent jika urutan Gray Code cocok. Hasil group ini adalah ${group.term}.`
+        : `Karena minterm tersebut berada dalam satu kolom. Variabel pada baris berubah, sedangkan variabel kolom tetap. Jadi variabel yang berubah dihilangkan dan hasilnya ${group.term}.`,
     };
   }
 
-  if (group.size === 2 && rows.length === 1) {
-    const isWrap = cols.includes(0) && cols.includes(3);
-
+  if (group.type === "block") {
     return {
-      question: isWrap
-        ? `Kenapa group ${mintermText} boleh horizontal wrap-around?`
-        : `Kenapa group ${mintermText} dibuat horizontal?`,
-      answer: isWrap
-        ? `Karena kolom 00 dan 10 berada di sisi tepi K-Map dan tetap dianggap adjacent. Urutan K-Map memakai Gray Code, jadi cell ujung kiri dan ujung kanan tetap bertetangga. Hasil penyederhanaannya adalah ${term}.`
-        : `Karena kedua minterm berada berdampingan secara horizontal dan hanya berbeda 1 variabel. Variabel yang berubah dihilangkan, sehingga hasil group ini adalah ${term}.`,
-    };
-  }
-
-  if (group.size === 2 && rows.length === 2) {
-    return {
-      question: `Kenapa group ${mintermText} dibuat vertical?`,
-      answer: `Karena kedua minterm berada pada kolom yang sama dan hanya berbeda nilai A. Nilai B dan C tetap, sedangkan A berubah, jadi A dihilangkan. Hasilnya adalah ${term}.`,
-    };
-  }
-
-  if (group.size === 1) {
-    return {
-      question: `Kenapa minterm ${mintermText} menjadi single group?`,
-      answer: `Karena minterm ini tidak punya pasangan adjacent yang bisa membentuk group lebih besar. Maka dia tetap harus diambil sendiri agar semua minterm tetap ter-cover. Hasil term-nya adalah ${term}.`,
+      title: `Kenapa group ${mintermText} dibuat sebagai block?`,
+      body: group.wrap
+        ? `Karena bentuk block ini tetap valid walaupun melewati tepi map. K-Map memakai konsep adjacency wrap-around. Group block lebih besar lebih disukai karena menghilangkan lebih banyak variabel. Hasilnya adalah ${group.term}.`
+        : `Karena minterm tersebut membentuk area kotak. Group yang lebih besar lebih baik karena bisa menghilangkan lebih banyak variabel. Pada group ini sekitar ${variableLost} variabel berubah dan hasilnya ${group.term}.`,
     };
   }
 
   return {
-    question: `Kenapa group ${mintermText} dipilih?`,
-    answer: `Group ini dipilih karena membantu menutup minterm aktif dan menghasilkan term ${term}.`,
+    title: `Kenapa minterm ${mintermText} berdiri sendiri?`,
+    body: `Karena minterm ini tidak memiliki pasangan adjacent aktif yang dapat membentuk group lebih besar. Agar coverage tetap valid, minterm ini harus tetap dimasukkan sebagai single group. Hasilnya ${group.term}.`,
   };
 }
 
-function generateReasoning(activeMinterms, selectedGroups, validation, expression) {
-  const reasons = [];
+function generateReasoning(activeMinterms, result, validation, config) {
+  const items = [];
 
-  reasons.push({
-    question: "Apa tujuan utama grouping di K-Map?",
-    answer:
-      "Tujuan grouping adalah menggabungkan minterm yang bernilai 1 agar ekspresi boolean menjadi lebih sederhana. Group yang valid biasanya berukuran 1, 2, 4, atau 8 cell.",
+  items.push({
+    title: "Apa tujuan grouping di K-Map?",
+    body: "Tujuan grouping adalah menyatukan cell bernilai 1 agar ekspresi boolean menjadi lebih sederhana. Group yang valid berukuran 1, 2, 4, 8, atau 16 cell.",
   });
 
-  reasons.push({
-    question: "Kenapa group harus berisi 1, 2, 4, atau 8 cell?",
-    answer:
-      "Karena ukuran group harus berupa pangkat dua. Dengan begitu, perubahan variabel bisa dihilangkan secara teratur. Misalnya group 2 menghilangkan 1 variabel, group 4 menghilangkan 2 variabel, dan group 8 menghilangkan 3 variabel.",
+  items.push({
+    title: "Kenapa group besar lebih diprioritaskan?",
+    body: "Semakin besar group, semakin banyak variabel yang berubah dan bisa dihilangkan. Karena itu group 4 lebih baik daripada group 2, dan group 8 lebih baik daripada group 4 jika sama-sama valid.",
   });
 
-  selectedGroups.forEach((group) => {
-    reasons.push(describeGroupReason(group));
+  result.selectedGroups.forEach((group) => {
+    items.push(explainGroup(group, config));
   });
 
-  reasons.push({
-    question: "Bagaimana ekspresi SOP akhir dibentuk?",
-    answer:
-      selectedGroups.length === 0
-        ? "Karena tidak ada minterm aktif, maka fungsi bernilai 0."
-        : `Setiap group menghasilkan satu term. Semua term tersebut digabung menggunakan OR atau tanda '+'. Maka hasil akhirnya adalah F = ${expression}.`,
+  items.push({
+    title: "Bagaimana SOP akhir dibentuk?",
+    body:
+      result.selectedGroups.length === 0
+        ? "Belum ada minterm aktif, sehingga fungsi dianggap F = 0."
+        : `Setiap group menghasilkan satu term. Semua term digabung menggunakan OR atau tanda '+'. Maka hasil akhirnya adalah F = ${result.expression}.`,
   });
 
-  reasons.push({
-    question: "Apakah semua minterm sudah ter-cover?",
-    answer: validation.isValid
-      ? `Ya. Semua minterm aktif yaitu ${activeMinterms.join(", ") || "-"} sudah masuk ke dalam grouping yang dipilih.`
-      : `Belum. Minterm ${validation.uncovered.join(", ")} belum ter-cover, sehingga hasil simplifikasi belum valid.`,
+  items.push({
+    title: "Apakah semua minterm sudah ter-cover?",
+    body: validation.isEmpty
+      ? "Belum ada minterm aktif, jadi belum ada coverage yang perlu diperiksa."
+      : validation.isValid
+      ? `Ya. Semua minterm aktif yaitu ${activeMinterms.join(", ")} sudah masuk ke dalam group yang dipilih.`
+      : `Belum. Minterm ${validation.uncovered.join(", ")} belum masuk ke grouping, sehingga hasil belum valid.`,
   });
 
-  reasons.push({
-    question: "Kenapa validasi coverage penting?",
-    answer:
-      "Karena grouping yang terlihat bagus belum tentu menutup semua minterm asli. Validasi coverage memastikan tidak ada minterm bernilai 1 yang hilang dari hasil akhir.",
-  });
+  return items;
+}
 
-  return reasons;
+function sampleFor(variableCount) {
+  if (variableCount === 2) return [1, 2, 3];
+  if (variableCount === 3) return [2, 3, 4, 5, 6];
+  return [0, 2, 5, 7, 8, 10, 13, 15];
 }
 
 export default function App() {
+  const [variableCount, setVariableCount] = useState(3);
   const [active, setActive] = useState(new Set([2, 3, 4, 5, 6]));
   const [labelMode, setLabelMode] = useState("binary");
+  const [theme, setTheme] = useState("midnight");
+  const [appearance, setAppearance] = useState("dark");
+  const config = useMemo(() => makeConfig(variableCount), [variableCount]);
 
   const activeMinterms = useMemo(() => {
-    return [...active].sort((a, b) => a - b);
-  }, [active]);
+    return [...active].filter((m) => m <= config.maxMinterm).sort((a, b) => a - b);
+  }, [active, config.maxMinterm]);
 
   const result = useMemo(() => {
-    return chooseGroups(activeMinterms);
-  }, [activeMinterms]);
+    return chooseGroups(activeMinterms, config);
+  }, [activeMinterms, config]);
 
   const validation = useMemo(() => {
     return validateCoverage(activeMinterms, result.selectedGroups);
   }, [activeMinterms, result.selectedGroups]);
 
-const reasoning = useMemo(() => {
-  return generateReasoning(
-    activeMinterms,
-    result.selectedGroups,
-    validation,
-    result.expression
-  );
-}, [activeMinterms, result.selectedGroups, validation, result.expression]);
+  const reasoning = useMemo(() => {
+    return generateReasoning(activeMinterms, result, validation, config);
+  }, [activeMinterms, result, validation, config]);
+
+  const rowLabels =
+    labelMode === "binary"
+      ? config.rowCodes
+      : config.rowCodes.map((code) => variableLabel(config.rowVars, code));
 
   const colLabels =
     labelMode === "binary"
-      ? ["00", "01", "11", "10"]
-      : ["B'C'", "B'C", "BC", "BC'"];
+      ? config.colCodes
+      : config.colCodes.map((code) => variableLabel(config.colVars, code));
 
-  const rowLabels = labelMode === "binary" ? ["0", "1"] : ["A'", "A"];
+  function changeVariableCount(count) {
+    setVariableCount(count);
+    setActive(new Set(sampleFor(count)));
+  }
 
   function toggleCell(minterm) {
     setActive((prev) => {
       const next = new Set(prev);
 
-      if (next.has(minterm)) {
-        next.delete(minterm);
-      } else {
-        next.add(minterm);
-      }
+      if (next.has(minterm)) next.delete(minterm);
+      else next.add(minterm);
 
       return next;
     });
-  }
-
-  function loadBugCase() {
-    setActive(new Set([2, 3, 4, 5, 6]));
   }
 
   function clearAll() {
@@ -422,67 +473,128 @@ const reasoning = useMemo(() => {
   }
 
   function setAll() {
-    setActive(new Set([0, 1, 2, 3, 4, 5, 6, 7]));
+    const all = Array.from({ length: config.maxMinterm + 1 }, (_, i) => i);
+    setActive(new Set(all));
+  }
+
+  function loadSample() {
+    setActive(new Set(sampleFor(variableCount)));
   }
 
   return (
-    <div className="page">
+    <div className={`page theme-${theme} mode-${appearance}`}>
       <div className="container">
         <header className="hero">
-          <div>
+          <div className="hero-text">
             <p className="eyebrow">Boolean Algebra Tool</p>
-            <h1>K-Map Solver 3 Variabel</h1>
+            <h1>K-Map Solver</h1>
             <p className="subtitle">
-              Klik cell K-Map, lalu sistem akan membuat grouping, ekspresi SOP, garis grouping, dan validasi coverage otomatis.
+              Solver K-Map dinamis untuk 2, 3, dan 4 variabel dengan visual grouping,
+              SOP expression, coverage validation, dan reasoning buka-tutup.
             </p>
           </div>
 
           <div className="hero-card">
-            <span>F(A,B,C)</span>
+            <span>F({config.variables.join(",")})</span>
             <strong>{result.expression}</strong>
           </div>
         </header>
 
-        <div className="actions">
-          <button onClick={loadBugCase}>Load Σm(2,3,4,5,6)</button>
-          <button onClick={clearAll}>Clear</button>
-          <button onClick={setAll}>Set All</button>
-          <button onClick={() => setLabelMode(labelMode === "binary" ? "variable" : "binary")}>
-            Label: {labelMode === "binary" ? "00/01/11/10" : "A', A, B'C'"}
-          </button>
+        <div className="toolbar">
+          <div className="segmented">
+            {[2, 3, 4].map((count) => (
+              <button
+                key={count}
+                className={variableCount === count ? "selected" : ""}
+                onClick={() => changeVariableCount(count)}
+              >
+                {count} Variable
+              </button>
+            ))}
+          </div>
+
+          <div className="actions">
+            <button onClick={loadSample}>Load Sample</button>
+            <button onClick={clearAll}>Clear</button>
+            <button onClick={setAll}>Set All</button>
+
+            <button onClick={() => setLabelMode(labelMode === "binary" ? "variable" : "binary")}>
+              Label: {labelMode === "binary" ? "Binary" : "Variable"}
+            </button>
+
+            <button onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}>
+              Mode: {appearance === "dark" ? "Dark" : "Light"}
+            </button>
+
+            <select
+              className="theme-select"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+            >
+              <option value="midnight">Midnight</option>
+              <option value="coffee">Coffee</option>
+              <option value="forest">Forest</option>
+              <option value="ocean">Ocean</option>
+              <option value="rose">Rose</option>
+            </select>
+          </div>
         </div>
 
-        <main className="grid-layout">
+        <main className="main-grid">
           <section className="panel kmap-panel">
-            <div className="panel-title">
-              <h2>Karnaugh Map</h2>
-              <span className="badge">3 variables</span>
+            <div className="panel-title stack-title">
+              <div>
+                <h2>Karnaugh Map</h2>
+                <p>{config.variableCount} variable mode</p>
+              </div>
+              <span className="badge">{config.rowCount} × {config.colCount}</span>
             </div>
 
             <div className="kmap-shell">
-              <div className="kmap-labels">
-                <div className="corner">{labelMode === "binary" ? "A\\BC" : "A / BC"}</div>
+              <div
+                className="kmap-labels"
+                style={{ gridTemplateColumns: `72px repeat(${config.colCount}, 1fr)` }}
+              >
+                <div className="corner">
+                  {config.rowVars.join("")}\{config.colVars.join("")}
+                </div>
+
                 {colLabels.map((label) => (
-                  <div className="axis" key={label}>{label}</div>
+                  <div className="axis" key={label}>
+                    {label}
+                  </div>
                 ))}
               </div>
 
-              <div className="kmap-body">
-                <div className="row-labels">
+              <div
+                className="kmap-body"
+                style={{ gridTemplateColumns: "72px 1fr" }}
+              >
+                <div
+                  className="row-labels"
+                  style={{ gridTemplateRows: `repeat(${config.rowCount}, 104px)` }}
+                >
                   {rowLabels.map((label) => (
-                    <div className="axis row-axis" key={label}>{label}</div>
+                    <div className="axis row-axis" key={label}>
+                      {label}
+                    </div>
                   ))}
                 </div>
 
-                <div className="cell-area">
+                <div
+                  className="cell-area"
+                  style={{
+                    gridTemplateColumns: `repeat(${config.colCount}, 1fr)`,
+                    gridTemplateRows: `repeat(${config.rowCount}, 104px)`,
+                  }}
+                >
                   <div className="group-overlay">
                     {result.selectedGroups.map((group, groupIndex) =>
-                      getRectsForGroup(group).map((rect, rectIndex) => (
+                      getVisualRects(group, config).map((rect, rectIndex) => (
                         <div
                           key={`${groupKey(group.minterms)}-${rectIndex}`}
-                          className={`group-line group-color-${groupIndex % 5}`}
-                          style={rectStyle(rect)}
-                          title={`${group.term}: ${group.minterms.join(", ")}`}
+                          className={`group-line group-color-${groupIndex % 6}`}
+                          style={rectStyle(rect, config)}
                         >
                           <span>{group.term}</span>
                         </div>
@@ -490,7 +602,7 @@ const reasoning = useMemo(() => {
                     )}
                   </div>
 
-                  {kmapCells.map((cell) => (
+                  {config.cells.map((cell) => (
                     <button
                       key={cell.minterm}
                       className={active.has(cell.minterm) ? "cell active" : "cell"}
@@ -502,6 +614,7 @@ const reasoning = useMemo(() => {
                     >
                       <span className="cell-value">{active.has(cell.minterm) ? "1" : "0"}</span>
                       <span className="cell-label">{cell.label}</span>
+                      <small>{cell.bits}</small>
                     </button>
                   ))}
                 </div>
@@ -509,20 +622,24 @@ const reasoning = useMemo(() => {
             </div>
           </section>
 
-          <section className="panel">
-            <div className="panel-title">
-              <h2>Result</h2>
-          <span
-            className={
-              validation.isEmpty
-                ? "badge neutral"
-                : validation.isValid
-                ? "badge valid"
-                : "badge invalid"
-            }
-          >
-            {validation.isEmpty ? "Empty" : validation.isValid ? "Valid" : "Invalid"}
-          </span>
+          <section className="panel result-panel">
+            <div className="panel-title stack-title">
+              <div>
+                <h2>Result</h2>
+                <p>Hasil simplifikasi</p>
+              </div>
+
+              <span
+                className={
+                  validation.isEmpty
+                    ? "badge neutral"
+                    : validation.isValid
+                    ? "badge valid"
+                    : "badge invalid"
+                }
+              >
+                {validation.isEmpty ? "Empty" : validation.isValid ? "Valid" : "Invalid"}
+              </span>
             </div>
 
             <div className="result-box">
@@ -559,8 +676,11 @@ const reasoning = useMemo(() => {
         </main>
 
         <section className="panel">
-          <div className="panel-title">
-            <h2>Grouping</h2>
+          <div className="panel-title stack-title">
+            <div>
+              <h2>Grouping</h2>
+              <p>Garis warna di map menunjukkan area grouping.</p>
+            </div>
             <span className="badge">{result.selectedGroups.length} group</span>
           </div>
 
@@ -569,13 +689,16 @@ const reasoning = useMemo(() => {
           ) : (
             <div className="group-grid">
               {result.selectedGroups.map((group, index) => (
-                <div className={`group-card group-card-${index % 5}`} key={groupKey(group.minterms)}>
+                <div className={`group-card group-card-${index % 6}`} key={groupKey(group.minterms)}>
                   <div className="group-top">
                     <span>Group {index + 1}</span>
                     <b>{group.term}</b>
                   </div>
                   <p>Minterm: {group.minterms.join(", ")}</p>
-                  <small>{group.type}</small>
+                  <small>
+                    {group.type}
+                    {group.wrap ? " • wrap-around" : ""}
+                  </small>
                 </div>
               ))}
             </div>
@@ -583,41 +706,41 @@ const reasoning = useMemo(() => {
         </section>
 
         <section className="panel">
-          <div className="panel-title">
-            <h2>Coverage Validation</h2>
-            <section className="panel">
-  <div className="panel-title">
-    <h2>Reasoning</h2>
-    <span className="badge">Step-by-step</span>
-  </div>
-
-  <div className="reasoning-list">
-    {reasoning.map((item, index) => (
-      <div className="reasoning-card" key={index}>
-        <div className="reasoning-number">{index + 1}</div>
-
-        <div>
-          <h3>{item.question}</h3>
-          <p>{item.answer}</p>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
-            <span className="badge">Bug Prevention</span>
+          <div className="panel-title stack-title">
+            <div>
+              <h2>Coverage Validation</h2>
+              <p>Bug prevention agar tidak ada minterm yang hilang.</p>
+            </div>
+            <span className="badge">Check</span>
           </div>
 
-          <div className="explain">
-            <p>
-              Validasi ini mencegah bug seperti kasus <b>m6 tidak ter-cover</b>. Setelah ekspresi dibuat, sistem tetap mengecek apakah semua minterm asli masuk ke grouping yang dipilih.
-            </p>
-
-            <pre>
+          <pre>
 {`original  = { ${activeMinterms.join(", ") || "-"} }
 covered   = { ${validation.covered.join(", ") || "-"} }
 uncovered = original - covered
-result    = ${validation.isValid ? "VALID" : "INVALID"}`}
-            </pre>
+result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INVALID"}`}
+          </pre>
+        </section>
+
+        <section className="panel">
+          <div className="panel-title stack-title">
+            <div>
+              <h2>Reasoning</h2>
+              <p>Klik pertanyaan untuk membuka penjelasan.</p>
+            </div>
+            <span className="badge">Accordion</span>
+          </div>
+
+          <div className="reasoning-list">
+            {reasoning.map((item, index) => (
+              <details className="reasoning-card" key={index}>
+                <summary>
+                  <span>{index + 1}</span>
+                  <b>{item.title}</b>
+                </summary>
+                <p>{item.body}</p>
+              </details>
+            ))}
           </div>
         </section>
       </div>
