@@ -745,7 +745,6 @@ const outX = 1760;
 
   const svgWidth = 2020;
   const lastTermY = termTopY + (parsedTerms.length - 1) * termGap;
-  const railBottomY = lastTermY + 40;
   const svgHeight = Math.max(640, lastTermY + 180);
   const orY = termTopY + ((parsedTerms.length - 1) * termGap) / 2;
 
@@ -1184,39 +1183,135 @@ function getGateReasoning(gate, a, b, output) {
   return "";
 }
 
-function ElectricCircuitAnalogy({ gate, a, b, output }) {
+function ElectricFrame({
+  width = 840,
+  viewBox = "0 0 840 340",
+  electricZoom = 1,
+  children,
+}) {
+  return (
+    <div className="electric-svg-wrap">
+      <div
+        className="electric-zoom-canvas"
+        style={{
+          width: `${electricZoom * 100}%`,
+          minWidth: `${width * electricZoom}px`,
+        }}
+      >
+        <svg viewBox={viewBox} className="electric-svg">
+          {children}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function ElectricCircuitAnalogy({
+  gate,
+  a,
+  b,
+  output,
+  electricZoom,
+  setElectricZoom,
+}) {
   const isOn = Boolean(output);
   const aOn = Boolean(a);
   const bOn = Boolean(b);
 
+  const zoomControls = (
+    <div className="electric-toolbar">
+      <div className="zoom-controls">
+        <button
+          type="button"
+          onClick={() =>
+            setElectricZoom((prev) =>
+              Math.max(0.6, Number((prev - 0.1).toFixed(1)))
+            )
+          }
+        >
+          −
+        </button>
+
+        <span>{Math.round(electricZoom * 100)}%</span>
+
+        <button
+          type="button"
+          onClick={() =>
+            setElectricZoom((prev) =>
+              Math.min(1.8, Number((prev + 0.1).toFixed(1)))
+            )
+          }
+        >
+          +
+        </button>
+
+        <button type="button" onClick={() => setElectricZoom(1)}>
+          Reset
+        </button>
+      </div>
+    </div>
+  );
+
   if (gate === "AND") {
     return (
       <div className="electric-card">
+        {zoomControls}
+
         <div className="electric-info">
           <h3>AND = dua switch seri</h3>
-          <p>Lampu hanya menyala jika switch A dan switch B sama-sama tertutup.</p>
+          <p>
+            Lampu hanya menyala jika switch A dan switch B sama-sama tertutup.
+          </p>
         </div>
 
-        <svg viewBox="0 0 760 300" className="electric-svg">
-          <rect x="40" y="80" width="56" height="140" rx="18" className="battery-body" />
-          <text x="68" y="122" className="battery-mark" textAnchor="middle">+</text>
-          <text x="68" y="198" className="battery-mark" textAnchor="middle">−</text>
+        <ElectricFrame
+          width={760}
+          viewBox="0 0 760 320"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="80"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="122" className="battery-mark" textAnchor="middle">
+            +
+          </text>
+          <text x="68" y="198" className="battery-mark" textAnchor="middle">
+            −
+          </text>
 
-          <path d="M96 110 H170" className={aOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M96 110 H170"
+            className={aOn ? "electric-wire active" : "electric-wire"}
+          />
           <SwitchSymbol x={190} y={110} label="A" active={aOn} />
 
-          <path d="M230 110 H330" className={aOn && bOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M230 110 H330"
+            className={aOn && bOn ? "electric-wire active" : "electric-wire"}
+          />
           <SwitchSymbol x={350} y={110} label="B" active={bOn} />
 
-          <path d="M390 110 H560 V145" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M390 110 H560 V145"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
           <LampSymbol x={560} y={170} active={isOn} />
 
-          <path d="M560 195 V230 H68 V220" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M560 195 V230 H68 V220"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
 
-          <text x="190" y="260" className="electric-status">
-            A: {aOn ? "closed" : "open"} • B: {bOn ? "closed" : "open"} • Lamp: {isOn ? "ON" : "OFF"}
+          <text x="190" y="286" className="electric-status">
+            A: {aOn ? "closed" : "open"} • B:{" "}
+            {bOn ? "closed" : "open"} • Lamp: {isOn ? "ON" : "OFF"}
           </text>
-        </svg>
+        </ElectricFrame>
       </div>
     );
   }
@@ -1224,33 +1319,69 @@ function ElectricCircuitAnalogy({ gate, a, b, output }) {
   if (gate === "OR") {
     return (
       <div className="electric-card">
+        {zoomControls}
+
         <div className="electric-info">
           <h3>OR = dua switch paralel</h3>
           <p>Lampu menyala jika minimal salah satu switch tertutup.</p>
         </div>
 
-        <svg viewBox="0 0 760 330" className="electric-svg">
-          <rect x="40" y="100" width="56" height="140" rx="18" className="battery-body" />
-          <text x="68" y="142" className="battery-mark" textAnchor="middle">+</text>
-          <text x="68" y="218" className="battery-mark" textAnchor="middle">−</text>
+        <ElectricFrame
+          width={760}
+          viewBox="0 0 760 340"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="100"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="142" className="battery-mark" textAnchor="middle">
+            +
+          </text>
+          <text x="68" y="218" className="battery-mark" textAnchor="middle">
+            −
+          </text>
 
-          <path d="M96 130 H160 V90 H230" className={aOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M96 130 H160 V90 H230"
+            className={aOn ? "electric-wire active" : "electric-wire"}
+          />
           <SwitchSymbol x={250} y={90} label="A" active={aOn} />
-          <path d="M290 90 H430 V130" className={aOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M290 90 H430 V130"
+            className={aOn ? "electric-wire active" : "electric-wire"}
+          />
 
-          <path d="M160 130 V190 H230" className={bOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M160 130 V190 H230"
+            className={bOn ? "electric-wire active" : "electric-wire"}
+          />
           <SwitchSymbol x={250} y={190} label="B" active={bOn} />
-          <path d="M290 190 H430 V130" className={bOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M290 190 H430 V130"
+            className={bOn ? "electric-wire active" : "electric-wire"}
+          />
 
-          <path d="M430 130 H560 V155" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M430 130 H560 V155"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
           <LampSymbol x={560} y={180} active={isOn} />
 
-          <path d="M560 205 V250 H68 V240" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M560 205 V250 H68 V240"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
 
-          <text x="190" y="295" className="electric-status">
-            A: {aOn ? "closed" : "open"} • B: {bOn ? "closed" : "open"} • Lamp: {isOn ? "ON" : "OFF"}
+          <text x="190" y="310" className="electric-status">
+            A: {aOn ? "closed" : "open"} • B:{" "}
+            {bOn ? "closed" : "open"} • Lamp: {isOn ? "ON" : "OFF"}
           </text>
-        </svg>
+        </ElectricFrame>
       </div>
     );
   }
@@ -1258,201 +1389,412 @@ function ElectricCircuitAnalogy({ gate, a, b, output }) {
   if (gate === "NOT") {
     return (
       <div className="electric-card">
+        {zoomControls}
+
         <div className="electric-info">
           <h3>NOT = pembalik sederhana</h3>
-          <p>Jika input A aktif, output diputus. Jika A tidak aktif, output tersambung.</p>
+          <p>
+            Jika input A aktif, output diputus. Jika A tidak aktif, output
+            tersambung.
+          </p>
         </div>
 
-        <svg viewBox="0 0 760 300" className="electric-svg">
-          <rect x="40" y="80" width="56" height="140" rx="18" className="battery-body" />
-          <text x="68" y="122" className="battery-mark" textAnchor="middle">+</text>
-          <text x="68" y="198" className="battery-mark" textAnchor="middle">−</text>
+        <ElectricFrame
+          width={760}
+          viewBox="0 0 760 320"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="80"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="122" className="battery-mark" textAnchor="middle">
+            +
+          </text>
+          <text x="68" y="198" className="battery-mark" textAnchor="middle">
+            −
+          </text>
 
-          <path d="M96 110 H210" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M96 110 H210"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
           <SwitchSymbol x={240} y={110} label="A control" active={!aOn} />
-          <path d="M280 110 H560 V145" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M280 110 H560 V145"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
 
           <LampSymbol x={560} y={170} active={isOn} />
 
-          <path d="M560 195 V230 H68 V220" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M560 195 V230 H68 V220"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
 
-          <text x="180" y="260" className="electric-status">
-            A: {aOn ? "1 / control active" : "0 / control inactive"} • Lamp: {isOn ? "ON" : "OFF"}
+          <text x="180" y="286" className="electric-status">
+            A: {aOn ? "1 / control active" : "0 / control inactive"} • Lamp:{" "}
+            {isOn ? "ON" : "OFF"}
           </text>
-        </svg>
+        </ElectricFrame>
       </div>
     );
   }
 
-if (gate === "NAND") {
-  const andResult = aOn && bOn;
+  if (gate === "NAND") {
+    const andResult = aOn && bOn;
 
-  return (
-    <div className="electric-card">
-      <div className="electric-info">
-        <h3>NAND = AND lalu dibalik</h3>
-        <p>
-          Jalur seri A dan B membentuk AND. Setelah itu hasilnya masuk ke inverter,
-          sehingga output akhirnya dibalik.
-        </p>
-      </div>
+    return (
+      <div className="electric-card">
+        {zoomControls}
 
-      <svg viewBox="0 0 820 340" className="electric-svg">
-        <rect x="40" y="95" width="56" height="140" rx="18" className="battery-body" />
-        <text x="68" y="137" className="battery-mark" textAnchor="middle">+</text>
-        <text x="68" y="213" className="battery-mark" textAnchor="middle">−</text>
+        <div className="electric-info">
+          <h3>NAND = AND lalu dibalik</h3>
+          <p>
+            Jalur seri A dan B membentuk AND. Setelah itu hasilnya masuk ke
+            inverter, sehingga output akhirnya dibalik.
+          </p>
+        </div>
 
-        <path d="M96 125 H170" className={aOn ? "electric-wire active" : "electric-wire"} />
-        <SwitchSymbol x={190} y={125} label="A" active={aOn} />
-
-        <path d="M230 125 H330" className={andResult ? "electric-wire active" : "electric-wire"} />
-        <SwitchSymbol x={350} y={125} label="B" active={bOn} />
-
-        <path d="M390 125 H470" className={andResult ? "electric-wire active" : "electric-wire"} />
-
-        <g>
-          <rect x="470" y="95" width="92" height="60" rx="16" className="inverter-box" />
-          <text x="516" y="131" className="inverter-text" textAnchor="middle">NOT</text>
-        </g>
-
-        <path d="M562 125 H640 V160" className={isOn ? "electric-wire active" : "electric-wire"} />
-        <LampSymbol x={640} y={185} active={isOn} />
-
-        <path d="M640 210 V260 H68 V235" className={isOn ? "electric-wire active" : "electric-wire"} />
-
-        <text x="160" y="305" className="electric-status">
-          AND result: {andResult ? 1 : 0} • after NOT: Q = {output}
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-if (gate === "NOR") {
-  const orResult = aOn || bOn;
-
-  return (
-    <div className="electric-card">
-      <div className="electric-info">
-        <h3>NOR = OR lalu dibalik</h3>
-        <p>
-          Jalur paralel A dan B membentuk OR. Setelah itu hasilnya masuk ke inverter,
-          sehingga output akhirnya dibalik.
-        </p>
-      </div>
-
-      <svg viewBox="0 0 840 360" className="electric-svg">
-        <rect x="40" y="110" width="56" height="140" rx="18" className="battery-body" />
-        <text x="68" y="152" className="battery-mark" textAnchor="middle">+</text>
-        <text x="68" y="228" className="battery-mark" textAnchor="middle">−</text>
-
-        <path d="M96 140 H150 V100 H230" className={aOn ? "electric-wire active" : "electric-wire"} />
-        <SwitchSymbol x={250} y={100} label="A" active={aOn} />
-        <path d="M290 100 H430 V150" className={aOn ? "electric-wire active" : "electric-wire"} />
-
-        <path d="M150 140 V210 H230" className={bOn ? "electric-wire active" : "electric-wire"} />
-        <SwitchSymbol x={250} y={210} label="B" active={bOn} />
-        <path d="M290 210 H430 V150" className={bOn ? "electric-wire active" : "electric-wire"} />
-
-        <path d="M430 150 H500" className={orResult ? "electric-wire active" : "electric-wire"} />
-
-        <g>
-          <rect x="500" y="120" width="92" height="60" rx="16" className="inverter-box" />
-          <text x="546" y="156" className="inverter-text" textAnchor="middle">NOT</text>
-        </g>
-
-        <path d="M592 150 H660 V175" className={isOn ? "electric-wire active" : "electric-wire"} />
-        <LampSymbol x={660} y={200} active={isOn} />
-
-        <path d="M660 225 V270 H68 V250" className={isOn ? "electric-wire active" : "electric-wire"} />
-
-        <text x="160" y="325" className="electric-status">
-          OR result: {orResult ? 1 : 0} • after NOT: Q = {output}
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-if (gate === "XOR") {
-  return (
-    <div className="electric-card">
-      <div className="electric-info">
-        <h3>XOR = menyala jika input berbeda</h3>
-        <p>
-          Analogi sederhana: lampu menyala hanya saat salah satu input aktif,
-          bukan keduanya.
-        </p>
-      </div>
-
-      <svg viewBox="0 0 820 340" className="electric-svg">
-        <rect x="40" y="95" width="56" height="140" rx="18" className="battery-body" />
-        <text x="68" y="137" className="battery-mark" textAnchor="middle">+</text>
-        <text x="68" y="213" className="battery-mark" textAnchor="middle">−</text>
-
-        <path d="M96 125 H190" className={isOn ? "electric-wire active" : "electric-wire"} />
-
-        <g>
-          <rect x="190" y="82" width="250" height="86" rx="18" className={isOn ? "xor-rule-box active" : "xor-rule-box"} />
-          <text x="315" y="118" className="xor-rule-text" textAnchor="middle">A ≠ B</text>
-          <text x="315" y="146" className="xor-rule-small" textAnchor="middle">
-            {a} berbeda dari {b} = {isOn ? "true" : "false"}
+        <ElectricFrame
+          width={840}
+          viewBox="0 0 840 350"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="95"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="137" className="battery-mark" textAnchor="middle">
+            +
           </text>
-        </g>
-
-        <path d="M440 125 H620 V160" className={isOn ? "electric-wire active" : "electric-wire"} />
-        <LampSymbol x={620} y={185} active={isOn} />
-
-        <path d="M620 210 V260 H68 V235" className={isOn ? "electric-wire active" : "electric-wire"} />
-
-        <text x="160" y="305" className="electric-status">
-          XOR: A = {a}, B = {b} • Q = {output}
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-if (gate === "XNOR") {
-  return (
-    <div className="electric-card">
-      <div className="electric-info">
-        <h3>XNOR = menyala jika input sama</h3>
-        <p>
-          Analogi sederhana: lampu menyala saat kedua input memiliki nilai yang sama.
-        </p>
-      </div>
-
-      <svg viewBox="0 0 820 340" className="electric-svg">
-        <rect x="40" y="95" width="56" height="140" rx="18" className="battery-body" />
-        <text x="68" y="137" className="battery-mark" textAnchor="middle">+</text>
-        <text x="68" y="213" className="battery-mark" textAnchor="middle">−</text>
-
-        <path d="M96 125 H190" className={isOn ? "electric-wire active" : "electric-wire"} />
-
-        <g>
-          <rect x="190" y="82" width="250" height="86" rx="18" className={isOn ? "xor-rule-box active" : "xor-rule-box"} />
-          <text x="315" y="118" className="xor-rule-text" textAnchor="middle">A = B</text>
-          <text x="315" y="146" className="xor-rule-small" textAnchor="middle">
-            {a} sama dengan {b} = {isOn ? "true" : "false"}
+          <text x="68" y="213" className="battery-mark" textAnchor="middle">
+            −
           </text>
-        </g>
 
-        <path d="M440 125 H620 V160" className={isOn ? "electric-wire active" : "electric-wire"} />
-        <LampSymbol x={620} y={185} active={isOn} />
+          <path
+            d="M96 125 H170"
+            className={aOn ? "electric-wire active" : "electric-wire"}
+          />
+          <SwitchSymbol x={190} y={125} label="A" active={aOn} />
 
-        <path d="M620 210 V260 H68 V235" className={isOn ? "electric-wire active" : "electric-wire"} />
+          <path
+            d="M230 125 H330"
+            className={andResult ? "electric-wire active" : "electric-wire"}
+          />
+          <SwitchSymbol x={350} y={125} label="B" active={bOn} />
 
-        <text x="160" y="305" className="electric-status">
-          XNOR: A = {a}, B = {b} • Q = {output}
-        </text>
-      </svg>
-    </div>
-  );
-}
+          <path
+            d="M390 125 H470"
+            className={andResult ? "electric-wire active" : "electric-wire"}
+          />
+
+          <g>
+            <rect
+              x="470"
+              y="95"
+              width="92"
+              height="60"
+              rx="16"
+              className="inverter-box"
+            />
+            <text
+              x="516"
+              y="131"
+              className="inverter-text"
+              textAnchor="middle"
+            >
+              NOT
+            </text>
+          </g>
+
+          <path
+            d="M562 125 H640 V160"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+          <LampSymbol x={640} y={185} active={isOn} />
+
+          <path
+            d="M640 210 V260 H68 V235"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <text x="160" y="318" className="electric-status">
+            AND result: {andResult ? 1 : 0} • after NOT: Q = {output}
+          </text>
+        </ElectricFrame>
+      </div>
+    );
+  }
+
+  if (gate === "NOR") {
+    const orResult = aOn || bOn;
+
+    return (
+      <div className="electric-card">
+        {zoomControls}
+
+        <div className="electric-info">
+          <h3>NOR = OR lalu dibalik</h3>
+          <p>
+            Jalur paralel A dan B membentuk OR. Setelah itu hasilnya masuk ke
+            inverter, sehingga output akhirnya dibalik.
+          </p>
+        </div>
+
+        <ElectricFrame
+          width={860}
+          viewBox="0 0 860 370"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="110"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="152" className="battery-mark" textAnchor="middle">
+            +
+          </text>
+          <text x="68" y="228" className="battery-mark" textAnchor="middle">
+            −
+          </text>
+
+          <path
+            d="M96 140 H150 V100 H230"
+            className={aOn ? "electric-wire active" : "electric-wire"}
+          />
+          <SwitchSymbol x={250} y={100} label="A" active={aOn} />
+          <path
+            d="M290 100 H430 V150"
+            className={aOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <path
+            d="M150 140 V210 H230"
+            className={bOn ? "electric-wire active" : "electric-wire"}
+          />
+          <SwitchSymbol x={250} y={210} label="B" active={bOn} />
+          <path
+            d="M290 210 H430 V150"
+            className={bOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <path
+            d="M430 150 H500"
+            className={orResult ? "electric-wire active" : "electric-wire"}
+          />
+
+          <g>
+            <rect
+              x="500"
+              y="120"
+              width="92"
+              height="60"
+              rx="16"
+              className="inverter-box"
+            />
+            <text
+              x="546"
+              y="156"
+              className="inverter-text"
+              textAnchor="middle"
+            >
+              NOT
+            </text>
+          </g>
+
+          <path
+            d="M592 150 H660 V175"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+          <LampSymbol x={660} y={200} active={isOn} />
+
+          <path
+            d="M660 225 V270 H68 V250"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <text x="160" y="340" className="electric-status">
+            OR result: {orResult ? 1 : 0} • after NOT: Q = {output}
+          </text>
+        </ElectricFrame>
+      </div>
+    );
+  }
+
+  if (gate === "XOR") {
+    return (
+      <div className="electric-card">
+        {zoomControls}
+
+        <div className="electric-info">
+          <h3>XOR = menyala jika input berbeda</h3>
+          <p>
+            Analogi sederhana: lampu menyala hanya saat salah satu input aktif,
+            bukan keduanya.
+          </p>
+        </div>
+
+        <ElectricFrame
+          width={840}
+          viewBox="0 0 840 350"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="95"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="137" className="battery-mark" textAnchor="middle">
+            +
+          </text>
+          <text x="68" y="213" className="battery-mark" textAnchor="middle">
+            −
+          </text>
+
+          <path
+            d="M96 125 H190"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <g>
+            <rect
+              x="190"
+              y="82"
+              width="250"
+              height="86"
+              rx="18"
+              className={isOn ? "xor-rule-box active" : "xor-rule-box"}
+            />
+            <text x="315" y="118" className="xor-rule-text" textAnchor="middle">
+              A ≠ B
+            </text>
+            <text
+              x="315"
+              y="146"
+              className="xor-rule-small"
+              textAnchor="middle"
+            >
+              {a} berbeda dari {b} = {isOn ? "true" : "false"}
+            </text>
+          </g>
+
+          <path
+            d="M440 125 H620 V160"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+          <LampSymbol x={620} y={185} active={isOn} />
+
+          <path
+            d="M620 210 V260 H68 V235"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <text x="160" y="318" className="electric-status">
+            XOR: A = {a}, B = {b} • Q = {output}
+          </text>
+        </ElectricFrame>
+      </div>
+    );
+  }
+
+  if (gate === "XNOR") {
+    return (
+      <div className="electric-card">
+        {zoomControls}
+
+        <div className="electric-info">
+          <h3>XNOR = menyala jika input sama</h3>
+          <p>
+            Analogi sederhana: lampu menyala saat kedua input memiliki nilai
+            yang sama.
+          </p>
+        </div>
+
+        <ElectricFrame
+          width={840}
+          viewBox="0 0 840 350"
+          electricZoom={electricZoom}
+        >
+          <rect
+            x="40"
+            y="95"
+            width="56"
+            height="140"
+            rx="18"
+            className="battery-body"
+          />
+          <text x="68" y="137" className="battery-mark" textAnchor="middle">
+            +
+          </text>
+          <text x="68" y="213" className="battery-mark" textAnchor="middle">
+            −
+          </text>
+
+          <path
+            d="M96 125 H190"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <g>
+            <rect
+              x="190"
+              y="82"
+              width="250"
+              height="86"
+              rx="18"
+              className={isOn ? "xor-rule-box active" : "xor-rule-box"}
+            />
+            <text x="315" y="118" className="xor-rule-text" textAnchor="middle">
+              A = B
+            </text>
+            <text
+              x="315"
+              y="146"
+              className="xor-rule-small"
+              textAnchor="middle"
+            >
+              {a} sama dengan {b} = {isOn ? "true" : "false"}
+            </text>
+          </g>
+
+          <path
+            d="M440 125 H620 V160"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+          <LampSymbol x={620} y={185} active={isOn} />
+
+          <path
+            d="M620 210 V260 H68 V235"
+            className={isOn ? "electric-wire active" : "electric-wire"}
+          />
+
+          <text x="160" y="318" className="electric-status">
+            XNOR: A = {a}, B = {b} • Q = {output}
+          </text>
+        </ElectricFrame>
+      </div>
+    );
+  }
 
   return (
     <div className="electric-card">
+      {zoomControls}
+
       <div className="electric-info">
         <h3>{gate} analogy</h3>
         <p>
@@ -1480,9 +1822,15 @@ function SwitchSymbol({ x, y, label, active }) {
       <circle cx={x + 20} cy={y} r="6" className="switch-dot" />
 
       {active ? (
-        <path d={`M ${x - 20} ${y} L ${x + 20} ${y}`} className="switch-line active" />
+        <path
+          d={`M ${x - 20} ${y} L ${x + 20} ${y}`}
+          className="switch-line active"
+        />
       ) : (
-        <path d={`M ${x - 20} ${y} L ${x + 16} ${y - 22}`} className="switch-line" />
+        <path
+          d={`M ${x - 20} ${y} L ${x + 16} ${y - 22}`}
+          className="switch-line"
+        />
       )}
     </g>
   );
@@ -1515,11 +1863,12 @@ function LampSymbol({ x, y, active }) {
     </g>
   );
 }
-
 function InteractiveLogicGateLab() {
   const [gate, setGate] = useState("AND");
   const [a, setA] = useState(0);
   const [b, setB] = useState(0);
+  const [labZoom, setLabZoom] = useState(1);
+  const [electricZoom, setElectricZoom] = useState(1);
 
   const output = evalGate(gate, a, b) ? 1 : 0;
   const isSingleInput = gate === "NOT";
@@ -1548,6 +1897,30 @@ function InteractiveLogicGateLab() {
         ))}
       </div>
 
+      <div className="lab-toolbar">
+  <div className="zoom-controls">
+    <button
+      type="button"
+      onClick={() => setLabZoom((prev) => Math.max(0.6, Number((prev - 0.1).toFixed(1))))}
+    >
+      −
+    </button>
+
+    <span>{Math.round(labZoom * 100)}%</span>
+
+    <button
+      type="button"
+      onClick={() => setLabZoom((prev) => Math.min(1.6, Number((prev + 0.1).toFixed(1))))}
+    >
+      +
+    </button>
+
+    <button type="button" onClick={() => setLabZoom(1)}>
+      Reset
+    </button>
+  </div>
+</div>
+ 
       <div className="logic-lab-card">
         <div className="gate-controls">
           <div className="input-control">
@@ -1575,7 +1948,10 @@ function InteractiveLogicGateLab() {
           )}
         </div>
 
-        <div className="gate-svg-wrap">
+        <div
+          className="gate-svg-wrap"
+          style={{ "--lab-zoom": labZoom }}
+        >
           <svg viewBox="0 0 720 340" className="gate-svg">
             <text x="40" y="72" className="lab-label">Input</text>
 
@@ -1666,7 +2042,14 @@ function InteractiveLogicGateLab() {
           <b>{gate}</b>
         </summary>
 
-        <ElectricCircuitAnalogy gate={gate} a={a} b={b} output={output} />
+        <ElectricCircuitAnalogy
+          gate={gate}
+          a={a}
+          b={b}
+          output={output}
+          electricZoom={electricZoom}
+          setElectricZoom={setElectricZoom}
+        />
       </details>
 
       <details className="lab-accordion">
