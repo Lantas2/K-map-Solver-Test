@@ -2161,7 +2161,7 @@ export default function App() {
   }, [activeMinterms, result, validation, config]);
 
   const booleanSteps = useMemo(() => {
-  return generateBooleanSteps(activeMinterms, result, config);
+    return generateBooleanSteps(activeMinterms, result, config);
   }, [activeMinterms, result, config]);
 
   const rowLabels =
@@ -2204,422 +2204,423 @@ export default function App() {
   }
 
   function switchToolMode(mode) {
-  if (mode === toolMode) return;
+    if (mode === toolMode) return;
 
-  setToolMode(mode);
-  setViewKey((prev) => prev + 1);
-}
+    setToolMode(mode);
+    setViewKey((prev) => prev + 1);
+  }
+
+  const modeTitle = toolMode === "gate" ? "Logic Gate Lab" : "K-Map Solver";
+  const modeKicker = toolMode === "gate" ? "Digital Gate Bench" : "Boolean Cartography";
+  const modeCopy =
+    toolMode === "gate"
+      ? "Uji gerbang logika dari input, truth table, analogi listrik, sampai reasoning output."
+      : "Petakan minterm, grouping, SOP, validasi coverage, boolean steps, dan circuit dalam satu meja kerja.";
+  const modeCode = toolMode === "gate" ? "GATE://LAB" : `F(${config.variables.join(",")})`;
 
   return (
     <div className={`page theme-${theme} mode-${appearance}`}>
-      <div className="container">
-        <header className="hero">
-          <div className="hero-text">
-            <p className="eyebrow">
-              {toolMode === "gate" ? "Digital Logic Tool" : "Boolean Algebra Tool"}
-            </p>
+      <div className="signal-grid" aria-hidden="true" />
+      <div className="logic-sigil" aria-hidden="true">
+        <span>01</span>
+        <span>MAP</span>
+        <span>Σ</span>
+      </div>
 
-            <h1>
-              {toolMode === "gate" ? "Logic Gate Lab" : "K-Map Solver"}
-            </h1>
-
-            <p className="subtitle">
-              {toolMode === "gate"
-                ? "Simulasi gerbang logika interaktif untuk melihat cara kerja AND, OR, NOT, NAND, NOR, XOR, dan XNOR."
-                : "Solver K-Map dinamis untuk 2, 3, dan 4 variabel dengan visual grouping, SOP expression, coverage validation, dan reasoning."}
-            </p>
-          </div>
-
-          <div className="hero-card">
-            <span>
-              {toolMode === "gate" ? "Interactive Mode" : `F(${config.variables.join(",")})`}
-            </span>
-
-            <strong>
-              {toolMode === "gate" ? "Gate Simulator" : result.expression}
-            </strong>
-          </div>
-        </header>
-
-          <div className="tool-mode-switch">
-            <button
-              className={toolMode === "kmap" ? "tool-mode active" : "tool-mode"}
-              onClick={() => switchToolMode("kmap")}
-            >
-              K-Map Solver
-            </button>
-
-            <button
-              className={toolMode === "gate" ? "tool-mode active" : "tool-mode"}
-              onClick={() => switchToolMode("gate")}
-            >
-              Logic Gate Lab
-            </button>
-          </div>
-            <div key={viewKey} className="view-transition">
-              {toolMode === "gate" ? (
-                <InteractiveLogicGateLab />
-              ) : (
-                <>
-    <div className="kmap-control-panel">
-  <div className="control-group">
-    <div className="control-title">
-      <span>Variables</span>
-      <small>Pilih jumlah variabel untuk K-Map</small>
-    </div>
-
-    <div className="control-buttons variable-buttons">
-      {[2, 3, 4].map((count) => (
+      <nav className="command-orbit" aria-label="Primary command navigation">
         <button
-          key={count}
           type="button"
-          className={variableCount === count ? "selected" : ""}
-          onClick={() => changeVariableCount(count)}
+          className={toolMode === "kmap" ? "orbit-command active" : "orbit-command"}
+          onClick={() => switchToolMode("kmap")}
         >
-          {count} Variable
+          <span>01</span>
+          K-Map
         </button>
-      ))}
-    </div>
-  </div>
 
-  <div className="control-group">
-    <div className="control-title">
-      <span>Actions</span>
-      <small>Kelola isi cell K-Map</small>
-    </div>
+        <button
+          type="button"
+          className={toolMode === "gate" ? "orbit-command active" : "orbit-command"}
+          onClick={() => switchToolMode("gate")}
+        >
+          <span>02</span>
+          Gate Lab
+        </button>
 
-    <div className="control-buttons action-buttons">
-      <button type="button" onClick={loadSample}>
-        Load Sample
-      </button>
+        <button
+          type="button"
+          className="orbit-command utility"
+          onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}
+        >
+          <span>{appearance === "dark" ? "☾" : "☼"}</span>
+          {appearance === "dark" ? "Dark" : "Light"}
+        </button>
 
-      <button type="button" onClick={clearAll}>
-        Clear
-      </button>
+        <select
+          className="orbit-command orbit-select"
+          value={theme}
+          onChange={(event) => setTheme(event.target.value)}
+          aria-label="Choose theme"
+        >
+          <option value="coffee">Coffee</option>
+          <option value="forest">Forest</option>
+          <option value="ocean">Ocean</option>
+          <option value="rose">Rose</option>
+        </select>
+      </nav>
 
-      <button type="button" onClick={setAll}>
-        Set All
-      </button>
-    </div>
-  </div>
+      <main className="workspace-shell">
+        <section className="identity-slab">
+          <p className="slab-kicker">{modeKicker}</p>
+          <h1>{modeTitle}</h1>
+          <p>{modeCopy}</p>
 
-  <div className="control-group">
-    <div className="control-title">
-      <span>Display</span>
-      <small>Atur label, mode, dan tema tampilan</small>
-    </div>
-
-    <div className="control-buttons display-buttons">
-      <button
-        type="button"
-        onClick={() =>
-          setLabelMode(labelMode === "binary" ? "variable" : "binary")
-        }
-      >
-        Label: {labelMode === "binary" ? "Binary" : "Variable"}
-      </button>
-
-      <button
-        type="button"
-        onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}
-      >
-        Mode: {appearance === "dark" ? "Dark" : "Light"}
-      </button>
-
-      <select
-        className="theme-select"
-        value={theme}
-        onChange={(e) => setTheme(e.target.value)}
-      >
-        <option value="coffee">Coffee</option>
-        <option value="forest">Forest</option>
-        <option value="ocean">Ocean</option>
-        <option value="rose">Rose</option>
-      </select>
-    </div>
-  </div>
-</div>
-
-        <main className="main-grid">
-          <section className="panel kmap-panel">
-            <div className="panel-title stack-title">
-              <div>
-                <h2>Karnaugh Map</h2>
-                <p>{config.variableCount} variable mode</p>
-              </div>
-              <span className="badge">{config.rowCount} × {config.colCount}</span>
-            </div>
-
-            <div className="kmap-shell">
-              <div
-                className="kmap-labels"
-                style={{ gridTemplateColumns: `72px repeat(${config.colCount}, 1fr)` }}
-              >
-                <div className="corner">
-                  {config.rowVars.join("")}/{config.colVars.join("")}
-                </div>
-
-                {colLabels.map((label) => (
-                  <div className="axis" key={label}>
-                    {label}
-                  </div>
-                ))}
-              </div>
-
-              <div
-                className="kmap-body"
-                style={{ gridTemplateColumns: "72px 1fr" }}
-              >
-                <div
-                  className="row-labels"
-                  style={{ gridTemplateRows: `repeat(${config.rowCount}, 104px)` }}
-                >
-                  {rowLabels.map((label) => (
-                    <div className="axis row-axis" key={label}>
-                      {label}
-                    </div>
-                  ))}
-                </div>
-
-                <div
-                  className="cell-area"
-                  style={{
-                    gridTemplateColumns: `repeat(${config.colCount}, 1fr)`,
-                    gridTemplateRows: `repeat(${config.rowCount}, 104px)`,
-                  }}
-                >
-                  <div className="group-overlay">
-                    {result.selectedGroups.map((group, groupIndex) =>
-                      getVisualRects(group, config).map((rect, rectIndex) => (
-                        <div
-                          key={`${groupKey(group.minterms)}-${rectIndex}`}
-                          className={`group-line group-color-${groupIndex % 6}`}
-                          style={rectStyle(rect, config)}
-                        >
-                          <span>{group.term}</span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-
-                  {config.cells.map((cell) => (
-                    <button
-                      key={cell.minterm}
-                      className={active.has(cell.minterm) ? "cell active" : "cell"}
-                      onClick={() => toggleCell(cell.minterm)}
-                      style={{
-                        gridColumn: cell.col + 1,
-                        gridRow: cell.row + 1,
-                      }}
-                    >
-                      <span className="cell-value">{active.has(cell.minterm) ? "1" : "0"}</span>
-                      <span className="cell-label">{cell.label}</span>
-                      <small>{cell.minterm}</small>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="panel result-panel">
-            <div className="panel-title stack-title">
-              <div>
-                <h2>Result</h2>
-                <p>Hasil simplifikasi</p>
-              </div>
-
-              <span
-                className={
-                  validation.isEmpty
-                    ? "badge neutral"
-                    : validation.isValid
-                    ? "badge valid"
-                    : "badge invalid"
-                }
-              >
-                {validation.isEmpty ? "Empty" : validation.isValid ? "Valid" : "Invalid"}
-              </span>
-            </div>
-
-            <div className="result-box">
-              <p>Minterm</p>
-              <strong>Σm({activeMinterms.join(",") || "-"})</strong>
-            </div>
-
-            <div className="result-box">
-              <p>SOP Expression</p>
-              <strong>F = {result.expression}</strong>
-            </div>
-
-            <div className="result-box">
-              <p>Covered Minterms</p>
-              <strong>{validation.covered.join(", ") || "-"}</strong>
-            </div>
-
-            <div
-              className={
-                validation.isEmpty
-                  ? "status neutral"
-                  : validation.isValid
-                  ? "status success"
-                  : "status danger"
-              }
-            >
-              {validation.isEmpty
-                ? "Belum ada minterm aktif. Klik cell pada K-Map untuk mulai."
-                : validation.isValid
-                ? "Semua minterm aktif sudah ter-cover."
-                : `Minterm belum ter-cover: ${validation.uncovered.join(", ")}`}
-            </div>
-          </section>
-        </main>
-
-        <section className="panel">
-          <div className="panel-title stack-title">
-            <div>
-              <h2>Grouping</h2>
-              <p>Garis warna di map menunjukkan area grouping.</p>
-            </div>
-            <span className="badge">{result.selectedGroups.length} group</span>
+          <div className="formula-chip">
+            <span>{modeCode}</span>
+            <b>{toolMode === "gate" ? "interactive" : result.expression || "0"}</b>
           </div>
 
-          {result.selectedGroups.length === 0 ? (
-            <p className="empty">Belum ada grouping.</p>
+          <div className="mini-ledger">
+            <span>Active minterms</span>
+            <strong>{activeMinterms.length}</strong>
+          </div>
+        </section>
+
+        <section key={viewKey} className="content-field view-transition">
+          {toolMode === "gate" ? (
+            <InteractiveLogicGateLab />
           ) : (
-            <div className="group-grid">
-              {result.selectedGroups.map((group, index) => (
-                <div className={`group-card group-card-${index % 6}`} key={groupKey(group.minterms)}>
-                  <div className="group-top">
-                    <span>Group {index + 1}</span>
-                    <b>{group.term}</b>
+            <>
+              <section className="control-ribbon" aria-label="K-Map controls">
+                <div className="control-ribbon-block">
+                  <span className="ribbon-label">Variables</span>
+                  <div className="control-buttons variable-buttons">
+                    {[2, 3, 4].map((count) => (
+                      <button
+                        key={count}
+                        type="button"
+                        className={variableCount === count ? "selected" : ""}
+                        onClick={() => changeVariableCount(count)}
+                      >
+                        {count} Variable
+                      </button>
+                    ))}
                   </div>
-                  <p>Minterm: {group.minterms.join(", ")}</p>
-                  <small>
-                    {group.type}
-                    {group.wrap ? " • wrap-around" : ""}
-                  </small>
                 </div>
-              ))}
-            </div>
+
+                <div className="control-ribbon-block">
+                  <span className="ribbon-label">Map Actions</span>
+                  <div className="control-buttons action-buttons">
+                    <button type="button" onClick={loadSample}>
+                      Load Sample
+                    </button>
+                    <button type="button" onClick={clearAll}>
+                      Clear
+                    </button>
+                    <button type="button" onClick={setAll}>
+                      Set All
+                    </button>
+                  </div>
+                </div>
+
+                <div className="control-ribbon-block">
+                  <span className="ribbon-label">Display</span>
+                  <div className="control-buttons display-buttons">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setLabelMode(labelMode === "binary" ? "variable" : "binary")
+                      }
+                    >
+                      Label: {labelMode === "binary" ? "Binary" : "Variable"}
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <section className="solver-mosaic">
+                <section className="panel kmap-panel">
+                  <div className="panel-title stack-title">
+                    <div>
+                      <h2>Karnaugh Map</h2>
+                      <p>{config.variableCount} variable mode • Gray-code grid</p>
+                    </div>
+                    <span className="badge">{config.rowCount} × {config.colCount}</span>
+                  </div>
+
+                  <div className="kmap-shell">
+                    <div
+                      className="kmap-labels"
+                      style={{ gridTemplateColumns: `72px repeat(${config.colCount}, 1fr)` }}
+                    >
+                      <div className="corner">
+                        {config.rowVars.join("")}/{config.colVars.join("")}
+                      </div>
+
+                      {colLabels.map((label) => (
+                        <div className="axis" key={label}>
+                          {label}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div
+                      className="kmap-body"
+                      style={{ gridTemplateColumns: "72px 1fr" }}
+                    >
+                      <div
+                        className="row-labels"
+                        style={{ gridTemplateRows: `repeat(${config.rowCount}, 104px)` }}
+                      >
+                        {rowLabels.map((label) => (
+                          <div className="axis row-axis" key={label}>
+                            {label}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div
+                        className="cell-area"
+                        style={{
+                          gridTemplateColumns: `repeat(${config.colCount}, 1fr)`,
+                          gridTemplateRows: `repeat(${config.rowCount}, 104px)`,
+                        }}
+                      >
+                        <div className="group-overlay">
+                          {result.selectedGroups.map((group, groupIndex) =>
+                            getVisualRects(group, config).map((rect, rectIndex) => (
+                              <div
+                                key={`${groupKey(group.minterms)}-${rectIndex}`}
+                                className={`group-line group-color-${groupIndex % 6}`}
+                                style={rectStyle(rect, config)}
+                              >
+                                <span>{group.term}</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
+
+                        {config.cells.map((cell) => (
+                          <button
+                            key={cell.minterm}
+                            className={active.has(cell.minterm) ? "cell active" : "cell"}
+                            onClick={() => toggleCell(cell.minterm)}
+                            style={{
+                              gridColumn: cell.col + 1,
+                              gridRow: cell.row + 1,
+                            }}
+                          >
+                            <span className="cell-value">{active.has(cell.minterm) ? "1" : "0"}</span>
+                            <span className="cell-label">{cell.label}</span>
+                            <small>{cell.minterm}</small>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section className="panel result-panel">
+                  <div className="panel-title stack-title">
+                    <div>
+                      <h2>Result</h2>
+                      <p>Hasil simplifikasi dan validasi coverage</p>
+                    </div>
+
+                    <span
+                      className={
+                        validation.isEmpty
+                          ? "badge neutral"
+                          : validation.isValid
+                          ? "badge valid"
+                          : "badge invalid"
+                      }
+                    >
+                      {validation.isEmpty ? "Empty" : validation.isValid ? "Valid" : "Invalid"}
+                    </span>
+                  </div>
+
+                  <div className="result-box">
+                    <p>Minterm</p>
+                    <strong>Σm({activeMinterms.join(",") || "-"})</strong>
+                  </div>
+
+                  <div className="result-box feature-result">
+                    <p>SOP Expression</p>
+                    <strong>F = {result.expression}</strong>
+                  </div>
+
+                  <div className="result-box">
+                    <p>Covered Minterms</p>
+                    <strong>{validation.covered.join(", ") || "-"}</strong>
+                  </div>
+
+                  <div
+                    className={
+                      validation.isEmpty
+                        ? "status neutral"
+                        : validation.isValid
+                        ? "status success"
+                        : "status danger"
+                    }
+                  >
+                    {validation.isEmpty
+                      ? "Belum ada minterm aktif. Klik cell pada K-Map untuk mulai."
+                      : validation.isValid
+                      ? "Semua minterm aktif sudah ter-cover."
+                      : `Minterm belum ter-cover: ${validation.uncovered.join(", ")}`}
+                  </div>
+                </section>
+              </section>
+
+              <section className="insight-stack">
+                <section className="panel group-panel">
+                  <div className="panel-title stack-title">
+                    <div>
+                      <h2>Grouping</h2>
+                      <p>Area grouping divisualkan sebagai overlay berwarna pada map.</p>
+                    </div>
+                    <span className="badge">{result.selectedGroups.length} group</span>
+                  </div>
+
+                  {result.selectedGroups.length === 0 ? (
+                    <p className="empty">Belum ada grouping.</p>
+                  ) : (
+                    <div className="group-grid">
+                      {result.selectedGroups.map((group, index) => (
+                        <div className={`group-card group-card-${index % 6}`} key={groupKey(group.minterms)}>
+                          <div className="group-top">
+                            <span>Group {index + 1}</span>
+                            <b>{group.term}</b>
+                          </div>
+                          <p>Minterm: {group.minterms.join(", ")}</p>
+                          <small>
+                            {group.type}
+                            {group.wrap ? " • wrap-around" : ""}
+                          </small>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+
+                <section className="panel boolean-panel">
+                  <div className="panel-title stack-title">
+                    <div>
+                      <h2>Boolean Simplification</h2>
+                      <p>Penyelesaian manual berbasis minterm dan grouping K-Map.</p>
+                    </div>
+                    <span className="badge">Step-by-step</span>
+                  </div>
+
+                  <div className="boolean-step-list">
+                    {booleanSteps.map((step, index) => (
+                      <details className="boolean-step-card" key={index} open={index === 0}>
+                        <summary>
+                          <span>{index + 1}</span>
+                          <b>{step.title}</b>
+                        </summary>
+
+                        <div className="boolean-step-content">
+                          <code>{step.expression}</code>
+                          <p>{step.reason}</p>
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                </section>
+              </section>
+
+              <section className="panel circuit-panel">
+                <div className="panel-title stack-title">
+                  <div>
+                    <h2>Logic Circuit</h2>
+                    <p>Visualisasi circuit dengan bentuk gerbang logika dan line lurus.</p>
+                  </div>
+                  <span className="badge">{circuitMode === "original" ? "Original SOP" : "Simplified"}</span>
+                </div>
+
+                <div className="circuit-toolbar">
+                  <div className="circuit-mode-switch">
+                    <button
+                      className={circuitMode === "original" ? "circuit-tab active" : "circuit-tab"}
+                      onClick={() => setCircuitMode("original")}
+                    >
+                      Original SOP
+                    </button>
+
+                    <button
+                      className={circuitMode === "simplified" ? "circuit-tab active" : "circuit-tab"}
+                      onClick={() => setCircuitMode("simplified")}
+                    >
+                      Simplified
+                    </button>
+                  </div>
+
+                  <div className="zoom-controls">
+                    <button onClick={() => setCircuitZoom((z) => Math.max(0.55, Number((z - 0.1).toFixed(2))))}>
+                      −
+                    </button>
+                    <span>{Math.round(circuitZoom * 100)}%</span>
+                    <button onClick={() => setCircuitZoom((z) => Math.min(1.6, Number((z + 0.1).toFixed(2))))}>
+                      +
+                    </button>
+                    <button onClick={() => setCircuitZoom(1)}>Reset</button>
+                  </div>
+                </div>
+
+                <LogicCircuit
+                  activeMinterms={activeMinterms}
+                  result={result}
+                  config={config}
+                  mode={circuitMode}
+                  zoom={circuitZoom}
+                />
+              </section>
+
+              <section className="validation-reasoning-grid">
+                <section className="panel validation-panel">
+                  <div className="panel-title stack-title">
+                    <div>
+                      <h2>Coverage Validation</h2>
+                      <p>Bug prevention agar tidak ada minterm yang hilang.</p>
+                    </div>
+                    <span className="badge">Check</span>
+                  </div>
+
+                  <pre>
+{`original  = { ${activeMinterms.join(", ") || "-"} }
+covered   = { ${validation.covered.join(", ") || "-"} }
+uncovered = original - covered
+result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INVALID"}`}
+                  </pre>
+                </section>
+
+                <section className="panel reasoning-panel">
+                  <div className="panel-title stack-title">
+                    <div>
+                      <h2>Reasoning</h2>
+                      <p>Klik pertanyaan untuk membuka penjelasan.</p>
+                    </div>
+                    <span className="badge">Accordion</span>
+                  </div>
+
+                  <div className="reasoning-list">
+                    {reasoning.map((item, index) => (
+                      <details className="reasoning-card" key={index}>
+                        <summary>
+                          <span>{index + 1}</span>
+                          <b>{item.title}</b>
+                        </summary>
+                        <p>{item.body}</p>
+                      </details>
+                    ))}
+                  </div>
+                </section>
+              </section>
+            </>
           )}
         </section>
-
-        <section className="panel">
-          <div className="panel-title stack-title">
-            <div>
-              <h2>Boolean Simplification</h2>
-              <p>Penyelesaian manual berbasis minterm dan grouping K-Map.</p>
-            </div>
-            <span className="badge">Step-by-step</span>
-          </div>
-
-          <div className="boolean-step-list">
-            {booleanSteps.map((step, index) => (
-              <details className="boolean-step-card" key={index} open={index === 0}>
-                <summary>
-                  <span>{index + 1}</span>
-                  <b>{step.title}</b>
-                </summary>
-
-                <div className="boolean-step-content">
-                  <code>{step.expression}</code>
-                  <p>{step.reason}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
-
-    <section className="panel">
-      <div className="panel-title stack-title">
-        <div>
-          <h2>Logic Circuit</h2>
-          <p>Visualisasi circuit dengan bentuk gerbang logika asli dan line lurus.</p>
-        </div>
-        <span className="badge">{circuitMode === "original" ? "Original SOP" : "Simplified"}</span>
-      </div>
-
-      <div className="circuit-toolbar">
-        <div className="circuit-mode-switch">
-          <button
-            className={circuitMode === "original" ? "circuit-tab active" : "circuit-tab"}
-            onClick={() => setCircuitMode("original")}
-          >
-            Original SOP
-          </button>
-
-          <button
-            className={circuitMode === "simplified" ? "circuit-tab active" : "circuit-tab"}
-            onClick={() => setCircuitMode("simplified")}
-          >
-            Simplified
-          </button>
-        </div>
-
-        <div className="zoom-controls">
-          <button onClick={() => setCircuitZoom((z) => Math.max(0.55, Number((z - 0.1).toFixed(2))))}>
-            −
-          </button>
-          <span>{Math.round(circuitZoom * 100)}%</span>
-          <button onClick={() => setCircuitZoom((z) => Math.min(1.6, Number((z + 0.1).toFixed(2))))}>
-            +
-          </button>
-          <button onClick={() => setCircuitZoom(1)}>Reset</button>
-        </div>
-      </div>
-
-      <LogicCircuit
-        activeMinterms={activeMinterms}
-        result={result}
-        config={config}
-        mode={circuitMode}
-        zoom={circuitZoom}
-      />
-    </section>
-
-        <section className="panel">
-          <div className="panel-title stack-title">
-            <div>
-              <h2>Coverage Validation</h2>
-              <p>Bug prevention agar tidak ada minterm yang hilang.</p>
-            </div>
-            <span className="badge">Check</span>
-          </div>
-
-          <pre>
-        {`original  = { ${activeMinterms.join(", ") || "-"} }
-        covered   = { ${validation.covered.join(", ") || "-"} }
-        uncovered = original - covered
-        result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INVALID"}`}
-          </pre>
-        </section>
-
-        <section className="panel">
-          <div className="panel-title stack-title">
-            <div>
-              <h2>Reasoning</h2>
-              <p>Klik pertanyaan untuk membuka penjelasan.</p>
-            </div>
-            <span className="badge">Accordion</span>
-          </div>
-
-          <div className="reasoning-list">
-            {reasoning.map((item, index) => (
-              <details className="reasoning-card" key={index}>
-                <summary>
-                  <span>{index + 1}</span>
-                  <b>{item.title}</b>
-                </summary>
-                <p>{item.body}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-      </>
-    )}
-</div>
-      </div>
+      </main>
     </div>
   );
 }
