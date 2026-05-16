@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./index.css";
 
 const ALL_VARIABLES = ["A", "B", "C", "D"];
@@ -40,7 +40,7 @@ function playMechanicalClick(type = "soft") {
 
     osc.start(now);
     osc.stop(now + 0.06);
-  } catch (error) {
+  } catch {
     // Browser tidak support audio context, abaikan saja.
   }
 }
@@ -81,7 +81,7 @@ function playLampOnSound() {
     osc2.start(now);
     osc1.stop(now + 0.22);
     osc2.stop(now + 0.22);
-  } catch (error) {
+  } catch {
     // abaikan jika browser tidak support
   }
 }
@@ -1299,26 +1299,33 @@ function ElectricCircuitAnalogy({
   setA,
   setB,
   soundEnabled,
+  lampActionTick,
+  requestLampSound,
 }) {
   const isOn = Boolean(output);
   const aOn = Boolean(a);
   const bOn = Boolean(b);
-  const prevLampOnRef = useRef(false);
 
   useEffect(() => {
-    if (isOn && !prevLampOnRef.current && soundEnabled) {
-      playLampOnSound();
-    }
+    if (!soundEnabled) return;
+    if (!isOn) return;
+    if (!lampActionTick) return;
 
-    prevLampOnRef.current = isOn;
-  }, [isOn, soundEnabled]);
+    playLampOnSound();
+  }, [lampActionTick, isOn, soundEnabled]);
 
   function toggleAFromElectric() {
-    if (typeof setA === "function") setA((value) => (value ? 0 : 1));
+    if (typeof setA === "function") {
+      setA((value) => (value ? 0 : 1));
+      requestLampSound?.();
+    }
   }
 
   function toggleBFromElectric() {
-    if (typeof setB === "function") setB((value) => (value ? 0 : 1));
+    if (typeof setB === "function") {
+      setB((value) => (value ? 0 : 1));
+      requestLampSound?.();
+    }
   }
   const zoomControls = (
     <div className="electric-toolbar">
@@ -1964,24 +1971,28 @@ function SwitchSymbol({ x, y, label, active }) {
 }
 
 function ElectricSwitchTap({ x, y, label, onToggle }) {
-  function handleKeyDown(event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      onToggle?.();
-    }
-  }
-
   return (
     <g
-      className="electric-switch-hit"
+      className="electric-switch-tap"
       role="button"
       tabIndex="0"
       aria-label={`Toggle switch ${label}`}
       onClick={onToggle}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onToggle();
+        }
+      }}
     >
-      <title>Tap switch {label}</title>
-      <rect x={x - 54} y={y - 50} width="108" height="92" rx="18" />
+      <rect
+        x={x - 46}
+        y={y - 54}
+        width="92"
+        height="104"
+        rx="18"
+        className="electric-switch-hitbox"
+      />
     </g>
   );
 }
@@ -2030,6 +2041,28 @@ function InteractiveLogicGateLab({
 
   const output = evalGate(gate, a, b) ? 1 : 0;
   const isSingleInput = gate === "NOT";
+  const [lampActionTick, setLampActionTick] = useState(0);
+
+  function requestLampSound() {
+    setTimeout(() => {
+      setLampActionTick((prev) => prev + 1);
+    }, 0);
+  }
+
+  function changeGate(nextGate) {
+    setGate(nextGate);
+    requestLampSound();
+  }
+
+  function toggleAFromLab() {
+    setA((value) => (value ? 0 : 1));
+    requestLampSound();
+  }
+
+  function toggleBFromLab() {
+    setB((value) => (value ? 0 : 1));
+    requestLampSound();
+  }
 
   const gates = ["AND", "OR", "NOT", "NAND", "NOR", "XOR", "XNOR"];
 
@@ -2048,7 +2081,7 @@ function InteractiveLogicGateLab({
           <button
             key={item}
             className={gate === item ? "gate-pill active" : "gate-pill"}
-            onClick={() => setGate(item)}
+            onClick={() => changeGate(item)}
             type="button"
           >
             {item}
@@ -2095,7 +2128,7 @@ function InteractiveLogicGateLab({
             <button
               type="button"
               className={a ? "toggle active" : "toggle"}
-              onClick={() => setA(a ? 0 : 1)}
+              onClick={toggleAFromLab}
             >
               <i />
             </button>
@@ -2108,7 +2141,7 @@ function InteractiveLogicGateLab({
               <button
                 type="button"
                 className={b ? "toggle active" : "toggle"}
-                onClick={() => setB(b ? 0 : 1)}
+                onClick={toggleBFromLab}
               >
                 <i />
               </button>
@@ -2274,6 +2307,8 @@ function InteractiveLogicGateLab({
           setA={setA}
           setB={setB}
           soundEnabled={soundEnabled}
+          lampActionTick={lampActionTick}
+          requestLampSound={requestLampSound}
         />
       </details>
 
@@ -2308,7 +2343,6 @@ export default function App() {
   const [electricZoom, setElectricZoom] = useState(1);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const config = useMemo(() => makeConfig(variableCount), [variableCount]);
-
   const activeMinterms = useMemo(() => {
     return [...active].filter((m) => m <= config.maxMinterm).sort((a, b) => a - b);
   }, [active, config.maxMinterm]);

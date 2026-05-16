@@ -2539,131 +2539,139 @@ button:active,
     width: 920px;
   }
 }
+
 /* ================================================= */
-/* ELECTRIC ANALOGY INTERACTION PATCH */
+/* ELECTRIC TAP HITBOX FIX */
 /* ================================================= */
 
-.electric-switch-hit {
+.electric-switch-tap {
   cursor: pointer;
+}
+
+.electric-switch-hitbox {
+  fill: transparent !important;
+  stroke: transparent !important;
+  opacity: 0 !important;
   pointer-events: all;
-  outline: none;
 }
 
-.electric-switch-hit rect {
-  fill: transparent;
-  stroke: transparent;
-  transition: stroke 160ms ease, fill 160ms ease;
-}
-
+/* Optional hover hanya di desktop, biar user tahu area bisa diklik */
 @media (hover: hover) and (pointer: fine) {
-  .electric-switch-hit:hover rect {
-    fill: color-mix(in srgb, var(--color-secondary) 10%, transparent);
-    stroke: color-mix(in srgb, var(--color-secondary) 55%, transparent);
-    stroke-width: 2;
-    stroke-dasharray: 5 5;
+  .electric-switch-tap:hover .electric-switch-hitbox {
+    opacity: 1 !important;
+    fill: rgba(24, 216, 210, 0.08) !important;
+    stroke: rgba(24, 216, 210, 0.45) !important;
+    stroke-width: 2px !important;
   }
 }
 
-.electric-switch-hit:focus-visible rect {
-  fill: color-mix(in srgb, var(--color-secondary) 14%, transparent);
-  stroke: var(--color-secondary);
-  stroke-width: 2;
-  stroke-dasharray: 5 5;
-}
-
-.electric-rule-toggle {
-  cursor: pointer;
-  pointer-events: all;
-}
-
-.electric-rule-toggle rect {
-  fill: color-mix(in srgb, var(--color-secondary) 16%, var(--color-line));
-  stroke: color-mix(in srgb, var(--color-secondary) 70%, transparent);
-  stroke-width: 2;
-}
-
-.electric-rule-toggle text {
-  fill: var(--color-paper) !important;
-  font-size: 12px;
-  font-weight: 900;
-  pointer-events: none;
-}
-
-.mode-light .electric-rule-toggle rect {
-  fill: color-mix(in srgb, var(--color-secondary) 18%, #fff7df);
-  stroke: color-mix(in srgb, var(--color-secondary) 70%, #15120d);
-}
-
-.mode-light .electric-rule-toggle text {
-  fill: var(--color-ink) !important;
-}
-
-/* Preserve gate-lab state visually while switching theme; avoid remount-like flash */
-.logic-lab-panel,
-.logic-lab-card,
-.electric-card,
-.truth-table-box,
-.gate-svg-wrap,
-.electric-svg-wrap {
-  transition:
-    background 220ms var(--ease-mech, ease),
-    color 220ms var(--ease-mech, ease),
-    border-color 220ms var(--ease-mech, ease),
-    box-shadow 220ms var(--ease-mech, ease);
-}
-
-/* ================================================= */
-/* ELECTRIC SWITCH LABEL VISIBILITY FIX */
-/* ================================================= */
-
-/* Label A/B pada electric circuit */
-.electric-svg .switch-label,
-.electric-canvas-svg .electric-switch-label,
-.electric-svg text.switch-label,
-.electric-canvas-svg text.electric-switch-label {
-  fill: #f8fafc !important;
-  color: #f8fafc !important;
+/* Label A/B pada electric circuit harus selalu kelihatan */
+.electric-switch-label,
+.switch-label,
+.electric-switch-tap-label {
+  fill: var(--electric-text, #f8fafc) !important;
   font-family: "Space Grotesk", Arial, sans-serif !important;
   font-size: 20px !important;
   font-weight: 900 !important;
   paint-order: stroke !important;
-  stroke: rgba(0, 0, 0, 0.75) !important;
+  stroke: rgba(0, 0, 0, 0.78) !important;
   stroke-width: 4px !important;
   stroke-linejoin: round !important;
-}
-
-/* Mode dark: kasih outline gelap dan isi terang */
-.mode-dark .electric-svg .switch-label,
-.mode-dark .electric-canvas-svg .electric-switch-label,
-.mode-dark .electric-svg text.switch-label,
-.mode-dark .electric-canvas-svg text.electric-switch-label {
-  fill: #f8fafc !important;
-  stroke: #050807 !important;
-  stroke-width: 4px !important;
-}
-
-/* Mode light: teks gelap, outline terang */
-.mode-light .electric-svg .switch-label,
-.mode-light .electric-canvas-svg .electric-switch-label,
-.mode-light .electric-svg text.switch-label,
-.mode-light .electric-canvas-svg text.electric-switch-label {
-  fill: #101820 !important;
-  stroke: rgba(255, 247, 223, 0.9) !important;
-  stroke-width: 4px !important;
-}
-
-/* Biar label dekat switch tetap muncul di atas garis */
-.electric-svg .switch-label,
-.electric-canvas-svg .electric-switch-label {
   pointer-events: none;
 }
 
-.mode-dark .electric-svg .switch-label,
-.mode-dark .electric-canvas-svg .electric-switch-label,
-.mode-dark .electric-svg text.switch-label,
-.mode-dark .electric-canvas-svg text.electric-switch-label {
-  fill: #7dd3fc !important;
+.mode-light .electric-switch-label,
+.mode-light .switch-label,
+.mode-light .electric-switch-tap-label {
+  fill: #101820 !important;
+  stroke: rgba(255, 247, 223, 0.95) !important;
+}
+
+.mode-dark .electric-switch-label,
+.mode-dark .switch-label,
+.mode-dark .electric-switch-tap-label {
+  fill: #f8fafc !important;
   stroke: #020617 !important;
-  stroke-width: 4px !important;
-  filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.45)) !important;
+}
+
+/* ================================================= */
+/* OCEAN LIGHT CONTRAST FIX */
+/* ================================================= */
+
+.mode-light.theme-ocean {
+  --color-void: #e7f7fb;
+  --color-ink: #06222e;
+  --color-paper: #082936;
+  --color-paper-dim: #315a68;
+  --color-surface: #f4fbfd;
+  --color-surface-2: #d8eef5;
+  --color-grid: rgba(6, 34, 46, 0.13);
+  --color-primary: #0077b6;
+  --color-primary-2: #00a6d6;
+  --color-secondary: #008f8c;
+  --color-accent: #2457c5;
+  --color-muted: #426674;
+  --color-line: #061923;
+
+  --electric-panel-bg: #e8f7fb;
+  --electric-canvas-bg: #f6efd9;
+  --electric-stroke: #70674f;
+  --electric-text: #071c26;
+  --electric-soft: #2f6170;
+  --electric-node: #e9fbff;
+  --electric-battery: #49c3dc;
+  --electric-battery-mark: #04131a;
+  --electric-lamp-off: #81765b;
+  --electric-lamp-on: #ffe05a;
+  --electric-lamp-glow: rgba(255, 224, 90, 0.32);
+  --electric-border: rgba(6, 34, 46, 0.34);
+  --electric-row: rgba(0, 119, 182, 0.14);
+
+  --electric-switch-label-color: #061923;
+  --electric-switch-label-stroke: rgba(246, 239, 217, 0.95);
+}
+
+.mode-light.theme-ocean .page {
+  background:
+    radial-gradient(circle at 16% 8%, rgba(0, 166, 214, 0.22), transparent 28%),
+    radial-gradient(circle at 84% 10%, rgba(0, 143, 140, 0.18), transparent 24%),
+    linear-gradient(135deg, #e7f7fb, #cbeaf3 52%, #a8d4e4) !important;
+}
+
+.mode-light.theme-ocean .electric-card,
+.mode-light.theme-ocean .truth-table-box {
+  background: #e8f7fb !important;
+  color: #071c26 !important;
+  border-color: rgba(6, 34, 46, 0.34) !important;
+}
+
+.mode-light.theme-ocean .electric-info h3,
+.mode-light.theme-ocean .electric-info p,
+.mode-light.theme-ocean .electric-status,
+.mode-light.theme-ocean .truth-table-box h3,
+.mode-light.theme-ocean .truth-table-box th,
+.mode-light.theme-ocean .truth-table-box td {
+  color: #071c26 !important;
+  fill: #071c26 !important;
+}
+
+.mode-light.theme-ocean .electric-svg-wrap {
+  background: #f6efd9 !important;
+  border-color: rgba(6, 34, 46, 0.38) !important;
+}
+
+.mode-light.theme-ocean .electric-svg {
+  background: #f6efd9 !important;
+}
+
+.mode-light.theme-ocean .electric-output-text.off,
+.mode-light.theme-ocean .lamp-label,
+.mode-light.theme-ocean .electric-svg text {
+  fill: #071c26 !important;
+}
+
+.mode-light.theme-ocean .electric-switch-label,
+.mode-light.theme-ocean .switch-label {
+  fill: #061923 !important;
+  stroke: rgba(246, 239, 217, 0.98) !important;
 }
