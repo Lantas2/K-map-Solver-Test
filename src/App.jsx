@@ -2263,6 +2263,7 @@ export default function App() {
         >
           <option value="coffee">Coffee</option>
           <option value="forest">Forest</option>
+          <option value="original">Original</option>
           <option value="ocean">Ocean</option>
           <option value="rose">Rose</option>
         </select>

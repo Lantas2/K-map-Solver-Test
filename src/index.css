@@ -2019,10 +2019,19 @@ text.wire-d,
     min-width: 560px;
   }
 
+  .circuit-zoom-canvas,
+  .gate-zoom-canvas,
+  .electric-zoom-canvas {
+    transform-origin: top left !important;
+  }
+
+
   .logic-circuit,
   .gate-svg,
   .electric-svg {
-    min-width: 760px;
+      width: 100% !important;
+    min-width: 0 !important;
+    display: block !important;
   }
 
   .command-orbit {
