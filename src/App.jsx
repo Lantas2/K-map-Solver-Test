@@ -2347,7 +2347,7 @@ export default function App() {
                     <span className="badge">{config.rowCount} × {config.colCount}</span>
                   </div>
 
-                  <div className="kmap-shell">
+                  <div className="kmap-shell" data-vars={variableCount}>
                     <div
                       className="kmap-labels"
                       style={{ gridTemplateColumns: `72px repeat(${config.colCount}, 1fr)` }}

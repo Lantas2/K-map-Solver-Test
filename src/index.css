@@ -110,11 +110,26 @@ select {
   --color-accent: #48a0a8;
 }
 
-.theme-ocean {
+.theme-original {
   --color-primary: #ff5b22;
   --color-primary-2: #ff9e1b;
   --color-secondary: #1bd8d2;
   --color-accent: #4f7cff;
+}
+
+.theme-ocean {
+  --color-void: #06141f;
+  --color-ink: #071019;
+  --color-paper: #e8f7ff;
+  --color-paper-dim: #9ec9d8;
+  --color-surface: #071a24;
+  --color-surface-2: #0b2b3a;
+  --color-grid: rgba(164, 223, 245, 0.13);
+  --color-primary: #00a8e8;
+  --color-primary-2: #48cae4;
+  --color-secondary: #90f1ef;
+  --color-accent: #0077b6;
+  --color-warning: #ffd166;
 }
 
 .theme-rose {
@@ -1765,4 +1780,292 @@ text.wire-d,
 .mode-light .expression-circuit text {
   stroke: none !important;
   text-shadow: none !important;
+}
+
+
+/* ================================================= */
+/* FINAL RESPONSIVE + DESKTOP FIX — DO NOT PATCH ABOVE */
+/* ================================================= */
+
+/* Ocean light bukan kuning/oranye */
+.mode-light.theme-ocean {
+  --atlas-bg: #d8eef7;
+  --atlas-bg-2: #b7d8e8;
+  --atlas-ink: #071019;
+  --atlas-muted: #426979;
+  --atlas-panel: #ecf9ff;
+  --atlas-panel-2: #d3edf8;
+  --atlas-cell: #f4fcff;
+  --atlas-cell-off: #d8edf7;
+  --atlas-active: #00a8e8;
+  --atlas-active-2: #48cae4;
+  --atlas-cyan: #0077b6;
+  --atlas-line: rgba(7, 16, 25, 0.74);
+  --atlas-shadow: rgba(7, 16, 25, 0.30);
+}
+
+.mode-light.theme-ocean .page,
+.mode-light.theme-ocean.app-shell,
+.mode-light.theme-ocean .atlas-shell {
+  background:
+    radial-gradient(circle at 72% 16%, rgba(0, 168, 232, 0.22), transparent 24%),
+    radial-gradient(circle at 10% 8%, rgba(144, 241, 239, 0.22), transparent 26%),
+    linear-gradient(135deg, var(--atlas-bg), var(--atlas-bg-2)) !important;
+}
+
+.mode-light.theme-ocean .cell.active {
+  background: linear-gradient(180deg, #48cae4, #00a8e8) !important;
+  color: #071019 !important;
+  box-shadow:
+    inset 0 -10px 0 rgba(0, 79, 117, 0.18),
+    0 0 0 4px rgba(144, 241, 239, 0.36),
+    5px 5px 0 rgba(7, 16, 25, 0.32) !important;
+}
+
+.mode-light.theme-ocean button.selected,
+.mode-light.theme-ocean .selected,
+.mode-light.theme-ocean .tool-mode.active,
+.mode-light.theme-ocean .circuit-tab.active {
+  background: linear-gradient(135deg, #00a8e8, #48cae4) !important;
+  color: #071019 !important;
+}
+
+/* Hilangkan penyebab desktop berantakan: command bar tidak lagi nempel di tengah konten */
+@media (min-width: 1101px) {
+  .command-orbit {
+    position: fixed !important;
+    top: 18px !important;
+    right: 18px !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+
+    width: auto !important;
+    max-width: min(720px, calc(73vw - 48px)) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    padding: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    z-index: 500 !important;
+  }
+
+  .orbit-command {
+    flex: 0 0 auto !important;
+    min-width: 128px !important;
+    white-space: nowrap !important;
+  }
+
+  .orbit-command.utility {
+    min-width: 112px !important;
+  }
+
+  .orbit-select {
+    min-width: 150px !important;
+  }
+
+  .content-field {
+    padding-top: 92px !important;
+    padding-bottom: 130px !important;
+  }
+}
+
+/* Tablet: command bar tetap floating bawah, tapi konten diberi jarak aman */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .command-orbit {
+    position: fixed !important;
+    left: 18px !important;
+    right: 18px !important;
+    bottom: 18px !important;
+    top: auto !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: calc(100vw - 36px) !important;
+    overflow-x: auto !important;
+  }
+
+  .content-field {
+    padding-bottom: 140px !important;
+  }
+}
+
+/* Desktop mosaic: jangan pakai margin minus/naik yang bikin panel tabrakan */
+@media (min-width: 1101px) {
+  .solver-mosaic {
+    display: grid !important;
+    grid-template-columns: minmax(620px, 1.25fr) minmax(340px, 0.75fr) !important;
+    gap: 28px !important;
+    align-items: start !important;
+  }
+
+  .result-panel,
+  .group-panel,
+  .boolean-panel,
+  .circuit-panel {
+    margin-top: 0 !important;
+  }
+
+  .group-panel,
+  .boolean-panel,
+  .circuit-panel,
+  .validation-reasoning-grid,
+  .insight-stack {
+    margin-top: 28px !important;
+  }
+
+  .circuit-panel,
+  section:has(.circuit-scroll) {
+    clear: both !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Mobile: jangan paksa body overflow hidden total; biarkan komponen besar scroll di dalamnya */
+@media (max-width: 720px) {
+  html,
+  body,
+  .page {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .workspace-shell {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .identity-slab {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    border-right: 0 !important;
+  }
+
+  .content-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 14px 10px 132px !important;
+  }
+
+  .identity-slab h1 {
+    max-width: 100% !important;
+    font-size: clamp(3rem, 15vw, 5rem) !important;
+    overflow-wrap: anywhere;
+  }
+
+  .identity-slab p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .formula-chip b {
+    font-size: clamp(1.25rem, 7vw, 2rem) !important;
+    overflow-wrap: anywhere;
+  }
+
+  .kmap-control-panel,
+  .control-ribbon {
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+    padding: 14px 10px !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .control-buttons {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+
+  .control-buttons button,
+  .theme-select {
+    flex: 1 1 auto !important;
+    min-width: 118px !important;
+  }
+
+  .solver-mosaic,
+  .validation-reasoning-grid,
+  .insight-stack {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .kmap-shell,
+  .circuit-scroll,
+  .gate-svg-wrap,
+  .electric-svg-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .kmap-labels,
+  .kmap-body,
+  .cell-area {
+    min-width: 560px;
+  }
+
+  .logic-circuit,
+  .gate-svg,
+  .electric-svg {
+    min-width: 760px;
+  }
+
+  .command-orbit {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 12px !important;
+    top: auto !important;
+    transform: none !important;
+    width: auto !important;
+    max-width: calc(100vw - 20px) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    justify-content: flex-start !important;
+    padding: 9px !important;
+    z-index: 999 !important;
+  }
+
+  .orbit-command {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    white-space: nowrap !important;
+  }
+
+  .orbit-select {
+    min-width: 140px !important;
+  }
+}
+
+/* Logic label final: jangan gumpal karena stroke text */
+.logic-circuit text,
+.rail-expression-circuit text,
+.expression-circuit text {
+  paint-order: normal !important;
+  stroke: none !important;
+  stroke-width: 0 !important;
+  text-shadow: none !important;
+}
+
+.expr-wire-label {
+  paint-order: normal !important;
+  stroke: none !important;
+  stroke-width: 0 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
 }
