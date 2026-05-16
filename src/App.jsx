@@ -1,7 +1,90 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./index.css";
 
 const ALL_VARIABLES = ["A", "B", "C", "D"];
+
+function playMechanicalClick(type = "soft") {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioContext();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    const now = ctx.currentTime;
+
+    if (type === "hard") {
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(70, now + 0.045);
+      gain.gain.setValueAtTime(0.16, now);
+    } else if (type === "toggle") {
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.035);
+      gain.gain.setValueAtTime(0.1, now);
+    } else {
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.03);
+      gain.gain.setValueAtTime(0.08, now);
+    }
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(900, now);
+
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+
+    osc.type = "square";
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.06);
+  } catch (error) {
+    // Browser tidak support audio context, abaikan saja.
+  }
+}
+
+function playLampOnSound() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioContext();
+    const now = ctx.currentTime;
+
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc1.type = "sine";
+    osc2.type = "triangle";
+
+    osc1.frequency.setValueAtTime(720, now);
+    osc1.frequency.exponentialRampToValueAtTime(1180, now + 0.14);
+
+    osc2.frequency.setValueAtTime(540, now);
+    osc2.frequency.exponentialRampToValueAtTime(860, now + 0.14);
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1800, now);
+
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.09, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.22);
+    osc2.stop(now + 0.22);
+  } catch (error) {
+    // abaikan jika browser tidak support
+  }
+}
 
 function grayCodes(bitCount) {
   if (bitCount === 1) return ["0", "1"];
@@ -1213,11 +1296,30 @@ function ElectricCircuitAnalogy({
   output,
   electricZoom,
   setElectricZoom,
+  setA,
+  setB,
+  soundEnabled,
 }) {
   const isOn = Boolean(output);
   const aOn = Boolean(a);
   const bOn = Boolean(b);
+  const prevLampOnRef = useRef(false);
 
+  useEffect(() => {
+    if (isOn && !prevLampOnRef.current && soundEnabled) {
+      playLampOnSound();
+    }
+
+    prevLampOnRef.current = isOn;
+  }, [isOn, soundEnabled]);
+
+  function toggleAFromElectric() {
+    if (typeof setA === "function") setA((value) => (value ? 0 : 1));
+  }
+
+  function toggleBFromElectric() {
+    if (typeof setB === "function") setB((value) => (value ? 0 : 1));
+  }
   const zoomControls = (
     <div className="electric-toolbar">
       <div className="zoom-controls">
@@ -1289,12 +1391,14 @@ function ElectricCircuitAnalogy({
             className={aOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={190} y={110} label="A" active={aOn} />
+          <ElectricSwitchTap x={190} y={110} label="A" onToggle={toggleAFromElectric} />
 
           <path
             d="M230 110 H330"
             className={aOn && bOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={350} y={110} label="B" active={bOn} />
+          <ElectricSwitchTap x={350} y={110} label="B" onToggle={toggleBFromElectric} />
 
           <path
             d="M390 110 H560 V145"
@@ -1351,6 +1455,7 @@ function ElectricCircuitAnalogy({
             className={aOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={250} y={90} label="A" active={aOn} />
+          <ElectricSwitchTap x={250} y={90} label="A" onToggle={toggleAFromElectric} />
           <path
             d="M290 90 H430 V130"
             className={aOn ? "electric-wire active" : "electric-wire"}
@@ -1361,6 +1466,7 @@ function ElectricCircuitAnalogy({
             className={bOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={250} y={190} label="B" active={bOn} />
+          <ElectricSwitchTap x={250} y={190} label="B" onToggle={toggleBFromElectric} />
           <path
             d="M290 190 H430 V130"
             className={bOn ? "electric-wire active" : "electric-wire"}
@@ -1424,6 +1530,7 @@ function ElectricCircuitAnalogy({
             className={isOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={240} y={110} label="A control" active={!aOn} />
+          <ElectricSwitchTap x={240} y={110} label="A" onToggle={toggleAFromElectric} />
           <path
             d="M280 110 H560 V145"
             className={isOn ? "electric-wire active" : "electric-wire"}
@@ -1485,12 +1592,14 @@ function ElectricCircuitAnalogy({
             className={aOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={190} y={125} label="A" active={aOn} />
+          <ElectricSwitchTap x={190} y={125} label="A" onToggle={toggleAFromElectric} />
 
           <path
             d="M230 125 H330"
             className={andResult ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={350} y={125} label="B" active={bOn} />
+          <ElectricSwitchTap x={350} y={125} label="B" onToggle={toggleBFromElectric} />
 
           <path
             d="M390 125 H470"
@@ -1575,6 +1684,7 @@ function ElectricCircuitAnalogy({
             className={aOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={250} y={100} label="A" active={aOn} />
+          <ElectricSwitchTap x={250} y={100} label="A" onToggle={toggleAFromElectric} />
           <path
             d="M290 100 H430 V150"
             className={aOn ? "electric-wire active" : "electric-wire"}
@@ -1585,6 +1695,7 @@ function ElectricCircuitAnalogy({
             className={bOn ? "electric-wire active" : "electric-wire"}
           />
           <SwitchSymbol x={250} y={210} label="B" active={bOn} />
+          <ElectricSwitchTap x={250} y={210} label="B" onToggle={toggleBFromElectric} />
           <path
             d="M290 210 H430 V150"
             className={bOn ? "electric-wire active" : "electric-wire"}
@@ -1691,6 +1802,22 @@ function ElectricCircuitAnalogy({
             >
               {a} berbeda dari {b} = {isOn ? "true" : "false"}
             </text>
+            <g className="electric-rule-toggle" onClick={toggleAFromElectric}>
+              <rect x="198" y="154" width="98" height="28" rx="12" />
+              <text x="247" y="174" textAnchor="middle">Tap A</text>
+            </g>
+            <g className="electric-rule-toggle" onClick={toggleBFromElectric}>
+              <rect x="334" y="154" width="98" height="28" rx="12" />
+              <text x="383" y="174" textAnchor="middle">Tap B</text>
+            </g>
+            <g className="electric-rule-toggle" onClick={toggleAFromElectric}>
+              <rect x="198" y="154" width="98" height="28" rx="12" />
+              <text x="247" y="174" textAnchor="middle">Tap A</text>
+            </g>
+            <g className="electric-rule-toggle" onClick={toggleBFromElectric}>
+              <rect x="334" y="154" width="98" height="28" rx="12" />
+              <text x="383" y="174" textAnchor="middle">Tap B</text>
+            </g>
           </g>
 
           <path
@@ -1836,6 +1963,29 @@ function SwitchSymbol({ x, y, label, active }) {
   );
 }
 
+function ElectricSwitchTap({ x, y, label, onToggle }) {
+  function handleKeyDown(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onToggle?.();
+    }
+  }
+
+  return (
+    <g
+      className="electric-switch-hit"
+      role="button"
+      tabIndex="0"
+      aria-label={`Toggle switch ${label}`}
+      onClick={onToggle}
+      onKeyDown={handleKeyDown}
+    >
+      <title>Tap switch {label}</title>
+      <rect x={x - 54} y={y - 50} width="108" height="92" rx="18" />
+    </g>
+  );
+}
+
 function LampSymbol({ x, y, active }) {
   return (
     <g>
@@ -1864,13 +2014,19 @@ function LampSymbol({ x, y, active }) {
   );
 }
 
-function InteractiveLogicGateLab() {
-  const [gate, setGate] = useState("AND");
-  const [a, setA] = useState(0);
-  const [b, setB] = useState(0);
-
-  const [labZoom, setLabZoom] = useState(1);
-  const [electricZoom, setElectricZoom] = useState(1);
+function InteractiveLogicGateLab({
+  gate,
+  setGate,
+  a,
+  setA,
+  b,
+  setB,
+  labZoom,
+  setLabZoom,
+  electricZoom,
+  setElectricZoom,
+  soundEnabled,
+}) {
 
   const output = evalGate(gate, a, b) ? 1 : 0;
   const isSingleInput = gate === "NOT";
@@ -2115,6 +2271,9 @@ function InteractiveLogicGateLab() {
           output={output}
           electricZoom={electricZoom}
           setElectricZoom={setElectricZoom}
+          setA={setA}
+          setB={setB}
+          soundEnabled={soundEnabled}
         />
       </details>
 
@@ -2142,6 +2301,12 @@ export default function App() {
   const [circuitMode, setCircuitMode] = useState("simplified");
   const [circuitZoom, setCircuitZoom] = useState(1);
   const [appearance, setAppearance] = useState("dark");
+  const [labGate, setLabGate] = useState("AND");
+  const [labA, setLabA] = useState(0);
+  const [labB, setLabB] = useState(0);
+  const [labZoom, setLabZoom] = useState(1);
+  const [electricZoom, setElectricZoom] = useState(1);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const config = useMemo(() => makeConfig(variableCount), [variableCount]);
 
   const activeMinterms = useMemo(() => {
@@ -2173,6 +2338,11 @@ export default function App() {
     labelMode === "binary"
       ? config.colCodes
       : config.colCodes.map((code) => variableLabel(config.colVars, code));
+
+  function clickSound(type = "soft") {
+    if (!soundEnabled) return;
+    playMechanicalClick(type);
+  }
 
   function changeVariableCount(count) {
     setVariableCount(count);
@@ -2209,7 +2379,6 @@ export default function App() {
     setToolMode(mode);
     setViewKey((prev) => prev + 1);
   }
-
   const modeTitle = toolMode === "gate" ? "Logic Gate Lab" : "K-Map Solver";
   const modeKicker = toolMode === "gate" ? "Digital Gate Bench" : "Boolean Cartography";
   const modeCopy =
@@ -2217,6 +2386,38 @@ export default function App() {
       ? "Uji gerbang logika dari input, truth table, analogi listrik, sampai reasoning output."
       : "Petakan minterm, grouping, SOP, validasi coverage, boolean steps, dan circuit dalam satu meja kerja.";
   const modeCode = toolMode === "gate" ? "GATE://LAB" : `F(${config.variables.join(",")})`;
+
+  useEffect(() => {
+  function handleSound(event) {
+    if (!soundEnabled) return;
+
+    const target = event.target.closest("button, select, .cell, summary, .electric-switch-hit, .electric-rule-toggle");
+
+    if (!target) return;
+
+    if (target.classList.contains("cell")) {
+      playMechanicalClick("hard");
+      return;
+    }
+
+    if (
+      target.classList.contains("orbit-command") ||
+      target.classList.contains("circuit-tab") ||
+      target.classList.contains("gate-pill")
+    ) {
+      playMechanicalClick("toggle");
+      return;
+    }
+
+    playMechanicalClick("soft");
+  }
+
+  window.addEventListener("pointerdown", handleSound);
+
+  return () => {
+    window.removeEventListener("pointerdown", handleSound);
+  };
+}, [soundEnabled]);
 
   return (
     <div className={`page theme-${theme} mode-${appearance}`}>
@@ -2228,9 +2429,20 @@ export default function App() {
       </div>
 
       <nav className="command-orbit" aria-label="Primary command navigation">
+
+        <button
+          type="button"
+          className="orbit-command utility"
+          onClick={() => setSoundEnabled((prev) => !prev)}
+        >
+          <span>{soundEnabled ? "♪" : "×"}</span>
+          {soundEnabled ? "Sound" : "Muted"}
+        </button>
+
         <button
           type="button"
           className={toolMode === "kmap" ? "orbit-command active" : "orbit-command"}
+          onMouseDown={() => clickSound("toggle")}
           onClick={() => switchToolMode("kmap")}
         >
           <span>01</span>
@@ -2249,6 +2461,7 @@ export default function App() {
         <button
           type="button"
           className="orbit-command utility"
+          onMouseDown={() => clickSound("toggle")}
           onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}
         >
           <span>{appearance === "dark" ? "☾" : "☼"}</span>
@@ -2288,7 +2501,19 @@ export default function App() {
 
         <section key={viewKey} className="content-field view-transition">
           {toolMode === "gate" ? (
-            <InteractiveLogicGateLab />
+            <InteractiveLogicGateLab
+              gate={labGate}
+              setGate={setLabGate}
+              a={labA}
+              setA={setLabA}
+              b={labB}
+              setB={setLabB}
+              labZoom={labZoom}
+              setLabZoom={setLabZoom}
+              electricZoom={electricZoom}
+              setElectricZoom={setElectricZoom}
+              soundEnabled={soundEnabled}
+            />
           ) : (
             <>
               <section className="control-ribbon" aria-label="K-Map controls">
@@ -2404,6 +2629,7 @@ export default function App() {
                           <button
                             key={cell.minterm}
                             className={active.has(cell.minterm) ? "cell active" : "cell"}
+                            onMouseDown={() => clickSound("hard")}
                             onClick={() => toggleCell(cell.minterm)}
                             style={{
                               gridColumn: cell.col + 1,
@@ -2544,6 +2770,7 @@ export default function App() {
                   <div className="circuit-mode-switch">
                     <button
                       className={circuitMode === "original" ? "circuit-tab active" : "circuit-tab"}
+                      onMouseDown={() => clickSound("hard")}
                       onClick={() => setCircuitMode("original")}
                     >
                       Original SOP
@@ -2551,6 +2778,7 @@ export default function App() {
 
                     <button
                       className={circuitMode === "simplified" ? "circuit-tab active" : "circuit-tab"}
+                      onMouseDown={() => clickSound("hard")}
                       onClick={() => setCircuitMode("simplified")}
                     >
                       Simplified

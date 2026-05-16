@@ -2078,3 +2078,592 @@ text.wire-d,
   font-size: 13px !important;
   font-weight: 800 !important;
 }
+
+/* ================================================= */
+/* MECHANICAL MOTION SYSTEM */
+/* ================================================= */
+
+:root {
+  --motion-fast: 120ms;
+  --motion-normal: 220ms;
+  --motion-slow: 420ms;
+  --ease-mech: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --ease-snap: cubic-bezier(0.7, -0.25, 0.25, 1.35);
+}
+
+.page,
+.workspace-shell,
+.identity-slab,
+.content-field,
+.panel,
+.result-box,
+.cell,
+.control-group,
+.command-orbit,
+.orbit-command,
+.circuit-tab,
+.gate-pill,
+.theme-select,
+button,
+select,
+.formula-chip,
+.group-card,
+.reasoning-card,
+.boolean-step-card,
+.circuit-scroll,
+.gate-svg-wrap,
+.electric-svg-wrap {
+  transition:
+    background-color var(--motion-normal) var(--ease-mech),
+    background var(--motion-normal) var(--ease-mech),
+    color var(--motion-normal) var(--ease-mech),
+    border-color var(--motion-normal) var(--ease-mech),
+    box-shadow var(--motion-normal) var(--ease-mech),
+    transform var(--motion-fast) var(--ease-mech),
+    opacity var(--motion-normal) var(--ease-mech),
+    filter var(--motion-normal) var(--ease-mech);
+}
+
+/* Saat hover, terasa seperti tombol mekanik */
+button:hover,
+.orbit-command:hover,
+.circuit-tab:hover,
+.gate-pill:hover,
+.control-buttons button:hover {
+  transform: translate(-2px, -2px);
+}
+
+button:active,
+.orbit-command:active,
+.circuit-tab:active,
+.gate-pill:active,
+.control-buttons button:active,
+.cell:active {
+  transform: translate(3px, 3px) scale(0.985) !important;
+  box-shadow: 1px 1px 0 var(--color-line) !important;
+}
+
+/* Cell lebih hidup */
+.cell {
+  transition:
+    transform var(--motion-fast) var(--ease-snap),
+    background var(--motion-normal) var(--ease-mech),
+    box-shadow var(--motion-normal) var(--ease-mech),
+    border-color var(--motion-normal) var(--ease-mech);
+}
+
+.cell.active {
+  animation: cellPunch 220ms var(--ease-snap);
+}
+
+@keyframes cellPunch {
+  0% {
+    transform: scale(0.96);
+  }
+
+  60% {
+    transform: scale(1.035);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Panel muncul lebih smooth saat mode berpindah */
+.view-transition,
+.solver-mosaic,
+.logic-lab-panel,
+.kmap-panel,
+.result-panel,
+.group-panel,
+.boolean-panel,
+.circuit-panel {
+  animation: panelEnter 360ms var(--ease-mech) both;
+}
+
+@keyframes panelEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Mode/theme change terasa seperti mesin ganti filter */
+.page {
+  animation: pageTone 280ms var(--ease-mech);
+}
+
+@keyframes pageTone {
+  from {
+    filter: saturate(0.8) brightness(0.92);
+  }
+
+  to {
+    filter: saturate(1) brightness(1);
+  }
+}
+
+/* Command bar terasa fisik */
+.command-orbit {
+  transition:
+    transform var(--motion-normal) var(--ease-snap),
+    background var(--motion-normal) var(--ease-mech),
+    box-shadow var(--motion-normal) var(--ease-mech);
+}
+
+.command-orbit:hover {
+  transform: translateX(-50%) translateY(-2px);
+}
+
+@media (min-width: 761px) {
+  .command-orbit:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Respect user yang mematikan animation */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================
+   ELECTRIC CIRCUIT PATCH
+   ========================= */
+
+.page {
+  --electric-panel-bg: rgba(16, 28, 36, 0.88);
+  --electric-canvas-bg: #081117;
+  --electric-stroke: #8a816a;
+  --electric-text: #eef4f7;
+  --electric-soft: #b0c5cc;
+  --electric-node: #dce9ef;
+  --electric-battery: #4db7d3;
+  --electric-battery-mark: #06131a;
+  --electric-lamp-off: #8d8368;
+  --electric-lamp-on: #ffd54a;
+  --electric-lamp-glow: rgba(255, 213, 74, 0.32);
+  --electric-border: rgba(177, 203, 214, 0.22);
+  --electric-row: rgba(104, 171, 187, 0.18);
+}
+
+.mode-light {
+  --electric-panel-bg: rgba(242, 244, 236, 0.92);
+  --electric-canvas-bg: #f4efdf;
+  --electric-stroke: #7d735f;
+  --electric-text: #101820;
+  --electric-soft: #536069;
+  --electric-node: #d7e5ec;
+  --electric-battery: #4db7d3;
+  --electric-battery-mark: #06131a;
+  --electric-lamp-off: #9b9279;
+  --electric-lamp-on: #ffcb3c;
+  --electric-lamp-glow: rgba(255, 203, 60, 0.28);
+  --electric-border: rgba(80, 98, 109, 0.24);
+  --electric-row: rgba(86, 152, 169, 0.14);
+}
+
+/* truth table lebih kebaca */
+.truth-table-box {
+  border: 1px solid var(--electric-border);
+  background: var(--electric-panel-bg);
+}
+
+.truth-table-box h3 {
+  color: var(--electric-text);
+}
+
+.truth-table-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.truth-table-box th {
+  color: var(--electric-text);
+  font-weight: 900;
+}
+
+.truth-table-box td {
+  color: var(--electric-text);
+  border-bottom: 1px solid var(--electric-border);
+}
+
+.truth-table-box .current-row {
+  background: var(--electric-row);
+}
+
+.mode-light .truth-table-box th,
+.mode-light .truth-table-box td {
+  color: #102028 !important;
+}
+
+.mode-dark .truth-table-box th,
+.mode-dark .truth-table-box td {
+  color: #eef4f7 !important;
+}
+
+/* electric panel */
+.electric-panel {
+  background: var(--electric-panel-bg) !important;
+  border: 1px solid var(--electric-border) !important;
+}
+
+.electric-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.electric-panel-title {
+  margin: 0;
+  color: var(--electric-text);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.electric-gate-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #18d8d2;
+  color: #18d8d2;
+  font-weight: 900;
+  background: transparent;
+}
+
+.electric-analogy-title {
+  margin: 8px 0 8px;
+  color: var(--electric-text);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.electric-analogy-desc {
+  margin: 0 0 16px;
+  color: var(--electric-soft);
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.electric-canvas-shell {
+  width: 100%;
+  overflow: auto;
+  border-radius: 24px;
+  border: 1px solid var(--electric-border);
+  background: var(--electric-canvas-bg);
+  padding: 16px;
+}
+
+.electric-canvas-zoom {
+  width: fit-content;
+  transform-origin: top left;
+}
+
+.electric-canvas-svg {
+  width: 980px;
+  height: auto;
+  display: block;
+}
+
+.electric-bg-rect {
+  fill: var(--electric-canvas-bg);
+}
+
+.electric-wire-main {
+  stroke: var(--electric-stroke);
+  stroke-width: 8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.electric-switch-node {
+  fill: var(--electric-node);
+  stroke: #101820;
+  stroke-width: 2.5;
+}
+
+.electric-switch-link {
+  stroke: var(--electric-stroke);
+  stroke-width: 8;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.electric-switch-link.active {
+  stroke: #22d35d;
+  filter: drop-shadow(0 0 8px rgba(34, 211, 93, 0.28));
+}
+
+.electric-switch-label {
+  fill: var(--electric-text);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.electric-battery-body {
+  fill: var(--electric-battery);
+  stroke: #101820;
+  stroke-width: 4;
+}
+
+.electric-battery-mark {
+  fill: var(--electric-battery-mark);
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.electric-lamp-body {
+  stroke: #dce9ef;
+  stroke-width: 5;
+}
+
+.electric-lamp-body.off {
+  fill: var(--electric-lamp-off);
+}
+
+.electric-lamp-body.on {
+  fill: var(--electric-lamp-on);
+  filter: drop-shadow(0 0 18px var(--electric-lamp-glow));
+}
+
+.electric-lamp-filament {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.electric-lamp-filament.off {
+  stroke: #1aa6f4;
+}
+
+.electric-lamp-filament.on {
+  stroke: #fff4a3;
+}
+
+.electric-output-text {
+  font-size: 22px;
+  font-weight: 900;
+  text-anchor: start;
+}
+
+.electric-output-text.off {
+  fill: var(--electric-text);
+}
+
+.electric-output-text.on {
+  fill: #22d35d;
+}
+
+.mode-light .electric-output-text.off {
+  fill: #101820;
+}
+
+.mode-dark .electric-output-text.off {
+  fill: #eef4f7;
+}
+
+/* zoom controls */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.zoom-controls button {
+  border: 2px solid #222;
+  background: #ebe4cf;
+  color: #111;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.zoom-controls span {
+  color: #19d7d0;
+  font-weight: 900;
+  min-width: 56px;
+  text-align: center;
+}
+
+.mode-dark .zoom-controls button {
+  background: #e9f0f3;
+  color: #09141a;
+}
+
+.mode-light .zoom-controls button {
+  background: #e7dfc8;
+  color: #101820;
+}
+
+/* mobile */
+@media (max-width: 700px) {
+  .electric-panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .electric-panel-title {
+    font-size: 19px;
+  }
+
+  .electric-analogy-title {
+    font-size: 16px;
+  }
+
+  .electric-output-text {
+    font-size: 18px;
+  }
+
+  .electric-canvas-svg {
+    width: 920px;
+  }
+}
+/* ================================================= */
+/* ELECTRIC ANALOGY INTERACTION PATCH */
+/* ================================================= */
+
+.electric-switch-hit {
+  cursor: pointer;
+  pointer-events: all;
+  outline: none;
+}
+
+.electric-switch-hit rect {
+  fill: transparent;
+  stroke: transparent;
+  transition: stroke 160ms ease, fill 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .electric-switch-hit:hover rect {
+    fill: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+    stroke: color-mix(in srgb, var(--color-secondary) 55%, transparent);
+    stroke-width: 2;
+    stroke-dasharray: 5 5;
+  }
+}
+
+.electric-switch-hit:focus-visible rect {
+  fill: color-mix(in srgb, var(--color-secondary) 14%, transparent);
+  stroke: var(--color-secondary);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
+.electric-rule-toggle {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.electric-rule-toggle rect {
+  fill: color-mix(in srgb, var(--color-secondary) 16%, var(--color-line));
+  stroke: color-mix(in srgb, var(--color-secondary) 70%, transparent);
+  stroke-width: 2;
+}
+
+.electric-rule-toggle text {
+  fill: var(--color-paper) !important;
+  font-size: 12px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.mode-light .electric-rule-toggle rect {
+  fill: color-mix(in srgb, var(--color-secondary) 18%, #fff7df);
+  stroke: color-mix(in srgb, var(--color-secondary) 70%, #15120d);
+}
+
+.mode-light .electric-rule-toggle text {
+  fill: var(--color-ink) !important;
+}
+
+/* Preserve gate-lab state visually while switching theme; avoid remount-like flash */
+.logic-lab-panel,
+.logic-lab-card,
+.electric-card,
+.truth-table-box,
+.gate-svg-wrap,
+.electric-svg-wrap {
+  transition:
+    background 220ms var(--ease-mech, ease),
+    color 220ms var(--ease-mech, ease),
+    border-color 220ms var(--ease-mech, ease),
+    box-shadow 220ms var(--ease-mech, ease);
+}
+
+/* ================================================= */
+/* ELECTRIC SWITCH LABEL VISIBILITY FIX */
+/* ================================================= */
+
+/* Label A/B pada electric circuit */
+.electric-svg .switch-label,
+.electric-canvas-svg .electric-switch-label,
+.electric-svg text.switch-label,
+.electric-canvas-svg text.electric-switch-label {
+  fill: #f8fafc !important;
+  color: #f8fafc !important;
+  font-family: "Space Grotesk", Arial, sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  paint-order: stroke !important;
+  stroke: rgba(0, 0, 0, 0.75) !important;
+  stroke-width: 4px !important;
+  stroke-linejoin: round !important;
+}
+
+/* Mode dark: kasih outline gelap dan isi terang */
+.mode-dark .electric-svg .switch-label,
+.mode-dark .electric-canvas-svg .electric-switch-label,
+.mode-dark .electric-svg text.switch-label,
+.mode-dark .electric-canvas-svg text.electric-switch-label {
+  fill: #f8fafc !important;
+  stroke: #050807 !important;
+  stroke-width: 4px !important;
+}
+
+/* Mode light: teks gelap, outline terang */
+.mode-light .electric-svg .switch-label,
+.mode-light .electric-canvas-svg .electric-switch-label,
+.mode-light .electric-svg text.switch-label,
+.mode-light .electric-canvas-svg text.electric-switch-label {
+  fill: #101820 !important;
+  stroke: rgba(255, 247, 223, 0.9) !important;
+  stroke-width: 4px !important;
+}
+
+/* Biar label dekat switch tetap muncul di atas garis */
+.electric-svg .switch-label,
+.electric-canvas-svg .electric-switch-label {
+  pointer-events: none;
+}
+
+.mode-dark .electric-svg .switch-label,
+.mode-dark .electric-canvas-svg .electric-switch-label,
+.mode-dark .electric-svg text.switch-label,
+.mode-dark .electric-canvas-svg text.electric-switch-label {
+  fill: #7dd3fc !important;
+  stroke: #020617 !important;
+  stroke-width: 4px !important;
+  filter: drop-shadow(0 0 5px rgba(125, 211, 252, 0.45)) !important;
+}
