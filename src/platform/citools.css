@@ -271,8 +271,14 @@
   text-transform: uppercase;
 }
 
+.cit-hero-visual {
+  width: min(100%, 600px);
+  justify-self: end;
+}
+
 .cit-preview-window {
   position: relative;
+  width: 100%;
   border: 1px solid var(--cit-border-bright);
   border-radius: 25px;
   overflow: hidden;
@@ -281,93 +287,130 @@
   box-shadow: 0 36px 100px rgba(0, 0, 0, .42), 0 0 76px rgba(34, 207, 233, .06);
 }
 
-.cit-preview-window::after {
-  content: "CIT / SIGNAL";
-  position: absolute;
-  right: 16px;
-  bottom: 64px;
-  color: rgba(111, 232, 255, .07);
-  font-family: "Archivo Black", sans-serif;
-  font-size: 3.2rem;
-}
-
 .cit-preview-head {
-  height: 54px;
+  min-height: 54px;
   padding: 0 18px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   border-bottom: 1px solid var(--cit-border);
   color: var(--cit-muted);
 }
 
-.cit-preview-head span {
+.cit-preview-lights {
+  display: flex;
+  gap: 8px;
+}
+
+.cit-preview-lights span {
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: rgba(146, 170, 190, .4);
 }
 
-.cit-preview-head span:nth-child(2) { background: rgba(53, 242, 173, .62); }
-.cit-preview-head span:nth-child(3) { background: rgba(111, 232, 255, .62); }
+.cit-preview-lights span:nth-child(2) { background: rgba(53, 242, 173, .62); }
+.cit-preview-lights span:nth-child(3) { background: rgba(111, 232, 255, .62); }
 
 .cit-preview-head b {
+  min-width: 0;
   margin-left: auto;
+  overflow: hidden;
+  color: var(--cit-muted);
   font-size: .66rem;
   letter-spacing: .15em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.cit-preview-canvas {
+.cit-preview-stage {
   position: relative;
-  height: 370px;
+  overflow: hidden;
   background:
-    radial-gradient(circle at 50% 50%, rgba(53, 242, 173, .09), transparent 33%),
+    radial-gradient(circle at 50% 50%, rgba(53, 242, 173, .08), transparent 34%),
     linear-gradient(rgba(111,232,255,.065) 1px, transparent 1px) 0 0 / 30px 30px,
     linear-gradient(90deg, rgba(111,232,255,.065) 1px, transparent 1px) 0 0 / 30px 30px;
 }
 
-.cit-node {
-  position: absolute;
-  z-index: 2;
-  min-width: 72px;
-  height: 50px;
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 1px solid var(--cit-border-bright);
-  border-radius: 13px;
-  background: rgba(10, 25, 40, .94);
-  color: var(--cit-text);
+.cit-preview-circuit {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 560 / 330;
+}
+
+.cit-preview-watermark {
+  fill: rgba(111, 232, 255, .055);
+  font-family: "Archivo Black", Impact, sans-serif;
+  font-size: 49px;
+  font-weight: 900;
+  letter-spacing: -2px;
+}
+
+.cit-svg-wire {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cit-svg-wire.is-live {
+  stroke: var(--cit-green);
+}
+
+.cit-svg-wire.is-low {
+  stroke: rgba(53, 242, 173, .42);
+}
+
+.cit-svg-port circle {
+  stroke-width: 1.5px;
+}
+
+.cit-svg-port.is-live circle {
+  fill: var(--cit-green);
+  stroke: rgba(53, 242, 173, .32);
+}
+
+.cit-svg-port.is-low circle {
+  fill: rgba(53, 242, 173, .48);
+  stroke: rgba(53, 242, 173, .18);
+}
+
+.cit-svg-node-box {
+  fill: rgba(10, 25, 40, .96);
+  stroke: var(--cit-border-bright);
+  stroke-width: 1;
+}
+
+.cit-svg-node-box.gate {
+  stroke: rgba(144, 132, 255, .62);
+}
+
+.cit-svg-label,
+.cit-svg-value {
+  dominant-baseline: middle;
+  fill: var(--cit-text);
+  font-family: "Space Grotesk", Arial, sans-serif;
+  font-size: 16px;
   font-weight: 700;
-  box-shadow: 0 0 26px rgba(53, 242, 173, .08);
 }
 
-.cit-node i {
-  font-style: normal;
-  color: var(--cit-green);
+.cit-svg-label.gate-label {
+  text-anchor: middle;
 }
 
-.cit-node.input { left: 36px; top: 98px; }
-.cit-node.input.second { top: 222px; }
-.cit-node.gate { left: calc(50% - 40px); top: 153px; border-color: rgba(144, 132, 255, .52); }
-.cit-node.output { right: 34px; top: 153px; }
-
-.cit-wire {
-  position: absolute;
-  height: 3px;
-  background: linear-gradient(90deg, var(--cit-green), var(--cit-cyan));
-  box-shadow: 0 0 14px var(--cit-green);
-  transform-origin: left center;
+.cit-svg-value.is-live {
+  fill: var(--cit-green);
 }
 
-.wire-a { left: 109px; top: 124px; width: 145px; transform: rotate(18deg); }
-.wire-b { right: 106px; top: 178px; width: 135px; }
-.wire-c { left: 109px; top: 247px; width: 145px; transform: rotate(-27deg); opacity: .45; }
+.cit-svg-value.is-low {
+  fill: var(--cit-cyan);
+  opacity: .78;
+}
 
 .cit-preview-console {
-  padding: 17px 20px;
+  min-height: 58px;
+  padding: 16px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -385,6 +428,14 @@
 
 .cit-preview-console strong {
   color: var(--cit-green);
+  font-size: clamp(.86rem, 2vw, 1rem);
+  white-space: nowrap;
+}
+
+.cit-preview-console strong i {
+  margin: 0 5px;
+  color: var(--cit-cyan);
+  font-style: normal;
 }
 
 .cit-subjects,
@@ -859,12 +910,20 @@
   .cit-hero { padding: 48px 0 62px; grid-template-columns: 1fr; }
   .cit-hero-copy h1 { font-size: clamp(2.75rem, 15vw, 3.6rem); }
   .cit-hero-metrics { gap: 22px; margin-top: 40px; }
-  .cit-preview-canvas { height: 270px; }
-  .cit-node.gate { left: calc(50% - 37px); }
-  .cit-node.output { right: 16px; }
-  .cit-node.input { left: 14px; }
-  .wire-a, .wire-c { width: 88px; left: 86px; }
-  .wire-b { width: 70px; right: 87px; }
+  .cit-hero-visual { width: 100%; justify-self: stretch; }
+  .cit-preview-window { border-radius: 19px; }
+  .cit-preview-head { min-height: 47px; padding: 0 13px; gap: 12px; }
+  .cit-preview-head b { font-size: .56rem; letter-spacing: .1em; }
+  .cit-preview-stage {
+    background-size: auto, 22px 22px, 22px 22px;
+  }
+  .cit-preview-console {
+    min-height: 54px;
+    padding: 13px 14px;
+    gap: 8px;
+  }
+  .cit-preview-console span { font-size: .58rem; letter-spacing: .12em; }
+  .cit-preview-console strong { font-size: .78rem; }
   .cit-section-heading { flex-direction: column; align-items: flex-start; }
   .cit-subject-grid, .cit-about-grid { grid-template-columns: 1fr; }
   .cit-module-card { grid-template-columns: 55px 1fr; padding: 17px; gap: 14px; }
@@ -894,6 +953,21 @@
   .cit-university-logo {
     width: 76px;
     height: 76px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cit-preview-head b {
+    max-width: 174px;
+  }
+
+  .cit-preview-console {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cit-preview-watermark {
+    opacity: .5;
   }
 }
 

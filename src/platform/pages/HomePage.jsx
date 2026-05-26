@@ -27,21 +27,78 @@ export default function HomePage({ onNavigate }) {
         <div className="cit-hero-visual" aria-label="Preview Elektronika Digital">
           <div className="cit-preview-window">
             <div className="cit-preview-head">
-              <span></span><span></span><span></span>
+              <div className="cit-preview-lights" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
               <b>DIGITAL-ELECTRONICS / CIRCUIT</b>
             </div>
-            <div className="cit-preview-canvas">
-              <div className="cit-node input">A <i>1</i></div>
-              <div className="cit-wire wire-a" />
-              <div className="cit-node gate">XOR</div>
-              <div className="cit-wire wire-b" />
-              <div className="cit-node output">Q <i>1</i></div>
-              <div className="cit-node input second">B <i>0</i></div>
-              <div className="cit-wire wire-c" />
+
+            <div className="cit-preview-stage">
+              <svg
+                className="cit-preview-circuit"
+                viewBox="0 0 560 330"
+                role="img"
+                aria-label="Rangkaian XOR: input A bernilai satu dan B bernilai nol menghasilkan output Q bernilai satu."
+              >
+                <defs>
+                  <filter id="cit-signal-glow" x="-20%" y="-30%" width="140%" height="160%">
+                    <feGaussianBlur stdDeviation="5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <text className="cit-preview-watermark" x="286" y="296">CIT / SIGNAL</text>
+
+                <g className="cit-svg-wire is-live" filter="url(#cit-signal-glow)">
+                  <path d="M116 105 L242 152" />
+                  <path d="M328 161 L444 161" />
+                </g>
+                <g className="cit-svg-wire is-low">
+                  <path d="M116 235 L242 170" />
+                </g>
+
+                <g className="cit-svg-port is-live" aria-hidden="true">
+                  <circle cx="116" cy="105" r="4" />
+                  <circle cx="242" cy="152" r="4" />
+                  <circle cx="328" cy="161" r="4" />
+                  <circle cx="444" cy="161" r="4" />
+                </g>
+                <g className="cit-svg-port is-low" aria-hidden="true">
+                  <circle cx="116" cy="235" r="4" />
+                  <circle cx="242" cy="170" r="4" />
+                </g>
+
+                <g className="cit-svg-node">
+                  <rect className="cit-svg-node-box input" x="38" y="79" width="78" height="52" rx="13" />
+                  <text className="cit-svg-label" x="53" y="111">A</text>
+                  <text className="cit-svg-value is-live" x="92" y="111">1</text>
+                </g>
+
+                <g className="cit-svg-node">
+                  <rect className="cit-svg-node-box input" x="38" y="209" width="78" height="52" rx="13" />
+                  <text className="cit-svg-label" x="53" y="241">B</text>
+                  <text className="cit-svg-value is-low" x="92" y="241">0</text>
+                </g>
+
+                <g className="cit-svg-node">
+                  <rect className="cit-svg-node-box gate" x="242" y="135" width="86" height="52" rx="13" />
+                  <text className="cit-svg-label gate-label" x="285" y="167">XOR</text>
+                </g>
+
+                <g className="cit-svg-node">
+                  <rect className="cit-svg-node-box output" x="444" y="135" width="78" height="52" rx="13" />
+                  <text className="cit-svg-label" x="459" y="167">Q</text>
+                  <text className="cit-svg-value is-live" x="498" y="167">1</text>
+                </g>
+              </svg>
             </div>
+
             <div className="cit-preview-console">
               <span>SIGNAL MONITOR</span>
-              <strong>Q = A ⊕ B → 1</strong>
+              <strong>Q = A ⊕ B <i>→</i> 1</strong>
             </div>
           </div>
         </div>
