@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./index.css";
+import CircuitIdeMode from "./modes/CircuitIdeMode";
+import CIToolsApp from "./platform/CIToolsApp";
 
 const ALL_VARIABLES = ["A", "B", "C", "D"];
 
@@ -2070,8 +2072,8 @@ function InteractiveLogicGateLab({
     <section className="panel logic-lab-panel">
       <div className="panel-title stack-title">
         <div>
-          <h2>Interactive Logic Gate Lab</h2>
-          <p>Pilih gerbang logika, ubah input, lalu lihat output secara langsung.</p>
+          <h2>Logic Gate Learning Bench</h2>
+          <p>Belajar gerbang logika dari input, output, truth table, dan analogi rangkaian listrik.</p>
         </div>
         <span className="badge">Interactive</span>
       </div>
@@ -2326,8 +2328,8 @@ function InteractiveLogicGateLab({
   );
 }
 
-export default function App() {
-  const [toolMode, setToolMode] = useState("kmap");
+export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMode }) {
+  const toolMode = initialMode;
   const [viewKey, setViewKey] = useState(0);
   const [variableCount, setVariableCount] = useState(3);
   const [active, setActive] = useState(new Set([2, 3, 4, 5, 6]));
@@ -2410,16 +2412,44 @@ export default function App() {
   function switchToolMode(mode) {
     if (mode === toolMode) return;
 
-    setToolMode(mode);
     setViewKey((prev) => prev + 1);
+    if (onNavigateMode) onNavigateMode(mode);
   }
-  const modeTitle = toolMode === "gate" ? "Logic Gate Lab" : "K-Map Solver";
-  const modeKicker = toolMode === "gate" ? "Digital Gate Bench" : "Boolean Cartography";
-  const modeCopy =
-    toolMode === "gate"
-      ? "Uji gerbang logika dari input, truth table, analogi listrik, sampai reasoning output."
-      : "Petakan minterm, grouping, SOP, validasi coverage, boolean steps, dan circuit dalam satu meja kerja.";
-  const modeCode = toolMode === "gate" ? "GATE://LAB" : `F(${config.variables.join(",")})`;
+
+  const modeMeta = {
+    kmap: {
+      title: "K-Map Solver",
+      kicker: "Boolean Cartography",
+      copy: "Petakan minterm, grouping, SOP, validasi coverage, boolean steps, dan circuit dalam satu meja kerja.",
+      code: `F(${config.variables.join(",")})`,
+      chip: result.expression || "0",
+      ledgerLabel: "Active minterms",
+      ledgerValue: activeMinterms.length,
+    },
+    learning: {
+      title: "Logic lab",
+      kicker: "Logic Gate Learning Bench",
+      copy: "Eksplorasi gerbang logika, truth table, analogi listrik, dan reasoning output dalam visual yang ramah pemula.",
+      code: "LEARN://GATES",
+      chip: "interactive",
+      ledgerLabel: "Gate family",
+      ledgerValue: "7",
+    },
+    deep: {
+      title: "Circuit IDE",
+      kicker: "Advanced Circuit Studio",
+      copy: "Workspace profesional untuk merancang rangkaian digital, memantau sinyal, dan menyiapkan simulasi tingkat lanjut.",
+      code: "IDE://CIRCUIT",
+      chip: "offline editor",
+      ledgerLabel: "Build phase",
+      ledgerValue: "02",
+    },
+  };
+  const currentMode = modeMeta[toolMode] ?? modeMeta.kmap;
+  const modeTitle = currentMode.title;
+  const modeKicker = currentMode.kicker;
+  const modeCopy = currentMode.copy;
+  const modeCode = currentMode.code;
 
   useEffect(() => {
   function handleSound(event) {
@@ -2485,11 +2515,20 @@ export default function App() {
 
         <button
           type="button"
-          className={toolMode === "gate" ? "orbit-command active" : "orbit-command"}
-          onClick={() => switchToolMode("gate")}
+          className={toolMode === "learning" ? "orbit-command active" : "orbit-command"}
+          onClick={() => switchToolMode("learning")}
         >
           <span>02</span>
-          Gate Lab
+          Learning
+        </button>
+
+        <button
+          type="button"
+          className={toolMode === "deep" ? "orbit-command active" : "orbit-command"}
+          onClick={() => switchToolMode("deep")}
+        >
+          <span>03</span>
+          Circuit IDE
         </button>
 
         <button
@@ -2524,17 +2563,17 @@ export default function App() {
 
           <div className="formula-chip">
             <span>{modeCode}</span>
-            <b>{toolMode === "gate" ? "interactive" : result.expression || "0"}</b>
+            <b>{currentMode.chip}</b>
           </div>
 
           <div className="mini-ledger">
-            <span>Active minterms</span>
-            <strong>{activeMinterms.length}</strong>
+            <span>{currentMode.ledgerLabel}</span>
+            <strong>{currentMode.ledgerValue}</strong>
           </div>
         </section>
 
         <section key={viewKey} className="content-field view-transition">
-          {toolMode === "gate" ? (
+          {toolMode === "learning" ? (
             <InteractiveLogicGateLab
               gate={labGate}
               setGate={setLabGate}
@@ -2548,6 +2587,8 @@ export default function App() {
               setElectricZoom={setElectricZoom}
               soundEnabled={soundEnabled}
             />
+          ) : toolMode === "deep" ? (
+            <CircuitIdeMode />
           ) : (
             <>
               <section className="control-ribbon" aria-label="K-Map controls">
@@ -2886,4 +2927,9 @@ result    = ${validation.isEmpty ? "EMPTY" : validation.isValid ? "VALID" : "INV
       </main>
     </div>
   );
+}
+
+
+export default function App() {
+  return <CIToolsApp ToolWorkspace={DigitalElectronicsWorkspace} />;
 }

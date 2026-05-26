@@ -1,0 +1,93 @@
+export const SITE_CONFIG = {
+  name: "CITools",
+  mark: "CIT",
+  subtitle: "Cokroaminoto informatika tool",
+  creator: "Fauzan Mardani",
+  university: "Universitas Cokroaminoto Palopo",
+  githubUrl: "https://github.com/Lantas2",
+  linkedinUrl: "https://www.linkedin.com/in/FauzanMardani",
+  universityShort: "UNCP",
+  universityLogo: `${import.meta.env.BASE_URL}assets/university/logo.svg`,
+  universityWebsiteUrl: "https://uncp.ac.id/",
+  admissionUrl: "https://pmb.uncp.ac.id/",
+  universityInstagramUrl: "https://www.instagram.com/uncp_official/",
+  universityAddress: "X5VX+H5G, Jl. Latamacelling, Tompotika, Kec. Wara, Kota Palopo, Sulawesi Selatan 91911",
+  universityMapsUrl: "https://www.google.com/maps/search/?api=1&query=Universitas+Cokroaminoto+Palopo%2C+X5VX%2BH5G%2C+Jl.+Latamacelling%2C+Tompotika%2C+Kec.+Wara%2C+Kota+Palopo%2C+Sulawesi+Selatan+91911",
+  universityMapEmbedUrl: "https://www.google.com/maps?q=Universitas+Cokroaminoto+Palopo%2C+X5VX%2BH5G%2C+Jl.+Latamacelling%2C+Tompotika%2C+Kec.+Wara%2C+Kota+Palopo%2C+Sulawesi+Selatan+91911&output=embed",
+};
+
+export const SUBJECTS = [
+  {
+    id: "digital-electronics",
+    title: "Elektronika Digital",
+    description: "Karnaugh Map, gerbang logika, dan simulasi rangkaian digital interaktif.",
+    code: "EDG-01",
+    status: "active",
+    href: "/digital-electronics",
+  },
+  {
+    id: "data-structures",
+    title: "Struktur Data",
+    description: "Visualisasi tree, graph, stack, queue, dan traversal.",
+    code: "DS-02",
+    status: "soon",
+  },
+  {
+    id: "algorithms",
+    title: "Algoritma",
+    description: "Eksperimen sorting, searching, dan strategi algoritmik.",
+    code: "ALG-03",
+    status: "soon",
+  },
+  {
+    id: "databases",
+    title: "Basis Data",
+    description: "Model relasi, query, normalisasi, dan pengolahan data.",
+    code: "DB-04",
+    status: "soon",
+  },
+  {
+    id: "networks",
+    title: "Jaringan Komputer",
+    description: "Simulasi topologi, paket, alamat IP, dan protokol dasar.",
+    code: "NET-05",
+    status: "soon",
+  },
+  {
+    id: "operating-systems",
+    title: "Sistem Operasi",
+    description: "Scheduling, memory, process, dan resource management.",
+    code: "OS-06",
+    status: "soon",
+  },
+];
+
+export const DIGITAL_MODULES = [
+  {
+    id: "kmap",
+    title: "K-Map Solver",
+    code: "01",
+    level: "Core",
+    href: "/digital-electronics/kmap",
+    description: "Tool untuk menyederhanakan fungsi Boolean menggunakan Karnaugh Map.",
+    features: ["Gray-code grid", "SOP expression", "Grouping validation"],
+  },
+  {
+    id: "logic-lab",
+    title: "Learning Mode",
+    code: "02",
+    level: "Foundation",
+    href: "/digital-electronics/logic-lab",
+    description: "Mode pembelajaran dasar untuk memahami gerbang logika, input-output, tabel kebenaran, dan visualisasi sinyal digital.",
+    features: ["Seven gate families", "Truth table", "Electric analogy"],
+  },
+  {
+    id: "circuit-ide",
+    title: "Circuit IDE",
+    code: "03",
+    level: "Interactive Lab",
+    href: "/digital-electronics/circuit-ide",
+    description: "Digital & Electronics Interactive Lab untuk merancang rangkaian digital secara realtime, dikembangkan bertahap menuju simulator edukasi lengkap dan tetap berjalan offline tanpa AI.",
+    features: ["Component registry", "Realtime digital wiring", "Template circuits"],
+  },
+];

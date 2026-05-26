@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting · CITools</title>
+    <script>
+      (function () {
+        var base = "/K-map-Solver-Test/";
+        var route = window.location.pathname;
+        if (route.indexOf(base) === 0) {
+          route = "/" + route.slice(base.length);
+        }
+        window.location.replace(base + "?route=" + encodeURIComponent(route + window.location.search + window.location.hash));
+      }());
+    </script>
+  </head>
+  <body></body>
+</html>
