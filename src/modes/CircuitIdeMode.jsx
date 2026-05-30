@@ -14,8 +14,11 @@ import {
 } from "../deep/registry/componentRegistry";
 import { CIRCUIT_TEMPLATES, cloneTemplate } from "../deep/templates/circuitTemplates";
 
-const BOARD_W = 1320;
-const BOARD_H = 820;
+const INITIAL_BOARD_W = 2800;
+const INITIAL_BOARD_H = 1800;
+const BOARD_GROW_X = 1000;
+const BOARD_GROW_Y = 720;
+const BOARD_EDGE_BUFFER = 260;
 const GRID = 20;
 const NODE_W = 164;
 const MIN_NODE_H = 92;
@@ -133,7 +136,7 @@ function LibraryItem({ definition, onAdd }) {
   );
 }
 
-export default function CircuitIdeMode() {
+export default function CircuitIdeMode({ onArtifactChange }) {
   const starter = useMemo(() => cloneTemplate("half-adder"), []);
   const [nodes, setNodes] = useState(starter.nodes);
   const [edges, setEdges] = useState(starter.edges);
@@ -141,6 +144,7 @@ export default function CircuitIdeMode() {
   const [selected, setSelected] = useState({ kind: "node", id: "ha-xor" });
   const [connecting, setConnecting] = useState(null);
   const [zoom, setZoom] = useState(100);
+  const [boardSize, setBoardSize] = useState({ width: INITIAL_BOARD_W, height: INITIAL_BOARD_H });
   const [snapEnabled, setSnapEnabled] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("gates");
@@ -155,6 +159,7 @@ export default function CircuitIdeMode() {
   const [tickCount, setTickCount] = useState(0);
   const [timing, setTiming] = useState([]);
   const boardRef = useRef(null);
+  const frameRef = useRef(null);
   const fileRef = useRef(null);
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
@@ -182,6 +187,51 @@ export default function CircuitIdeMode() {
     return [{ key: `${node.id}:out`, label: node.label }];
   }).slice(0, 12), [monitorNodes]);
 
+  const artifactState = useMemo(() => {
+    const monitorTypes = ["OUTPUT", "PROBE", "BINARY4", "HEX4", "COUNTER4", "REGISTER4"];
+    const outputNodes = nodes.filter((node) => monitorTypes.includes(node.type));
+    const activeEdgeCount = simulation.evaluatedEdges.filter((edge) => edge.active).length;
+    const outputHighCount = outputNodes.reduce((count, node) => {
+      return count + outputPortsForType(node.type).filter((port) => Boolean(readNodePort(simulation, node.id, port))).length;
+    }, 0);
+    const templateName = CIRCUIT_TEMPLATES.find((template) => template.id === templateId)?.name ?? "Custom Board";
+
+    return {
+      nodeCount: nodes.length,
+      edgeCount: edges.length,
+      activeEdgeCount,
+      outputHighCount,
+      selectedType: selectedNode?.type ?? "LOGIC",
+      selectedLabel: selectedNode?.label ?? "No selection",
+      templateName,
+      clockRunning,
+      clockLevel,
+    };
+  }, [nodes, edges.length, simulation, selectedNode, templateId, clockRunning, clockLevel]);
+
+  useEffect(() => {
+    onArtifactChange?.(artifactState);
+  }, [artifactState, onArtifactChange]);
+
+  function ensureBoardSpace(x, y, height = MIN_NODE_H) {
+    setBoardSize((current) => {
+      let width = current.width;
+      let boardHeight = current.height;
+      while (x + NODE_W + BOARD_EDGE_BUFFER > width) width += BOARD_GROW_X;
+      while (y + height + BOARD_EDGE_BUFFER > boardHeight) boardHeight += BOARD_GROW_Y;
+      return width === current.width && boardHeight === current.height ? current : { width, height: boardHeight };
+    });
+  }
+
+  function expandCanvas() {
+    setBoardSize((current) => ({ width: current.width + BOARD_GROW_X, height: current.height + BOARD_GROW_Y }));
+    setNotice("Workspace expanded. Additional signal-plane area is ready.");
+  }
+
+  function returnToOrigin() {
+    frameRef.current?.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+  }
+
   function recordTiming(nextSimulation, label = `T${tickCount}`) {
     const signals = Object.fromEntries(monitoredSignals.map((channel) => {
       const [nodeId, port] = channel.key.split(":");
@@ -198,8 +248,9 @@ export default function CircuitIdeMode() {
       const scale = zoom / 100;
       let x = (event.clientX - rect.left) / scale - drag.offsetX;
       let y = (event.clientY - rect.top) / scale - drag.offsetY;
-      x = Math.max(18, Math.min(BOARD_W - NODE_W - 18, snapEnabled ? snap(x) : x));
-      y = Math.max(58, Math.min(BOARD_H - nodeHeight(drag.node) - 18, snapEnabled ? snap(y) : y));
+      x = Math.max(18, snapEnabled ? snap(x) : x);
+      y = Math.max(58, snapEnabled ? snap(y) : y);
+      ensureBoardSpace(x, y, nodeHeight(drag.node));
       setNodes((current) => current.map((node) => node.id === drag.id ? { ...node, x, y } : node));
     };
     const onUp = () => {
@@ -242,6 +293,7 @@ export default function CircuitIdeMode() {
       y: position?.y ?? snap(112 + ((index * 67) % 510)),
       properties: { ...(definition?.properties ?? {}) },
     };
+    ensureBoardSpace(nextNode.x, nextNode.y, nodeHeight(nextNode));
     commit([...nodes, nextNode], edges, `${definition.name} added to workspace.`);
     setSelected({ kind: "node", id: nextNode.id });
   }
@@ -444,8 +496,9 @@ export default function CircuitIdeMode() {
     const rect = boardRef.current?.getBoundingClientRect();
     if (!rect) return;
     const scale = zoom / 100;
-    const x = snap(Math.max(18, Math.min(BOARD_W - NODE_W - 18, (event.clientX - rect.left) / scale - NODE_W / 2)));
-    const y = snap(Math.max(58, Math.min(BOARD_H - MIN_NODE_H - 18, (event.clientY - rect.top) / scale - MIN_NODE_H / 2)));
+    const x = snap(Math.max(18, (event.clientX - rect.left) / scale - NODE_W / 2));
+    const y = snap(Math.max(58, (event.clientY - rect.top) / scale - MIN_NODE_H / 2));
+    ensureBoardSpace(x, y);
     addNode(type, { x, y });
   }
 
@@ -557,20 +610,23 @@ export default function CircuitIdeMode() {
               <button type="button" onClick={() => setZoom((value) => Math.max(60, value - 10))}>−</button>
               <b>{zoom}%</b>
               <button type="button" onClick={() => setZoom((value) => Math.min(150, value + 10))}>+</button>
+              <button type="button" className="dil-canvas-tool-text" onClick={returnToOrigin}>Origin</button>
+              <button type="button" className="dil-canvas-tool-text" onClick={expandCanvas}>Expand</button>
+              <span className="dil-board-size">{boardSize.width} × {boardSize.height}</span>
               <span className="dil-signal-pill">Signal Live</span>
             </div>
           </div>
-          <div className="dil-canvas-frame">
+          <div className="dil-canvas-frame" ref={frameRef}>
             <div
               ref={boardRef}
               className="dil-canvas"
-              style={{ transform: `scale(${zoom / 100})` }}
+              style={{ width: boardSize.width, height: boardSize.height, transform: `scale(${zoom / 100})` }}
               onDragOver={(event) => event.preventDefault()}
               onDrop={onComponentDrop}
               onClick={() => setSelected({ kind: null, id: null })}
             >
               <span className="dil-axis-label">DIGITAL SIGNAL PLANE · drag ready components here</span>
-              <svg className="dil-wires" viewBox={`0 0 ${BOARD_W} ${BOARD_H}`}>
+              <svg className="dil-wires" viewBox={`0 0 ${boardSize.width} ${boardSize.height}`}>
                 {simulation.evaluatedEdges.map((edge) => {
                   const source = nodes.find((node) => node.id === edge.source);
                   const target = nodes.find((node) => node.id === edge.target);

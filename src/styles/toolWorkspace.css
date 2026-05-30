@@ -1,0 +1,3020 @@
+/* ======================================================================
+   CITools Tool Workspace — authoritative editorial glass system
+   This sheet is intentionally scoped to .cit-tool-page and loaded after
+   the legacy application styles. Mechanical/state logic remains in JSX.
+   ====================================================================== */
+
+.cit-tool-page {
+  --ws-sidebar: 378px;
+  --ws-gap: 30px;
+  --ws-pink: #fb3ca6;
+  --ws-violet: #8665ff;
+  --ws-cyan: #1eb6ea;
+  --ws-mint: #14aa93;
+  --ws-bg: #f7f8fc;
+  --ws-bg-end: #f1f4fb;
+  --ws-text: #151a30;
+  --ws-copy: #66738f;
+  --ws-muted: #98a3bc;
+  --ws-panel: rgba(255, 255, 255, .68);
+  --ws-panel-strong: rgba(255, 255, 255, .84);
+  --ws-surface: rgba(255, 255, 255, .63);
+  --ws-border: rgba(116, 130, 173, .13);
+  --ws-highlight: rgba(255, 255, 255, .82);
+  --ws-shadow: 0 18px 55px rgba(76, 88, 127, .075);
+  --ws-shadow-high: 0 34px 92px rgba(77, 90, 130, .105);
+  --ws-cell-on: rgba(215, 245, 255, .74);
+  --ws-success: rgba(20, 170, 147, .07);
+  /* Unified environment bridge used by K-Map, Learning and Circuit IDE. */
+  --env-bg: var(--ws-bg);
+  --env-bg-end: var(--ws-bg-end);
+  --env-panel: var(--ws-panel);
+  --env-panel-strong: var(--ws-panel-strong);
+  --env-control: var(--ws-surface);
+  --env-border: var(--ws-border);
+  --env-border-bright: var(--ws-highlight);
+  --env-shadow: var(--ws-shadow);
+  --env-shadow-high: var(--ws-shadow-high);
+  --env-ink: var(--ws-text);
+  --env-copy: var(--ws-copy);
+  --env-muted: var(--ws-muted);
+  --env-pink: var(--ws-pink);
+  --env-violet: var(--ws-violet);
+  --env-cyan: var(--ws-cyan);
+  --env-mint: var(--ws-mint);
+  --env-grid: color-mix(in srgb, var(--ws-cyan) 8%, transparent);
+  --env-success: var(--ws-success);
+  /* Compatibility bridge for lower legacy-rendered mechanics: never leak orange/beige. */
+  --color-primary: var(--ws-pink);
+  --color-primary-2: var(--ws-violet);
+  --color-secondary: var(--ws-cyan);
+  --color-accent: var(--ws-violet);
+  --color-paper: var(--ws-text);
+  --color-paper-dim: var(--ws-copy);
+  --color-surface: var(--ws-panel);
+  --color-surface-2: var(--ws-surface);
+  --color-grid: transparent;
+  --color-line: var(--ws-border);
+  --shadow-hard: var(--ws-shadow);
+  --shadow-small: var(--ws-shadow);
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 13% 18%, color-mix(in srgb, var(--ws-pink) 8%, transparent), transparent 24%),
+    radial-gradient(circle at 76% 22%, color-mix(in srgb, var(--ws-cyan) 8%, transparent), transparent 26%),
+    radial-gradient(circle at 43% 70%, color-mix(in srgb, var(--ws-violet) 6%, transparent), transparent 34%),
+    linear-gradient(142deg, var(--ws-bg), var(--ws-bg-end)) !important;
+  color: var(--ws-text) !important;
+  font-family: "Instrument Sans", "Space Grotesk", sans-serif !important;
+}
+
+.cit-tool-page.mode-light.theme-original {
+  --ws-pink: #fb3ca6;
+  --ws-violet: #8665ff;
+  --ws-cyan: #1eb6ea;
+  --ws-mint: #14aa93;
+}
+
+.cit-tool-page.mode-dark {
+  --ws-bg: #080c16;
+  --ws-bg-end: #111a2b;
+  --ws-text: #f4f6fe;
+  --ws-copy: #b0bbd7;
+  --ws-muted: #7784a3;
+  --ws-panel: rgba(15, 21, 37, .68);
+  --ws-panel-strong: rgba(18, 25, 44, .88);
+  --ws-surface: rgba(24, 31, 52, .70);
+  --ws-border: rgba(165, 180, 221, .15);
+  --ws-highlight: rgba(239, 244, 255, .10);
+  --ws-shadow: 0 22px 64px rgba(0, 0, 0, .25);
+  --ws-shadow-high: 0 38px 105px rgba(0, 0, 0, .39);
+  --ws-cell-on: rgba(17, 94, 128, .36);
+  --ws-success: rgba(20, 170, 147, .11);
+  background:
+    radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--ws-pink) 17%, transparent), transparent 28%),
+    radial-gradient(circle at 82% 20%, color-mix(in srgb, var(--ws-cyan) 16%, transparent), transparent 31%),
+    radial-gradient(circle at 44% 73%, color-mix(in srgb, var(--ws-violet) 13%, transparent), transparent 34%),
+    linear-gradient(143deg, var(--ws-bg), var(--ws-bg-end)) !important;
+}
+
+.cit-tool-page.theme-ocean {
+  --ws-pink: #18c5df;
+  --ws-violet: #3279ff;
+  --ws-cyan: #33d4ee;
+  --ws-mint: #13aaad;
+}
+.cit-tool-page.theme-ocean.mode-light { --ws-bg: #f2fbfd; --ws-bg-end: #edf7fc; }
+.cit-tool-page.theme-ocean.mode-dark { --ws-bg: #06131f; --ws-bg-end: #071d2c; }
+.cit-tool-page.theme-forest {
+  --ws-pink: #27a273;
+  --ws-violet: #58ab75;
+  --ws-cyan: #28bca9;
+  --ws-mint: #198d68;
+}
+.cit-tool-page.theme-forest.mode-light { --ws-bg: #f2f8f3; --ws-bg-end: #edf5ef; }
+.cit-tool-page.theme-forest.mode-dark { --ws-bg: #091610; --ws-bg-end: #102119; }
+.cit-tool-page.theme-coffee {
+  --ws-pink: #bb794d;
+  --ws-violet: #d19b69;
+  --ws-cyan: #e0b56f;
+  --ws-mint: #a66b47;
+}
+.cit-tool-page.theme-coffee.mode-light { --ws-bg: #fcf8f3; --ws-bg-end: #f5eee7; }
+.cit-tool-page.theme-coffee.mode-dark { --ws-bg: #160f0c; --ws-bg-end: #241a13; }
+.cit-tool-page.theme-rose {
+  --ws-pink: #ff4b91;
+  --ws-violet: #d66bcb;
+  --ws-cyan: #f49db8;
+  --ws-mint: #d26889;
+}
+.cit-tool-page.theme-rose.mode-light { --ws-bg: #fff7fb; --ws-bg-end: #f9f0f7; }
+.cit-tool-page.theme-rose.mode-dark { --ws-bg: #180c18; --ws-bg-end: #281226; }
+
+body.cit-tools-workspace-active {
+  background: #f7f8fc !important;
+}
+body.cit-tools-workspace-active[data-tool-appearance="dark"] {
+  background: #080c16 !important;
+}
+
+/* Page atmosphere is below UI and cannot affect interactions. */
+.cit-tool-page .theme-environment {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cit-tool-page .theme-environment::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(119,132,170,.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(119,132,170,.026) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(circle at 72% 38%, #000 0 20%, transparent 72%);
+}
+.cit-tool-page .env-haze { position: absolute; border-radius: 50%; filter: blur(76px); opacity: .86; }
+.cit-tool-page .env-haze-a { left: 5%; top: 12%; width: 400px; height: 470px; background: color-mix(in srgb, var(--ws-pink) 11%, transparent); }
+.cit-tool-page .env-haze-b { right: -90px; top: 20%; width: 530px; height: 480px; background: color-mix(in srgb, var(--ws-cyan) 11%, transparent); }
+.cit-tool-page .env-haze-c { left: 36%; bottom: -120px; width: 500px; height: 350px; background: color-mix(in srgb, var(--ws-violet) 9%, transparent); }
+
+/* Phase 1 environment safety: explicit styles prevent raw SVG default-black artifacts. */
+.cit-tool-page .env-haze-d {
+  position: absolute;
+  display: none;
+  width: 460px;
+  height: 360px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .68;
+}
+.cit-tool-page.theme-ocean .env-haze-d { display:block; left:48%; top:-70px; background:color-mix(in srgb,var(--ws-cyan) 9%,transparent); }
+.cit-tool-page.theme-forest .env-haze-d { display:block; right:-80px; top:24%; background:color-mix(in srgb,var(--ws-pink) 8%,transparent); }
+.cit-tool-page.theme-coffee .env-haze-d { display:block; right:7%; bottom:5%; background:color-mix(in srgb,var(--ws-cyan) 10%,transparent); }
+.cit-tool-page.theme-rose .env-haze-d { display:block; left:35%; top:6%; background:color-mix(in srgb,var(--ws-pink) 10%,transparent); }
+
+.cit-tool-page .theme-environment svg { overflow: visible; pointer-events:none; }
+.cit-tool-page .env-wave,
+.cit-tool-page .env-leaves,
+.cit-tool-page .env-steam,
+.cit-tool-page .env-ribbon {
+  position:absolute;
+  display:block;
+  fill:none !important;
+  pointer-events:none;
+}
+.cit-tool-page .env-wave path,
+.cit-tool-page .env-leaves path,
+.cit-tool-page .env-steam path,
+.cit-tool-page .env-ribbon path {
+  fill:none !important;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* Ocean: minimal water-line layer; fuller caustics/particles reserved for Phase 2. */
+.cit-tool-page .env-wave { left:0; right:0; bottom:-24px; width:100%; height:min(38vh,360px); opacity:.18; }
+.cit-tool-page .env-wave path:first-child { stroke:var(--ws-cyan); stroke-width:2.4; }
+.cit-tool-page .env-wave path:last-child { stroke:var(--ws-violet); stroke-width:1.6; opacity:.7; }
+.cit-tool-page .env-bubble {
+  position:absolute; border-radius:50%; border:1px solid color-mix(in srgb,var(--ws-cyan) 30%,transparent);
+  background:radial-gradient(circle at 30% 22%, rgba(255,255,255,.7), color-mix(in srgb,var(--ws-cyan) 8%,transparent) 42%, transparent 70%);
+  box-shadow:0 18px 35px color-mix(in srgb,var(--ws-cyan) 8%,transparent); opacity:.54;
+  animation:envBubbleDrift 12s ease-in-out infinite;
+}
+.cit-tool-page .bubble-one { width:34px; height:34px; left:10%; bottom:24%; }
+.cit-tool-page .bubble-two { width:16px; height:16px; right:18%; top:28%; animation-delay:-4s; }
+.cit-tool-page .bubble-three { width:25px; height:25px; right:7%; bottom:18%; animation-delay:-8s; }
+
+/* Forest: line-art botanical contour only, never opaque fill. */
+.cit-tool-page .env-leaves { right:-38px; bottom:-80px; width:min(30vw,420px); height:min(74vh,860px); opacity:.14; }
+.cit-tool-page .env-leaves path { stroke:var(--ws-pink); stroke-width:2.1; }
+.cit-tool-page .env-leaves path:first-child { stroke:var(--ws-cyan); stroke-width:2.6; }
+.cit-tool-page .env-dew {
+  position:absolute; display:block; border-radius:50%; border:1px solid color-mix(in srgb,var(--ws-cyan) 22%,transparent);
+  background:radial-gradient(circle at 28% 25%, rgba(255,255,255,.8), color-mix(in srgb,var(--ws-cyan) 9%,transparent)); opacity:.48;
+}
+.cit-tool-page .dew-one { right:14%; top:31%; width:13px; height:16px; }
+.cit-tool-page .dew-two { right:8%; top:47%; width:8px; height:10px; }
+
+/* Coffee: restrained steam curves and soft amber bokeh. */
+.cit-tool-page .env-steam { left:-20px; bottom:1%; width:min(26vw,420px); height:min(60vh,680px); opacity:.15; }
+.cit-tool-page .env-steam path { stroke:var(--ws-cyan); stroke-width:2.8; }
+.cit-tool-page .env-steam path:last-child { stroke:var(--ws-pink); opacity:.72; }
+.cit-tool-page .env-bokeh { position:absolute; display:block; border-radius:50%; background:color-mix(in srgb,var(--ws-cyan) 18%,transparent); filter:blur(2px); opacity:.43; }
+.cit-tool-page .bokeh-one { width:92px; height:92px; right:8%; bottom:16%; }
+.cit-tool-page .bokeh-two { width:42px; height:42px; right:17%; bottom:28%; background:color-mix(in srgb,var(--ws-pink) 17%,transparent); }
+
+/* Rose: translucent petal geometry with one ribbon stroke. */
+.cit-tool-page .env-petal {
+  position:absolute; display:block; border-radius:75% 20% 70% 28% / 68% 22% 68% 24%;
+  background:linear-gradient(145deg, color-mix(in srgb,var(--ws-pink) 21%,transparent), color-mix(in srgb,var(--ws-violet) 14%,transparent));
+  opacity:.48; filter:blur(.2px); animation:envPetalFloat 11s ease-in-out infinite;
+}
+.cit-tool-page .petal-one { width:70px; height:90px; left:6%; bottom:18%; transform:rotate(-26deg); }
+.cit-tool-page .petal-two { width:42px; height:58px; right:19%; top:20%; transform:rotate(24deg); animation-delay:-4s; }
+.cit-tool-page .petal-three { width:58px; height:74px; right:7%; bottom:22%; transform:rotate(-9deg); animation-delay:-7s; }
+.cit-tool-page .env-ribbon { left:0; right:0; bottom:0; width:100%; height:min(23vh,280px); opacity:.17; }
+.cit-tool-page .env-ribbon path { stroke:var(--ws-pink); stroke-width:2; }
+
+@keyframes envBubbleDrift { 50% { transform:translateY(-18px) scale(1.04); opacity:.72; } }
+@keyframes envPetalFloat { 50% { transform:translateY(-13px) rotate(-8deg); opacity:.64; } }
+
+body.cit-tools-workspace-active[data-tool-theme="ocean"][data-tool-appearance="dark"] { background:#06131f !important; }
+body.cit-tools-workspace-active[data-tool-theme="forest"][data-tool-appearance="dark"] { background:#091610 !important; }
+body.cit-tools-workspace-active[data-tool-theme="coffee"][data-tool-appearance="dark"] { background:#160f0c !important; }
+body.cit-tools-workspace-active[data-tool-theme="rose"][data-tool-appearance="dark"] { background:#180c18 !important; }
+
+/* Full-height editorial sidebar. */
+.cit-tool-page .workspace-shell {
+  display: block !important;
+  min-height: 100vh !important;
+  padding: 96px 24px 44px calc(var(--ws-sidebar) + var(--ws-gap)) !important;
+}
+.cit-tool-page .identity-slab {
+  position: fixed !important;
+  z-index: 5;
+  inset: 0 auto 0 0 !important;
+  width: var(--ws-sidebar) !important;
+  min-height: 100vh !important;
+  padding: 30px 38px 25px 45px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-right: 1px solid var(--ws-border) !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 10% 18%, color-mix(in srgb, var(--ws-pink) 8%, transparent), transparent 26%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ws-panel) 78%, transparent), color-mix(in srgb, var(--ws-panel-strong) 60%, transparent)) !important;
+  color: var(--ws-text) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(25px);
+}
+.cit-tool-page .identity-slab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(circle at 80% 67%, color-mix(in srgb, var(--ws-cyan) 10%, transparent), transparent 28%);
+  pointer-events: none;
+}
+.cit-tool-page .identity-slab::after {
+  content: "";
+  position: absolute;
+  top: -72px;
+  right: -151px;
+  width: 365px;
+  height: 700px;
+  border: 1px solid color-mix(in srgb, var(--ws-violet) 17%, transparent);
+  border-radius: 50%;
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+.cit-tool-page .identity-slab-top,
+.cit-tool-page .identity-slab-bottom { position: relative; z-index: 3; }
+.cit-tool-page .slab-brand {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 58px !important;
+  color: var(--ws-text) !important;
+  text-decoration: none;
+}
+.cit-tool-page .slab-brand-mark {
+  width: 33px;
+  height: 33px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: .71rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--ws-pink), var(--ws-violet) 53%, var(--ws-cyan));
+  box-shadow: 0 13px 28px color-mix(in srgb, var(--ws-pink) 18%, transparent);
+}
+.cit-tool-page .slab-brand strong { color: var(--ws-text) !important; font-size: 1rem; font-weight: 600; letter-spacing: -.045em; }
+.cit-tool-page .slab-kicker {
+  display: inline-flex !important;
+  align-items: center;
+  width: max-content;
+  min-height: 31px;
+  gap: 8px;
+  padding: 0 12px !important;
+  margin: 0 0 27px !important;
+  border: 1px solid color-mix(in srgb, var(--ws-pink) 18%, var(--ws-border)) !important;
+  border-radius: 999px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-copy) !important;
+  font: 500 .61rem "IBM Plex Mono", monospace !important;
+  letter-spacing: .15em !important;
+  text-transform: uppercase;
+}
+.cit-tool-page .slab-kicker::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ws-pink); }
+.cit-tool-page .slab-title {
+  display: grid;
+  gap: 0;
+  margin: 0 !important;
+  color: var(--ws-text) !important;
+  font-family: "Bricolage Grotesque", "Instrument Sans", sans-serif !important;
+  font-size: clamp(3.8rem, 4.5vw, 4.7rem) !important;
+  font-weight: 430 !important;
+  line-height: .96 !important;
+  letter-spacing: -.068em !important;
+  text-shadow: none !important;
+  text-transform: none !important;
+}
+.cit-tool-page .slab-title span:first-child {
+  color: transparent !important;
+  background: linear-gradient(100deg, var(--ws-pink), var(--ws-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.cit-tool-page .slab-copy {
+  max-width: 258px;
+  margin: 25px 0 0 !important;
+  color: var(--ws-copy) !important;
+  font-size: .92rem !important;
+  font-weight: 400 !important;
+  line-height: 1.67 !important;
+}
+.cit-tool-page .identity-feature-list { display: grid; gap: 16px; margin-top: 34px; }
+.cit-tool-page .identity-feature-item { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; align-items: center; }
+.cit-tool-page .feature-icon {
+  width: 38px !important;
+  height: 38px !important;
+  display: block;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 13px !important;
+  background: var(--ws-panel-strong) !important;
+  box-shadow: inset 0 1px 0 var(--ws-highlight), 0 11px 25px rgba(82,95,134,.06) !important;
+  position: relative;
+}
+.cit-tool-page .feature-icon::after { content:""; position:absolute; inset:14px; border-radius:50%; background:var(--ws-violet); opacity:.22; }
+.cit-tool-page .feature-2 .feature-icon::after { background:var(--ws-pink); }
+.cit-tool-page .feature-3 .feature-icon::after { background:var(--ws-cyan); }
+.cit-tool-page .feature-4 .feature-icon::after { background:var(--ws-mint); }
+.cit-tool-page .identity-feature-item strong { display: block; color: var(--ws-text) !important; font-size: .82rem; font-weight: 500; letter-spacing: -.022em; }
+.cit-tool-page .identity-feature-item small { display: block; margin-top: 3px; color: var(--ws-copy) !important; font-size: .69rem; line-height: 1.35; }
+
+/* Volumetric translucent cube sculpture. */
+.cit-tool-page .sidebar-artwork {
+  position: absolute;
+  z-index: 2;
+  left: 27px;
+  bottom: 112px;
+  width: 295px;
+  height: 270px;
+  pointer-events: none;
+  perspective: 900px;
+  filter: drop-shadow(0 25px 36px color-mix(in srgb, var(--ws-violet) 13%, transparent));
+}
+.cit-tool-page .sidebar-artwork .cube-glow {
+  position: absolute;
+  left: 45px;
+  right: 24px;
+  bottom: 22px;
+  height: 86px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 50%, color-mix(in srgb, var(--ws-cyan) 24%, transparent), transparent 56%),
+    radial-gradient(circle at 70% 42%, color-mix(in srgb, var(--ws-pink) 24%, transparent), transparent 62%);
+  filter: blur(25px);
+}
+.cit-tool-page .sidebar-artwork .glass-cube {
+  position: absolute;
+  width: 82px;
+  height: 82px;
+  transform-style: preserve-3d;
+}
+.cit-tool-page .sidebar-artwork .face {
+  display: block;
+  position: absolute;
+  backdrop-filter: blur(5px);
+}
+.cit-tool-page .sidebar-artwork .front {
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--ws-violet) 56%, transparent);
+  background: linear-gradient(145deg, rgba(255,255,255,.22), color-mix(in srgb, var(--ws-violet) 13%, transparent), color-mix(in srgb, var(--ws-cyan) 15%, transparent));
+  box-shadow: inset 0 0 30px rgba(255,255,255,.34), 0 16px 32px color-mix(in srgb, var(--ws-cyan) 10%, transparent);
+}
+.cit-tool-page .sidebar-artwork .top {
+  left: 0;
+  top: -29px;
+  width: 82px;
+  height: 29px;
+  transform: skewX(-45deg);
+  transform-origin: left bottom;
+  border: 1px solid color-mix(in srgb, var(--ws-pink) 50%, transparent);
+  background: linear-gradient(130deg, rgba(255,255,255,.50), color-mix(in srgb, var(--ws-pink) 22%, transparent));
+}
+.cit-tool-page .sidebar-artwork .side {
+  top: -1px;
+  right: -31px;
+  width: 31px;
+  height: 82px;
+  transform: skewY(-43deg);
+  transform-origin: left top;
+  border: 1px solid color-mix(in srgb, var(--ws-cyan) 48%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ws-pink) 14%, transparent), color-mix(in srgb, var(--ws-cyan) 20%, transparent));
+}
+.cit-tool-page .sidebar-artwork .cube-left { left: 39px; bottom: 36px; }
+.cit-tool-page .sidebar-artwork .cube-center { left: 95px; bottom: 66px; width: 102px; height: 102px; }
+.cit-tool-page .sidebar-artwork .cube-center .top { width: 102px; }
+.cit-tool-page .sidebar-artwork .cube-center .side { height: 102px; }
+.cit-tool-page .sidebar-artwork .cube-right { left: 174px; bottom: 106px; width: 88px; height: 88px; }
+.cit-tool-page .sidebar-artwork .cube-right .top { width: 88px; }
+.cit-tool-page .sidebar-artwork .cube-right .side { height: 88px; }
+.cit-tool-page .sidebar-artwork .cube-mini { left: 6px; bottom: 10px; width: 44px; height: 44px; }
+.cit-tool-page .sidebar-artwork .cube-mini .top { width: 44px; height: 18px; top: -18px; }
+.cit-tool-page .sidebar-artwork .cube-mini .side { height: 44px; width: 19px; right: -19px; }
+.cit-tool-page .art-orb {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ws-pink) 19%, rgba(255,255,255,.8));
+  background: radial-gradient(circle at 30% 26%, rgba(255,255,255,.9), color-mix(in srgb, var(--ws-cyan) 9%, transparent) 47%, transparent 72%);
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--ws-violet) 11%, transparent);
+}
+.cit-tool-page .orb-one { width: 32px; height: 32px; left: 2px; bottom: 49px; }
+.cit-tool-page .orb-two { width: 14px; height: 14px; right: 17px; bottom: 63px; }
+.cit-tool-page .orb-three { width: 8px; height: 8px; right: 71px; top: 55px; }
+.cit-tool-page .mini-ledger {
+  width: 153px !important;
+  padding: 13px 13px 12px !important;
+  margin: 0 0 19px !important;
+  display: flex !important;
+  align-items: end;
+  justify-content: space-between;
+  gap: 9px;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 18px !important;
+  background: var(--ws-panel-strong) !important;
+  box-shadow: var(--ws-shadow) !important;
+}
+.cit-tool-page .mini-ledger span { color: var(--ws-muted) !important; font: 500 .58rem "IBM Plex Mono", monospace !important; letter-spacing: .13em; text-transform: uppercase; }
+.cit-tool-page .mini-ledger strong { color: var(--ws-text) !important; font: 500 1.72rem/1 "Bricolage Grotesque", sans-serif !important; margin-top: 5px; }
+.cit-tool-page .metric-wave { width: 52px; height: 24px; }
+.cit-tool-page .metric-wave path { fill: none; stroke: var(--ws-pink); stroke-width: 1.5; opacity: .48; }
+.cit-tool-page .slab-footer { margin: 0 !important; color: var(--ws-muted) !important; font-size: .63rem !important; }
+
+/* Target top bar: route pills + compact utilities only. */
+.cit-tool-page .command-orbit {
+  position: fixed !important;
+  z-index: 60 !important;
+  top: 18px !important;
+  left: calc(var(--ws-sidebar) + var(--ws-gap)) !important;
+  right: 24px !important;
+  bottom: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.cit-tool-page .orbit-routes,
+.cit-tool-page .orbit-utilities { display: flex; align-items: center; gap: 10px; }
+.cit-tool-page .orbit-command,
+.cit-tool-page .appearance-switch,
+.cit-tool-page .settings-trigger {
+  min-height: 50px !important;
+  min-width: 0 !important;
+  padding: 0 20px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: none !important;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 999px !important;
+  background: var(--ws-panel) !important;
+  color: var(--ws-text) !important;
+  box-shadow: 0 11px 30px rgba(77,90,130,.045), inset 0 1px var(--ws-highlight) !important;
+  font: 500 .82rem "Instrument Sans", sans-serif !important;
+  letter-spacing: -.015em !important;
+  text-transform: none !important;
+  transition: transform .17s ease, background .17s ease, box-shadow .17s ease, border-color .17s ease;
+}
+.cit-tool-page .orbit-command span {
+  min-width: 20px !important;
+  min-height: 20px !important;
+  margin: 0 !important;
+  display: inline-grid;
+  place-items: center;
+  border: 0 !important;
+  border-radius: 999px;
+  background: transparent !important;
+  color: var(--ws-copy) !important;
+  font: 500 .62rem "IBM Plex Mono", monospace !important;
+}
+.cit-tool-page .orbit-command:hover,
+.cit-tool-page .appearance-switch:hover,
+.cit-tool-page .settings-trigger:hover { transform: translateY(-1px); background: var(--ws-panel-strong) !important; box-shadow: var(--ws-shadow) !important; }
+.cit-tool-page .orbit-command.active {
+  border-color: color-mix(in srgb, var(--ws-pink) 18%, var(--ws-border)) !important;
+  background: color-mix(in srgb, var(--ws-pink) 7%, var(--ws-panel-strong)) !important;
+  color: var(--ws-pink) !important;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--ws-pink) 10%, transparent), inset 0 1px var(--ws-highlight) !important;
+}
+.cit-tool-page .orbit-command.active span { color: var(--ws-pink) !important; background: color-mix(in srgb, var(--ws-pink) 10%, transparent) !important; }
+.cit-tool-page .orbit-home { background: var(--ws-panel) !important; color: var(--ws-text) !important; }
+.cit-tool-page .appearance-switch { padding: 0 15px !important; gap: 11px; }
+.cit-tool-page .mode-icon { display: grid; place-items: center; width: 20px; color: var(--ws-text); }
+.cit-tool-page .mode-icon svg,
+.cit-tool-page .settings-icon svg { width: 18px; height: 18px; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.cit-tool-page .mode-track { width: 31px; height: 18px; padding: 2px; display: block; border-radius: 999px; background: color-mix(in srgb, var(--ws-copy) 28%, transparent); }
+.cit-tool-page .mode-track i { display: block; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 2px 7px rgba(0,0,0,.12); transform: translateX(0); transition: transform .18s ease; }
+.cit-tool-page.mode-dark .mode-track i { transform: translateX(13px); background: var(--ws-cyan); }
+.cit-tool-page .tool-settings { position: relative; }
+.cit-tool-page .settings-trigger { min-width: 126px !important; padding: 0 17px !important; }
+.cit-tool-page .settings-chevron { font-size: .8rem; color: var(--ws-copy); margin-left: 4px; }
+.cit-tool-page .settings-popover {
+  position: absolute;
+  z-index: 180;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 252px;
+  padding: 14px;
+  border: 1px solid var(--ws-border);
+  border-radius: 22px;
+  background: var(--ws-panel-strong);
+  color: var(--ws-text);
+  box-shadow: var(--ws-shadow-high);
+  backdrop-filter: blur(25px);
+}
+.cit-tool-page .settings-popover-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; color: var(--ws-text); font-size: .85rem; font-weight: 550; }
+.cit-tool-page .settings-popover-head small { color: var(--ws-muted); font: 500 .62rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.cit-tool-page .sound-setting {
+  width: 100%; min-height: 46px; margin-bottom: 13px; padding: 0 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1px solid var(--ws-border); border-radius: 14px;
+  background: var(--ws-surface); color: var(--ws-text);
+  font: 500 .8rem "Instrument Sans", sans-serif;
+}
+.cit-tool-page .sound-setting span:first-child { display: inline-flex; align-items: center; gap: 9px; }
+.cit-tool-page .sound-state { color: var(--ws-copy); font-size: .74rem; }
+.cit-tool-page .motion-label { margin: 2px 0 8px; display: block; color: var(--ws-muted); font: 500 .61rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .14em; }
+.cit-tool-page .motion-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  margin-bottom: 7px;
+  padding: 4px;
+  border: 1px solid var(--ws-border);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--ws-surface) 84%, transparent);
+}
+.cit-tool-page .motion-option {
+  height: 34px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ws-copy);
+  font: 500 .7rem "Instrument Sans", sans-serif;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+.cit-tool-page .motion-option:hover { color: var(--ws-text); background: color-mix(in srgb, var(--ws-pink) 5%, transparent); }
+.cit-tool-page .motion-option.selected {
+  color: var(--ws-pink);
+  background: color-mix(in srgb, var(--ws-pink) 10%, var(--ws-panel-strong));
+  box-shadow: inset 0 1px var(--ws-highlight), 0 7px 18px color-mix(in srgb, var(--ws-pink) 8%, transparent);
+}
+.cit-tool-page .motion-caption {
+  margin: 0 0 14px;
+  color: var(--ws-muted);
+  font: 500 .61rem "IBM Plex Mono", monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.cit-tool-page .palette-label { margin: 3px 0 9px; display: block; color: var(--ws-muted); font: 500 .61rem "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .14em; }
+.cit-tool-page .palette-grid { display: grid; gap: 5px; }
+.cit-tool-page .palette-option {
+  width: 100%; height: 39px; padding: 0 10px; display: flex; align-items: center; gap: 10px;
+  border: 0; border-radius: 11px; background: transparent; color: var(--ws-text);
+  font: 500 .79rem "Instrument Sans", sans-serif; text-align: left;
+}
+.cit-tool-page .palette-option:hover,
+.cit-tool-page .palette-option.selected { background: color-mix(in srgb, var(--ws-pink) 8%, transparent); }
+.cit-tool-page .palette-check { margin-left: auto; color: var(--ws-pink); }
+.cit-tool-page .theme-swatch { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.cit-tool-page .swatch-original { background: linear-gradient(135deg, #fb3ca6, #8665ff, #1eb6ea); }
+.cit-tool-page .swatch-rose { background: linear-gradient(135deg, #ff4b91, #d66bcb); }
+.cit-tool-page .swatch-ocean { background: linear-gradient(135deg, #18c5df, #3279ff); }
+.cit-tool-page .swatch-forest { background: linear-gradient(135deg, #27a273, #28bca9); }
+.cit-tool-page .swatch-coffee { background: linear-gradient(135deg, #bb794d, #e0b56f); }
+
+/* Working canvas and panels. */
+.cit-tool-page .content-field { padding: 0 !important; min-width: 0; color: var(--ws-text); }
+.cit-tool-page .control-ribbon {
+  margin: 0 0 23px !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1.05fr 1.23fr .84fr !important;
+  gap: 13px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+.cit-tool-page .control-ribbon-block,
+.cit-tool-page .panel {
+  position: relative;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 22px !important;
+  background: var(--ws-panel) !important;
+  color: var(--ws-text) !important;
+  box-shadow: var(--ws-shadow) !important;
+  backdrop-filter: blur(20px);
+}
+.cit-tool-page .control-ribbon-block { min-height: 106px; padding: 18px 18px 16px !important; display: grid; align-content: start; gap: 14px; }
+.cit-tool-page .panel { padding: 22px 22px 20px !important; }
+.cit-tool-page .panel::before { display: none !important; }
+.cit-tool-page .ribbon-label {
+  color: var(--ws-muted) !important;
+  font: 500 .59rem "IBM Plex Mono", monospace !important;
+  letter-spacing: .17em !important;
+  text-transform: uppercase;
+}
+.cit-tool-page .control-buttons { display: flex; flex-wrap: wrap; gap: 9px; }
+.cit-tool-page .control-buttons button,
+.cit-tool-page .circuit-tab,
+.cit-tool-page .zoom-controls button,
+.cit-tool-page .gate-pill {
+  min-height: 45px;
+  padding: 0 15px !important;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 12px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-text) !important;
+  font: 500 .78rem "Instrument Sans", sans-serif !important;
+  box-shadow: inset 0 1px var(--ws-highlight), 0 9px 21px rgba(73,85,122,.035) !important;
+  transition: transform .17s ease, border-color .17s ease, box-shadow .17s ease;
+}
+.cit-tool-page .control-buttons button:hover,
+.cit-tool-page .circuit-tab:hover,
+.cit-tool-page .zoom-controls button:hover,
+.cit-tool-page .gate-pill:hover { transform: translateY(-1px) !important; box-shadow: var(--ws-shadow) !important; }
+.cit-tool-page .control-buttons button.selected,
+.cit-tool-page .circuit-tab.active,
+.cit-tool-page .gate-pill.active {
+  border-color: color-mix(in srgb, var(--ws-pink) 48%, var(--ws-border)) !important;
+  background: color-mix(in srgb, var(--ws-pink) 6%, var(--ws-surface)) !important;
+  color: var(--ws-pink) !important;
+  box-shadow: 0 11px 29px color-mix(in srgb, var(--ws-pink) 10%, transparent), inset 0 1px var(--ws-highlight) !important;
+}
+.cit-tool-page .solver-mosaic {
+  display: grid !important;
+  grid-template-columns: minmax(540px, 1.58fr) minmax(330px, .88fr) !important;
+  gap: 20px !important;
+  margin: 0 !important;
+  align-items: start !important;
+}
+.cit-tool-page .result-panel,
+.cit-tool-page .group-panel,
+.cit-tool-page .boolean-panel { margin-top: 0 !important; }
+.cit-tool-page .panel-title { position: relative; z-index: 1; margin: 0 0 20px !important; align-items: flex-start; }
+.cit-tool-page .panel-title h2 {
+  margin: 0 !important;
+  color: var(--ws-text) !important;
+  font-family: "Bricolage Grotesque", "Instrument Sans", sans-serif !important;
+  font-size: 1.28rem !important;
+  font-weight: 480 !important;
+  letter-spacing: -.05em !important;
+  text-transform: uppercase !important;
+}
+.cit-tool-page .panel-title p { margin: 7px 0 0 !important; color: var(--ws-copy) !important; font-size: .73rem; font-weight: 400 !important; line-height: 1.42; }
+.cit-tool-page .badge {
+  min-height: 29px !important;
+  padding: 0 10px !important;
+  border: 1px solid color-mix(in srgb, var(--ws-violet) 18%, var(--ws-border)) !important;
+  border-radius: 999px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-violet) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  font: 500 .59rem "IBM Plex Mono", monospace !important;
+  letter-spacing: .02em;
+}
+.cit-tool-page .badge.valid { border-color: color-mix(in srgb, var(--ws-mint) 25%, var(--ws-border)) !important; color: var(--ws-mint) !important; }
+
+/* K-map: content remains sharp; overlays are only perimeter strokes. */
+.cit-tool-page .kmap-shell { padding: 0 !important; overflow-x: auto; }
+.cit-tool-page .kmap-labels,
+.cit-tool-page .kmap-body,
+.cit-tool-page .row-labels,
+.cit-tool-page .cell-area { gap: 9px !important; }
+.cit-tool-page .kmap-labels { margin-bottom: 9px !important; }
+.cit-tool-page .corner,
+.cit-tool-page .axis {
+  min-height: 55px !important;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 13px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-copy) !important;
+  box-shadow: inset 0 1px var(--ws-highlight) !important;
+  font: 500 .76rem "Instrument Sans", sans-serif !important;
+}
+.cit-tool-page .row-axis { min-height: 104px !important; }
+.cit-tool-page .cell-area { position: relative; isolation: isolate; }
+.cit-tool-page .cell {
+  position: relative !important;
+  z-index: 1 !important;
+  isolation: isolate !important;
+  overflow: visible !important;
+  min-height: 92px !important;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 15px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-text) !important;
+  box-shadow: inset 0 1px var(--ws-highlight), 0 10px 24px rgba(75,88,127,.04) !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+.cit-tool-page .cell::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 1px;
+  border-radius: 13px;
+  background: transparent;
+  filter: none !important;
+  pointer-events: none;
+}
+.cit-tool-page .cell.active {
+  border-color: color-mix(in srgb, var(--ws-cyan) 23%, var(--ws-border)) !important;
+  background: var(--ws-surface) !important;
+}
+.cit-tool-page .cell.active::before { background: linear-gradient(138deg, var(--ws-cell-on), color-mix(in srgb, var(--ws-cyan) 8%, transparent)); }
+.cit-tool-page .cell-value,
+.cit-tool-page .cell-label,
+.cit-tool-page .cell small {
+  position: relative !important;
+  z-index: 2 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+.cit-tool-page .cell-value { color: var(--ws-text) !important; font: 500 1.55rem/1 "Bricolage Grotesque", sans-serif !important; }
+.cit-tool-page .cell-label { margin-top: 5px !important; color: var(--ws-copy) !important; font: 500 .67rem "Instrument Sans", sans-serif !important; }
+.cit-tool-page .cell small { margin-top: 2px !important; color: var(--ws-muted) !important; font: 500 .64rem "Instrument Sans", sans-serif !important; }
+.cit-tool-page .group-overlay { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 1 !important; filter: none !important; }
+.cit-tool-page .group-line {
+  opacity: 1 !important;
+  background: transparent !important;
+  border: 2px solid currentColor !important;
+  border-radius: 17px !important;
+  box-shadow: 0 0 17px color-mix(in srgb, currentColor 12%, transparent) !important;
+  transform: scale(.95) !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+.cit-tool-page .group-line span {
+  position: absolute;
+  top: -9px !important;
+  left: 14px !important;
+  z-index: 5;
+  padding: 3px 8px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: color-mix(in srgb, var(--ws-text) 86%, transparent) !important;
+  color: var(--ws-bg) !important;
+  font: 500 .56rem "IBM Plex Mono", monospace !important;
+  filter: none !important;
+}
+.cit-tool-page .group-color-0 { color: var(--ws-pink) !important; }
+.cit-tool-page .group-color-1 { color: var(--ws-violet) !important; }
+.cit-tool-page .group-color-2 { color: var(--ws-cyan) !important; }
+.cit-tool-page .group-color-3 { color: #ff8266 !important; }
+.cit-tool-page .group-color-4 { color: var(--ws-mint) !important; }
+.cit-tool-page [data-vars="4"] .row-labels,
+.cit-tool-page [data-vars="4"] .cell-area { grid-template-rows: repeat(4, 88px) !important; }
+.cit-tool-page [data-vars="4"] .row-axis { min-height: 88px !important; }
+.cit-tool-page [data-vars="4"] .cell { min-height: 80px !important; }
+
+.cit-tool-page .result-panel { display: grid !important; align-content: start; gap: 11px; }
+.cit-tool-page .result-panel .panel-title { margin-bottom: 2px !important; }
+.cit-tool-page .result-box {
+  margin: 0 !important;
+  padding: 15px 17px !important;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 15px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-text) !important;
+  box-shadow: inset 0 1px var(--ws-highlight) !important;
+}
+.cit-tool-page .result-box p { margin: 0 0 8px !important; color: var(--ws-copy) !important; font: 500 .57rem "IBM Plex Mono", monospace !important; letter-spacing: .17em !important; text-transform: uppercase; }
+.cit-tool-page .result-box strong { color: var(--ws-text) !important; font: 480 clamp(1.35rem, 2vw, 1.78rem)/1.16 "Bricolage Grotesque", sans-serif !important; letter-spacing: -.055em !important; }
+.cit-tool-page .feature-result strong { color: transparent !important; background: linear-gradient(90deg, var(--ws-pink), var(--ws-violet), var(--ws-cyan)); -webkit-background-clip: text; background-clip: text; }
+.cit-tool-page .status {
+  padding: 12px 14px !important;
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 13px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-copy) !important;
+  font: 500 .7rem "Instrument Sans", sans-serif !important;
+}
+.cit-tool-page .status.success { color: var(--ws-mint) !important; border-color: color-mix(in srgb, var(--ws-mint) 23%, var(--ws-border)) !important; background: var(--ws-success) !important; }
+.cit-tool-page .insight-stack {
+  display: grid !important;
+  grid-template-columns: minmax(350px, .9fr) minmax(430px, 1.12fr) !important;
+  gap: 20px !important;
+  margin-top: 20px !important;
+  align-items: start;
+}
+.cit-tool-page .group-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px !important; }
+.cit-tool-page .group-card,
+.cit-tool-page .boolean-step-card,
+.cit-tool-page .reasoning-card {
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 14px !important;
+  background: var(--ws-surface) !important;
+  color: var(--ws-text) !important;
+  box-shadow: none !important;
+}
+.cit-tool-page .group-card { padding: 13px 12px !important; }
+.cit-tool-page .group-card-0 { border-color: color-mix(in srgb, var(--ws-pink) 24%, var(--ws-border)) !important; }
+.cit-tool-page .group-card-1 { border-color: color-mix(in srgb, var(--ws-violet) 24%, var(--ws-border)) !important; }
+.cit-tool-page .group-card-2 { border-color: color-mix(in srgb, var(--ws-cyan) 24%, var(--ws-border)) !important; }
+.cit-tool-page .group-top b { font-size: 1.25rem !important; }
+.cit-tool-page .group-card-0 .group-top b { color: var(--ws-pink) !important; }
+.cit-tool-page .group-card-1 .group-top b { color: var(--ws-violet) !important; }
+.cit-tool-page .group-card-2 .group-top b { color: var(--ws-cyan) !important; }
+.cit-tool-page .group-card p,
+.cit-tool-page .group-card small { color: var(--ws-copy) !important; }
+.cit-tool-page .boolean-step-list { display: grid; gap: 9px; }
+.cit-tool-page .boolean-step-card summary { padding: 13px !important; color: var(--ws-text) !important; }
+.cit-tool-page .boolean-step-card summary span {
+  width: 27px !important; height: 27px !important; display: inline-grid !important; place-items: center !important;
+  border: 0 !important; border-radius: 50% !important;
+  color: var(--ws-violet) !important; background: color-mix(in srgb, var(--ws-violet) 15%, transparent) !important;
+  box-shadow: none !important;
+}
+.cit-tool-page .boolean-step-card:first-child summary span { color: #fff !important; background: var(--ws-pink) !important; }
+.cit-tool-page .boolean-step-card summary b { color: var(--ws-text) !important; font-weight: 500 !important; }
+.cit-tool-page .boolean-step-content code,
+.cit-tool-page pre {
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 10px !important;
+  background: color-mix(in srgb, var(--ws-panel) 67%, transparent) !important;
+  color: var(--ws-copy) !important;
+}
+.cit-tool-page .boolean-step-content p,
+.cit-tool-page .reasoning-card p { color: var(--ws-copy) !important; }
+.cit-tool-page .circuit-panel,
+.cit-tool-page .validation-panel,
+.cit-tool-page .reasoning-panel { margin-top: 20px !important; }
+
+/* Dark is the same product at night, not a legacy beige UI. */
+.cit-tool-page.mode-dark .identity-slab {
+  background: linear-gradient(180deg, rgba(12,17,31,.73), rgba(14,21,39,.76)) !important;
+}
+.cit-tool-page.mode-dark .command-orbit .orbit-command,
+.cit-tool-page.mode-dark .appearance-switch,
+.cit-tool-page.mode-dark .settings-trigger,
+.cit-tool-page.mode-dark .settings-popover,
+.cit-tool-page.mode-dark .sound-setting,
+.cit-tool-page.mode-dark .control-ribbon-block,
+.cit-tool-page.mode-dark .panel,
+.cit-tool-page.mode-dark .corner,
+.cit-tool-page.mode-dark .axis,
+.cit-tool-page.mode-dark .cell,
+.cit-tool-page.mode-dark .result-box,
+.cit-tool-page.mode-dark .group-card,
+.cit-tool-page.mode-dark .boolean-step-card,
+.cit-tool-page.mode-dark .reasoning-card {
+  background: var(--ws-panel) !important;
+  border-color: var(--ws-border) !important;
+  color: var(--ws-text) !important;
+  box-shadow: var(--ws-shadow) !important;
+}
+.cit-tool-page.mode-dark .control-buttons button { background: var(--ws-surface) !important; color: var(--ws-text) !important; border-color: var(--ws-border) !important; box-shadow: inset 0 1px var(--ws-highlight) !important; }
+.cit-tool-page.mode-dark .control-buttons button.selected { color: var(--ws-pink) !important; border-color: color-mix(in srgb, var(--ws-pink) 44%, var(--ws-border)) !important; background: color-mix(in srgb, var(--ws-pink) 9%, var(--ws-surface)) !important; }
+.cit-tool-page.mode-dark .cell.active::before { background: linear-gradient(140deg, rgba(16,104,143,.41), rgba(13,48,73,.23)); }
+.cit-tool-page.mode-dark .group-line span { background: rgba(245,247,255,.9) !important; color: #12182a !important; }
+
+/* Non-Kmap workspaces inherit the shell, without changing mechanics. */
+.cit-tool-page .logic-lab-panel,
+.cit-tool-page .logic-lab-card,
+.cit-tool-page .electric-card,
+.cit-tool-page .lab-accordion {
+  border: 1px solid var(--ws-border) !important;
+  border-radius: 22px !important;
+  background: var(--ws-panel) !important;
+  color: var(--ws-text) !important;
+  box-shadow: var(--ws-shadow) !important;
+}
+.cit-tool-page .electric-panel {
+  --electric-panel-bg: var(--ws-panel) !important;
+  --electric-canvas-bg: color-mix(in srgb, var(--ws-panel) 82%, transparent) !important;
+  --electric-text: var(--ws-text) !important;
+  --electric-soft: var(--ws-copy) !important;
+  --electric-border: var(--ws-border) !important;
+}
+
+@media (max-width: 1240px) {
+  .cit-tool-page { --ws-sidebar: 322px; --ws-gap: 18px; }
+  .cit-tool-page .solver-mosaic,
+  .cit-tool-page .insight-stack { grid-template-columns: 1fr !important; }
+  .cit-tool-page .sidebar-artwork { transform: scale(.84); transform-origin: left bottom; }
+}
+@media (max-width: 970px) {
+  .cit-tool-page .workspace-shell { padding: 84px 12px 24px !important; }
+  .cit-tool-page .identity-slab {
+    position: relative !important; inset: auto !important; width: auto !important; min-height: 0 !important;
+    margin-bottom: 18px; padding: 22px !important; border: 1px solid var(--ws-border) !important; border-radius: 25px !important;
+  }
+  .cit-tool-page .sidebar-artwork, .cit-tool-page .identity-slab::after { display: none; }
+  .cit-tool-page .slab-brand { margin-bottom: 22px !important; }
+  .cit-tool-page .identity-feature-list { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .cit-tool-page .identity-slab-bottom { margin-top: 22px; }
+  .cit-tool-page .command-orbit {
+    top: 10px !important; left: 8px !important; right: 8px !important;
+    overflow-x: auto; justify-content: flex-start !important; scrollbar-width: none;
+  }
+  .cit-tool-page .command-orbit::-webkit-scrollbar { display: none; }
+  .cit-tool-page .orbit-routes, .cit-tool-page .orbit-utilities { flex-shrink: 0; }
+  .cit-tool-page .control-ribbon { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 670px) {
+  .cit-tool-page .identity-feature-list,
+  .cit-tool-page .group-grid { grid-template-columns: 1fr; }
+  .cit-tool-page .panel { padding: 15px !important; }
+  .cit-tool-page .kmap-labels,
+  .cit-tool-page .kmap-body { min-width: 520px; }
+  .cit-tool-page .orbit-command { padding: 0 13px !important; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .cit-tool-page *, .cit-tool-page *::before, .cit-tool-page *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .cit-tool-page .env-bubble, .cit-tool-page .env-petal { animation: none !important; }
+}
+
+/* ======================================================================
+   PHASE 2 — art-directed palette worlds
+   Non-original palettes now change environmental illustration and panel
+   atmosphere; they never alter tool mechanics or content hierarchy.
+   ====================================================================== */
+
+/* Stronger atmosphere tokens without contaminating Original. */
+.cit-tool-page.theme-ocean.mode-light {
+  --ws-bg: #e9f9fd;
+  --ws-bg-end: #daf2fa;
+  --ws-panel: rgba(231, 249, 253, .70);
+  --ws-panel-strong: rgba(242, 253, 255, .88);
+  --ws-surface: rgba(221, 246, 252, .66);
+  --ws-border: rgba(25, 167, 197, .15);
+  --ws-text: #092a39;
+  --ws-copy: #3d748b;
+  --ws-muted: #71a6b8;
+}
+.cit-tool-page.theme-ocean.mode-dark {
+  --ws-bg: #040d17;
+  --ws-bg-end: #061d2b;
+  --ws-panel: rgba(5, 21, 38, .74);
+  --ws-panel-strong: rgba(5, 17, 33, .91);
+  --ws-surface: rgba(8, 30, 51, .68);
+  --ws-border: rgba(45, 178, 210, .17);
+  --ws-text: #dff8fe;
+  --ws-copy: #80bdcf;
+  --ws-muted: #4b90a6;
+}
+.cit-tool-page.theme-forest.mode-light {
+  --ws-bg: #edf7ef;
+  --ws-bg-end: #dfeee4;
+  --ws-panel: rgba(234, 248, 238, .72);
+  --ws-panel-strong: rgba(246, 252, 248, .89);
+  --ws-surface: rgba(224, 243, 229, .67);
+  --ws-border: rgba(35, 143, 82, .14);
+  --ws-text: #102817;
+  --ws-copy: #447357;
+  --ws-muted: #77a488;
+}
+.cit-tool-page.theme-forest.mode-dark {
+  --ws-bg: #07100a;
+  --ws-bg-end: #101f14;
+  --ws-panel: rgba(9, 22, 14, .74);
+  --ws-panel-strong: rgba(7, 18, 11, .91);
+  --ws-surface: rgba(13, 31, 20, .69);
+  --ws-border: rgba(53, 166, 101, .16);
+  --ws-text: #ddf4e4;
+  --ws-copy: #86bb98;
+  --ws-muted: #4c8862;
+}
+.cit-tool-page.theme-coffee.mode-light {
+  --ws-bg: #fbf6ee;
+  --ws-bg-end: #efe5d7;
+  --ws-panel: rgba(253, 247, 237, .78);
+  --ws-panel-strong: rgba(255, 251, 244, .91);
+  --ws-surface: rgba(246, 237, 223, .72);
+  --ws-border: rgba(145, 80, 41, .14);
+  --ws-text: #2e180d;
+  --ws-copy: #805339;
+  --ws-muted: #a57c61;
+}
+.cit-tool-page.theme-coffee.mode-dark {
+  --ws-bg: #100a06;
+  --ws-bg-end: #24160d;
+  --ws-panel: rgba(28, 17, 10, .77);
+  --ws-panel-strong: rgba(23, 13, 7, .92);
+  --ws-surface: rgba(38, 24, 14, .72);
+  --ws-border: rgba(182, 109, 61, .17);
+  --ws-text: #f5e5d3;
+  --ws-copy: #c39b78;
+  --ws-muted: #936846;
+}
+.cit-tool-page.theme-rose.mode-light {
+  --ws-bg: #fff6fb;
+  --ws-bg-end: #f9ebf5;
+  --ws-panel: rgba(255, 248, 252, .76);
+  --ws-panel-strong: rgba(255, 252, 255, .91);
+  --ws-surface: rgba(253, 240, 248, .68);
+  --ws-border: rgba(214, 70, 129, .13);
+  --ws-text: #2a111d;
+  --ws-copy: #86536a;
+  --ws-muted: #ba829b;
+}
+.cit-tool-page.theme-rose.mode-dark {
+  --ws-bg: #130912;
+  --ws-bg-end: #281323;
+  --ws-panel: rgba(31, 11, 27, .76);
+  --ws-panel-strong: rgba(25, 8, 21, .92);
+  --ws-surface: rgba(39, 14, 34, .69);
+  --ws-border: rgba(222, 79, 143, .16);
+  --ws-text: #ffedf5;
+  --ws-copy: #d595b4;
+  --ws-muted: #9d5e7f;
+}
+
+.cit-tool-page.theme-ocean.mode-light {
+  background:
+    radial-gradient(ellipse at 50% -12%, rgba(133,236,255,.32), transparent 44%),
+    radial-gradient(circle at 82% 35%, rgba(51,121,255,.13), transparent 31%),
+    linear-gradient(169deg, #effcfe, #dbf3fa 48%, #d2eef7) !important;
+}
+.cit-tool-page.theme-ocean.mode-dark {
+  background:
+    radial-gradient(ellipse at 50% -8%, rgba(27,174,214,.20), transparent 42%),
+    radial-gradient(circle at 82% 34%, rgba(50,121,255,.15), transparent 33%),
+    linear-gradient(169deg, #040c17, #071727 48%, #06121f) !important;
+}
+.cit-tool-page.theme-forest.mode-light {
+  background:
+    radial-gradient(ellipse at 48% -10%, rgba(176,222,150,.26), transparent 48%),
+    radial-gradient(circle at 85% 38%, rgba(40,188,160,.10), transparent 29%),
+    linear-gradient(170deg, #f2fbf2, #e4f1e7 48%, #dbeadf) !important;
+}
+.cit-tool-page.theme-forest.mode-dark {
+  background:
+    radial-gradient(ellipse at 48% -10%, rgba(92,184,108,.15), transparent 48%),
+    radial-gradient(circle at 82% 43%, rgba(40,188,160,.11), transparent 29%),
+    linear-gradient(170deg, #071009, #0e1e13 48%, #08130d) !important;
+}
+.cit-tool-page.theme-coffee.mode-light {
+  background:
+    radial-gradient(circle at 17% 20%, rgba(200,120,62,.13), transparent 30%),
+    radial-gradient(circle at 85% 55%, rgba(225,177,116,.15), transparent 32%),
+    linear-gradient(160deg, #fffaf3, #f5ebdd 48%, #eadcc9) !important;
+}
+.cit-tool-page.theme-coffee.mode-dark {
+  background:
+    radial-gradient(circle at 15% 19%, rgba(185,93,46,.19), transparent 31%),
+    radial-gradient(circle at 82% 55%, rgba(221,154,80,.14), transparent 33%),
+    linear-gradient(160deg, #0f0905, #201309 51%, #140b06) !important;
+}
+.cit-tool-page.theme-rose.mode-light {
+  background:
+    radial-gradient(circle at 17% 22%, rgba(255,75,145,.14), transparent 31%),
+    radial-gradient(circle at 78% 18%, rgba(214,107,203,.12), transparent 28%),
+    linear-gradient(155deg, #fffafd, #faedf6 48%, #f5e3f1) !important;
+}
+.cit-tool-page.theme-rose.mode-dark {
+  background:
+    radial-gradient(circle at 17% 22%, rgba(232,61,133,.20), transparent 31%),
+    radial-gradient(circle at 80% 18%, rgba(196,96,196,.15), transparent 30%),
+    linear-gradient(155deg, #120811, #241121 48%, #180b15) !important;
+}
+
+/* Haze becomes palette-specific. */
+.cit-tool-page.theme-ocean .env-haze-a { background: color-mix(in srgb, var(--ws-cyan) 17%, transparent); }
+.cit-tool-page.theme-ocean .env-haze-b { background: color-mix(in srgb, var(--ws-violet) 12%, transparent); }
+.cit-tool-page.theme-ocean .env-haze-d { width: 700px; height: 330px; filter: blur(102px); }
+.cit-tool-page.theme-forest .env-haze-a { background: color-mix(in srgb, var(--ws-pink) 14%, transparent); }
+.cit-tool-page.theme-forest .env-haze-b { background: color-mix(in srgb, var(--ws-cyan) 12%, transparent); }
+.cit-tool-page.theme-coffee .env-haze-a { background: color-mix(in srgb, var(--ws-pink) 17%, transparent); }
+.cit-tool-page.theme-coffee .env-haze-b { background: color-mix(in srgb, var(--ws-cyan) 13%, transparent); }
+.cit-tool-page.theme-rose .env-haze-a { background: color-mix(in srgb, var(--ws-pink) 17%, transparent); }
+.cit-tool-page.theme-rose .env-haze-b { background: color-mix(in srgb, var(--ws-violet) 13%, transparent); }
+
+/* Never allow decorative SVGs to fall back to solid black fill. */
+.cit-tool-page .ocean-rays path,
+.cit-tool-page .ocean-caustics path,
+.cit-tool-page .forest-rays path,
+.cit-tool-page .forest-canopy path,
+.cit-tool-page .forest-vine path,
+.cit-tool-page .coffee-rings path,
+.cit-tool-page .coffee-rings circle,
+.cit-tool-page .coffee-steam path,
+.cit-tool-page .rose-filigree path,
+.cit-tool-page .rose-ribbon path { fill: none; }
+
+/* OCEAN — watery depth, refracted light and bubbles. */
+.cit-tool-page .ocean-rays { position:absolute; inset:0 0 auto; width:100%; height:min(77vh,720px); opacity:.19; mix-blend-mode:screen; }
+.cit-tool-page .ocean-ray { fill: color-mix(in srgb, var(--ws-cyan) 30%, transparent); stroke: none; filter: blur(1px); }
+.cit-tool-page .ray-b { fill: color-mix(in srgb, var(--ws-violet) 24%, transparent); }
+.cit-tool-page .ray-c { fill: color-mix(in srgb, var(--ws-cyan) 18%, transparent); }
+.cit-tool-page.theme-ocean.mode-light .ocean-rays { opacity:.12; mix-blend-mode:multiply; }
+.cit-tool-page .ocean-caustics { position:absolute; inset:30px 0 auto; width:100%; height:min(56vh,600px); opacity:.18; }
+.cit-tool-page .ocean-caustics path { stroke:var(--ws-cyan); stroke-width:1.6; stroke-linecap:round; opacity:.78; animation:citCausticShift 16s ease-in-out infinite; }
+.cit-tool-page .ocean-caustics path:nth-child(2) { stroke:var(--ws-violet); animation-delay:-6s; }
+.cit-tool-page .ocean-caustics path:nth-child(3) { animation-delay:-10s; opacity:.55; }
+@keyframes citCausticShift { 50% { transform:translateX(25px) translateY(-7px); } }
+.cit-tool-page .ocean-waves { position:absolute; left:0; right:0; bottom:-3px; height:min(19vh,190px); width:100%; opacity:.18; }
+.cit-tool-page .ocean-wave { stroke:none; animation:citWaveFloat 13s ease-in-out infinite; }
+.cit-tool-page .wave-a { fill:color-mix(in srgb, var(--ws-cyan) 39%, transparent); }
+.cit-tool-page .wave-b { fill:color-mix(in srgb, var(--ws-violet) 23%, transparent); animation-delay:-5s; }
+@keyframes citWaveFloat { 50% { transform:translateX(-22px) translateY(4px); } }
+.cit-tool-page .ocean-particles,
+.cit-tool-page .ocean-bubbles { position:absolute; inset:0; }
+.cit-tool-page .ocean-particle { position:absolute; width:4px; height:4px; border-radius:50%; background:var(--ws-cyan); opacity:0; box-shadow:0 0 15px color-mix(in srgb,var(--ws-cyan) 65%,transparent); animation:citOceanSpark 11s ease-in-out infinite; }
+.cit-tool-page .particle-0 { left:8%; top:34%; animation-delay:-2s; }
+.cit-tool-page .particle-1 { left:18%; top:61%; animation-delay:-7s; }
+.cit-tool-page .particle-2 { left:28%; top:22%; animation-delay:-4s; }
+.cit-tool-page .particle-3 { left:39%; top:76%; animation-delay:-9s; }
+.cit-tool-page .particle-4 { left:48%; top:33%; animation-delay:-1s; }
+.cit-tool-page .particle-5 { left:58%; top:57%; animation-delay:-6s; }
+.cit-tool-page .particle-6 { left:67%; top:23%; animation-delay:-3s; }
+.cit-tool-page .particle-7 { left:74%; top:71%; animation-delay:-8s; }
+.cit-tool-page .particle-8 { left:84%; top:40%; animation-delay:-5s; }
+.cit-tool-page .particle-9 { left:91%; top:80%; animation-delay:-10s; }
+.cit-tool-page .particle-10 { left:34%; top:49%; animation-delay:-11s; background:var(--ws-violet); }
+.cit-tool-page .particle-11 { left:80%; top:15%; animation-delay:-4.5s; background:var(--ws-violet); }
+@keyframes citOceanSpark { 0%,100% { opacity:0; transform:translateY(0) scale(.7); } 45% { opacity:.7; transform:translateY(-24px) scale(1.2); } }
+.cit-tool-page .ocean-bubble { position:absolute; bottom:-40px; border-radius:50%; border:1px solid color-mix(in srgb,var(--ws-cyan) 34%,transparent); background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.68), transparent 49%); opacity:0; animation:citBubbleRise 15s linear infinite; }
+.cit-tool-page .bubble-one { left:10%; width:18px; height:18px; animation-delay:-4s; }
+.cit-tool-page .bubble-two { left:26%; width:10px; height:10px; animation-delay:-9s; animation-duration:12s; }
+.cit-tool-page .bubble-three { left:42%; width:22px; height:22px; animation-delay:-12s; animation-duration:17s; }
+.cit-tool-page .bubble-four { left:57%; width:13px; height:13px; animation-delay:-2s; }
+.cit-tool-page .bubble-five { left:70%; width:25px; height:25px; animation-delay:-11s; animation-duration:18s; }
+.cit-tool-page .bubble-six { left:82%; width:9px; height:9px; animation-delay:-5s; animation-duration:11s; }
+.cit-tool-page .bubble-seven { left:89%; width:17px; height:17px; animation-delay:-15s; animation-duration:19s; }
+.cit-tool-page .bubble-eight { left:17%; width:7px; height:7px; animation-delay:-7s; animation-duration:10s; }
+@keyframes citBubbleRise { 8% { opacity:.56; } 90% { opacity:.22; } 100% { transform:translateY(-103vh) translateX(16px); opacity:0; } }
+
+/* FOREST — leaf silhouettes, warm rays and drifting spores. */
+.cit-tool-page .forest-rays { position:absolute; inset:0 0 auto; width:100%; height:min(72vh,700px); opacity:.12; mix-blend-mode:multiply; }
+.cit-tool-page .forest-rays path { fill:color-mix(in srgb,var(--ws-pink) 17%,transparent); stroke:none; }
+.cit-tool-page.theme-forest.mode-dark .forest-rays { opacity:.17; mix-blend-mode:screen; }
+.cit-tool-page .forest-canopy { position:absolute; top:-2px; width:100%; height:290px; opacity:.13; }
+.cit-tool-page .forest-canopy path { fill:var(--ws-violet); stroke:none; }
+.cit-tool-page.theme-forest.mode-dark .forest-canopy { opacity:.21; }
+.cit-tool-page .forest-vine { position:absolute; right:-45px; bottom:-28px; width:min(28vw,360px); height:min(80vh,820px); opacity:.18; }
+.cit-tool-page .vine-stem { stroke:var(--ws-cyan); stroke-width:2.5; }
+.cit-tool-page .vine-leaf { fill:color-mix(in srgb,var(--ws-pink) 22%,transparent); stroke:var(--ws-pink); stroke-width:1.4; }
+.cit-tool-page.theme-forest.mode-dark .forest-vine { opacity:.29; }
+.cit-tool-page .forest-fireflies,
+.cit-tool-page .forest-falling-leaves { position:absolute; inset:0; }
+.cit-tool-page .firefly { position:absolute; width:5px; height:5px; border-radius:50%; opacity:0; background:#e8c95a; box-shadow:0 0 13px rgba(255,213,81,.68); animation:citFirefly 9s ease-in-out infinite; }
+.cit-tool-page .firefly-0 { left:12%; top:34%; animation-delay:-1s; }
+.cit-tool-page .firefly-1 { left:21%; top:68%; animation-delay:-6s; }
+.cit-tool-page .firefly-2 { left:33%; top:24%; animation-delay:-4s; }
+.cit-tool-page .firefly-3 { left:44%; top:77%; animation-delay:-7s; }
+.cit-tool-page .firefly-4 { left:54%; top:42%; animation-delay:-3s; }
+.cit-tool-page .firefly-5 { left:62%; top:18%; animation-delay:-8s; }
+.cit-tool-page .firefly-6 { left:72%; top:58%; animation-delay:-5s; }
+.cit-tool-page .firefly-7 { left:84%; top:32%; animation-delay:-2s; }
+.cit-tool-page .firefly-8 { left:90%; top:73%; animation-delay:-9s; }
+.cit-tool-page .firefly-9 { left:17%; top:83%; animation-delay:-3.5s; }
+.cit-tool-page .firefly-10 { left:49%; top:21%; animation-delay:-6.5s; }
+.cit-tool-page .firefly-11 { left:78%; top:87%; animation-delay:-4.5s; }
+@keyframes citFirefly { 0%,100% { opacity:0; transform:translate(0,0); } 38% { opacity:.85; transform:translate(12px,-16px); } 62% { opacity:.45; transform:translate(-9px,-29px); } }
+.cit-tool-page.theme-forest.mode-light .firefly { opacity:.28; box-shadow:0 0 9px rgba(205,166,43,.34); }
+.cit-tool-page .falling-leaf { position:absolute; top:-38px; width:15px; height:22px; border-radius:72% 18% 70% 20%; background:color-mix(in srgb,var(--ws-pink) 48%,transparent); opacity:.27; animation:citLeafFall 18s linear infinite; }
+.cit-tool-page .leaf-0 { left:11%; animation-delay:-3s; }
+.cit-tool-page .leaf-1 { left:28%; animation-delay:-11s; width:10px; height:16px; }
+.cit-tool-page .leaf-2 { left:39%; animation-delay:-7s; background:color-mix(in srgb,var(--ws-cyan) 44%,transparent); }
+.cit-tool-page .leaf-3 { left:52%; animation-delay:-13s; width:18px; height:26px; }
+.cit-tool-page .leaf-4 { left:64%; animation-delay:-5s; }
+.cit-tool-page .leaf-5 { left:77%; animation-delay:-15s; width:11px; height:18px; }
+.cit-tool-page .leaf-6 { left:88%; animation-delay:-9s; background:color-mix(in srgb,var(--ws-cyan) 44%,transparent); }
+.cit-tool-page .leaf-7 { left:18%; animation-delay:-16s; width:20px; height:27px; }
+@keyframes citLeafFall { 5% { opacity:.27; } 100% { transform:translateY(108vh) translateX(35px) rotate(640deg); opacity:0; } }
+
+/* COFFEE — warm studio, steam, cup rings and bokeh. */
+.cit-tool-page .coffee-rings { position:absolute; left:-115px; top:14%; width:min(39vw,530px); opacity:.10; }
+.cit-tool-page .coffee-rings circle,
+.cit-tool-page .coffee-rings path { stroke:var(--ws-violet); stroke-width:1.3; }
+.cit-tool-page.theme-coffee.mode-dark .coffee-rings { opacity:.16; }
+.cit-tool-page .coffee-steam { position:absolute; left:24px; bottom:0; width:min(25vw,390px); height:min(66vh,700px); opacity:.16; }
+.cit-tool-page .coffee-steam path { stroke:var(--ws-cyan); stroke-width:2.5; stroke-linecap:round; animation:citSteam 8s ease-in-out infinite; }
+.cit-tool-page .coffee-steam .steam-b { stroke:var(--ws-pink); animation-delay:-2.5s; }
+.cit-tool-page .coffee-steam .steam-c { opacity:.54; animation-delay:-5s; }
+@keyframes citSteam { 50% { transform:translateY(-11px) translateX(4px); opacity:.72; } }
+.cit-tool-page .coffee-bokeh { position:absolute; inset:0; }
+.cit-tool-page .bokeh { position:absolute; border-radius:50%; background:radial-gradient(circle, color-mix(in srgb,var(--ws-cyan) 27%,transparent), transparent 70%); filter:blur(1px); }
+.cit-tool-page .bokeh-a { width:210px; height:210px; right:9%; top:16%; }
+.cit-tool-page .bokeh-b { width:145px; height:145px; right:24%; bottom:14%; }
+.cit-tool-page .bokeh-c { width:75px; height:75px; left:34%; top:31%; }
+.cit-tool-page .bokeh-d { width:100px; height:100px; right:4%; bottom:39%; }
+.cit-tool-page .coffee-cup { position:absolute; right:32px; bottom:34px; width:min(14vw,230px); opacity:.17; }
+.cit-tool-page .cup-shadow { fill:color-mix(in srgb,var(--ws-violet) 18%,transparent); }
+.cit-tool-page .cup-body { fill:color-mix(in srgb,var(--ws-cyan) 26%,transparent); stroke:var(--ws-cyan); stroke-width:1.4; }
+.cit-tool-page .cup-handle { fill:none; stroke:var(--ws-cyan); stroke-width:13; stroke-linecap:round; }
+.cit-tool-page .cup-coffee { fill:color-mix(in srgb,var(--ws-violet) 72%,transparent); }
+.cit-tool-page .cup-crema { fill:color-mix(in srgb,var(--ws-cyan) 70%,#fff); }
+.cit-tool-page.theme-coffee.mode-dark .coffee-cup { opacity:.25; }
+
+/* ROSE — floating petals, ribbon silk and filigree. */
+.cit-tool-page .rose-filigree { position:absolute; top:-22px; right:-26px; width:min(32vw,480px); opacity:.15; }
+.cit-tool-page .rose-filigree path { stroke:var(--ws-pink); stroke-width:1.1; stroke-linecap:round; }
+.cit-tool-page .rose-filigree .thin { stroke:var(--ws-violet); opacity:.62; }
+.cit-tool-page .filigree-dot { fill:var(--ws-pink); }
+.cit-tool-page.theme-rose.mode-dark .rose-filigree { opacity:.23; }
+.cit-tool-page .rose-ribbon { position:absolute; left:0; bottom:0; height:min(24vh,220px); width:100%; opacity:.17; }
+.cit-tool-page .rose-ribbon path { stroke-linecap:round; animation:citRibbonSway 12s ease-in-out infinite; }
+.cit-tool-page .ribbon-a { stroke:var(--ws-pink); stroke-width:2; }
+.cit-tool-page .ribbon-b { stroke:var(--ws-violet); stroke-width:1.4; animation-delay:-5s; }
+@keyframes citRibbonSway { 50% { transform:translateY(-7px); } }
+.cit-tool-page .rose-petals,
+.cit-tool-page .rose-dew { position:absolute; inset:0; }
+.cit-tool-page .rose-petal { position:absolute; top:-34px; width:16px; height:23px; border-radius:78% 18% 70% 20%; background:color-mix(in srgb,var(--ws-pink) 47%,transparent); opacity:.31; animation:citPetalFall 16s ease-in infinite; }
+.cit-tool-page .rose-petal-0 { left:6%; animation-delay:-4s; }
+.cit-tool-page .rose-petal-1 { left:14%; animation-delay:-11s; background:color-mix(in srgb,var(--ws-violet) 46%,transparent); }
+.cit-tool-page .rose-petal-2 { left:23%; animation-delay:-7s; width:21px; height:28px; }
+.cit-tool-page .rose-petal-3 { left:32%; animation-delay:-14s; }
+.cit-tool-page .rose-petal-4 { left:44%; animation-delay:-2s; background:color-mix(in srgb,var(--ws-violet) 46%,transparent); }
+.cit-tool-page .rose-petal-5 { left:53%; animation-delay:-9s; width:12px; height:18px; }
+.cit-tool-page .rose-petal-6 { left:61%; animation-delay:-5s; }
+.cit-tool-page .rose-petal-7 { left:69%; animation-delay:-13s; width:20px; height:27px; }
+.cit-tool-page .rose-petal-8 { left:77%; animation-delay:-3s; background:color-mix(in srgb,var(--ws-violet) 46%,transparent); }
+.cit-tool-page .rose-petal-9 { left:84%; animation-delay:-12s; }
+.cit-tool-page .rose-petal-10 { left:92%; animation-delay:-6s; width:13px; height:19px; }
+.cit-tool-page .rose-petal-11 { left:27%; animation-delay:-15s; width:10px; height:15px; }
+@keyframes citPetalFall { 6% { opacity:.31; } 100% { transform:translateY(105vh) translateX(42px) rotate(520deg); opacity:0; } }
+.cit-tool-page .dewdrop { position:absolute; border-radius:50%; border:1px solid rgba(255,210,230,.55); background:radial-gradient(circle at 30% 27%, rgba(255,255,255,.92), rgba(255,118,177,.12)); box-shadow:0 12px 29px rgba(227,70,132,.09); animation:citDew 5s ease-in-out infinite; }
+.cit-tool-page .dewdrop-a { width:14px; height:14px; top:31%; left:17%; }
+.cit-tool-page .dewdrop-b { width:9px; height:9px; top:53%; left:75%; animation-delay:-2s; }
+.cit-tool-page .dewdrop-c { width:18px; height:18px; top:71%; left:88%; animation-delay:-3.5s; }
+@keyframes citDew { 50% { transform:scale(1.08); opacity:.63; } }
+
+/* Palette-level panel and sidebar reflections. */
+.cit-tool-page:not(.theme-original) .panel,
+.cit-tool-page:not(.theme-original) .control-ribbon-block {
+  box-shadow: var(--ws-shadow), inset 0 1px var(--ws-highlight), 0 0 0 1px color-mix(in srgb,var(--ws-pink) 4%,transparent) !important;
+}
+.cit-tool-page.theme-ocean .identity-slab {
+  background: radial-gradient(circle at 44% 68%, rgba(37,194,228,.14), transparent 35%), linear-gradient(180deg, color-mix(in srgb,var(--ws-panel) 85%,transparent), color-mix(in srgb,var(--ws-panel-strong) 69%,transparent)) !important;
+}
+.cit-tool-page.theme-forest .identity-slab {
+  background: radial-gradient(circle at 45% 70%, rgba(43,171,102,.14), transparent 34%), linear-gradient(180deg, color-mix(in srgb,var(--ws-panel) 85%,transparent), color-mix(in srgb,var(--ws-panel-strong) 69%,transparent)) !important;
+}
+.cit-tool-page.theme-coffee .identity-slab {
+  background: radial-gradient(circle at 44% 68%, rgba(191,113,56,.15), transparent 34%), linear-gradient(180deg, color-mix(in srgb,var(--ws-panel) 86%,transparent), color-mix(in srgb,var(--ws-panel-strong) 70%,transparent)) !important;
+}
+.cit-tool-page.theme-rose .identity-slab {
+  background: radial-gradient(circle at 44% 69%, rgba(229,72,138,.15), transparent 34%), linear-gradient(180deg, color-mix(in srgb,var(--ws-panel) 86%,transparent), color-mix(in srgb,var(--ws-panel-strong) 70%,transparent)) !important;
+}
+.cit-tool-page.theme-ocean .sidebar-artwork::after,
+.cit-tool-page.theme-forest .sidebar-artwork::after,
+.cit-tool-page.theme-coffee .sidebar-artwork::after,
+.cit-tool-page.theme-rose .sidebar-artwork::after {
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  border-radius:50%;
+}
+.cit-tool-page.theme-ocean .sidebar-artwork::after { inset:72px 12px 34px 29px; border:1px solid color-mix(in srgb,var(--ws-cyan) 20%,transparent); box-shadow:0 0 0 20px color-mix(in srgb,var(--ws-cyan) 4%,transparent),0 0 0 42px color-mix(in srgb,var(--ws-violet) 3%,transparent); }
+.cit-tool-page.theme-forest .sidebar-artwork::after { right:15px; top:45px; width:74px; height:111px; transform:rotate(31deg); border:1px solid color-mix(in srgb,var(--ws-pink) 22%,transparent); border-radius:75% 20% 75% 20%; }
+.cit-tool-page.theme-coffee .sidebar-artwork::after { left:24px; bottom:30px; width:176px; height:76px; border:1px solid color-mix(in srgb,var(--ws-pink) 16%,transparent); transform:rotate(-10deg); }
+.cit-tool-page.theme-rose .sidebar-artwork::after { right:18px; top:26px; width:73px; height:95px; border:1px solid color-mix(in srgb,var(--ws-pink) 25%,transparent); border-radius:70% 20% 70% 22%; transform:rotate(18deg); box-shadow:-26px 20px 0 -1px color-mix(in srgb,var(--ws-violet) 16%,transparent); }
+
+@media (max-width: 970px) {
+  .cit-tool-page .ocean-rays,
+  .cit-tool-page .forest-rays,
+  .cit-tool-page .forest-canopy,
+  .cit-tool-page .forest-vine,
+  .cit-tool-page .coffee-rings,
+  .cit-tool-page .coffee-steam,
+  .cit-tool-page .coffee-cup,
+  .cit-tool-page .rose-filigree { opacity:.08; }
+  .cit-tool-page .ocean-particle:nth-child(n+7),
+  .cit-tool-page .ocean-bubble:nth-child(n+5),
+  .cit-tool-page .firefly:nth-child(n+7),
+  .cit-tool-page .falling-leaf:nth-child(n+5),
+  .cit-tool-page .rose-petal:nth-child(n+7) { display:none; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .cit-tool-page .ocean-caustics path,
+  .cit-tool-page .ocean-wave,
+  .cit-tool-page .ocean-particle,
+  .cit-tool-page .ocean-bubble,
+  .cit-tool-page .firefly,
+  .cit-tool-page .falling-leaf,
+  .cit-tool-page .coffee-steam path,
+  .cit-tool-page .rose-ribbon path,
+  .cit-tool-page .rose-petal,
+  .cit-tool-page .dewdrop { animation:none !important; }
+}
+
+/* ======================================================================
+   PHASE 2.1 — Theme presence polish + stronger, bounded ornaments
+   The environment remains non-interactive and below functional surfaces.
+   ====================================================================== */
+.cit-tool-page .theme-environment { z-index: 0; }
+.cit-tool-page .workspace-shell { position: relative; z-index: 1; }
+.cit-tool-page .theme-environment svg,
+.cit-tool-page .theme-environment i { pointer-events: none; }
+
+/* Allow ornaments to be noticed through the atmosphere without reducing UI contrast. */
+.cit-tool-page:not(.theme-original).mode-dark .control-ribbon-block,
+.cit-tool-page:not(.theme-original).mode-dark .panel {
+  backdrop-filter: blur(17px) saturate(1.06);
+}
+.cit-tool-page:not(.theme-original) .identity-slab::before {
+  opacity: .86;
+}
+
+/* Ocean: add a readable reef/kelp silhouette at the empty perimeter. */
+.cit-tool-page .ocean-reef {
+  position: absolute;
+  left: calc(var(--ws-sidebar) - 26px);
+  bottom: -10px;
+  width: min(19vw, 320px);
+  height: min(42vh, 360px);
+  opacity: .24;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--ws-cyan) 18%, transparent));
+}
+.cit-tool-page .ocean-reef path { fill: none !important; stroke-linecap: round; stroke-linejoin: round; }
+.cit-tool-page .reef-stem { stroke: var(--ws-cyan); stroke-width: 3.2; }
+.cit-tool-page .reef-b { stroke: var(--ws-violet); stroke-width: 2.5; }
+.cit-tool-page .reef-c { stroke: color-mix(in srgb, var(--ws-cyan) 64%, var(--ws-violet)); stroke-width: 2.2; }
+.cit-tool-page .reef-coral { stroke: var(--ws-pink); stroke-width: 2.8; }
+.cit-tool-page.theme-ocean.mode-light .ocean-reef { opacity: .14; }
+.cit-tool-page.theme-ocean.mode-dark .ocean-caustics { opacity: .25; }
+.cit-tool-page.theme-ocean.mode-dark .ocean-waves { opacity: .29; }
+.cit-tool-page.theme-ocean.mode-dark .ocean-particle { box-shadow: 0 0 18px 5px color-mix(in srgb, var(--ws-cyan) 32%, transparent); }
+
+/* Forest: grounding layer avoids a plain recolored dashboard appearance. */
+.cit-tool-page .forest-floor {
+  position: absolute;
+  left: calc(var(--ws-sidebar) - 18px);
+  bottom: -8px;
+  width: min(23vw, 360px);
+  height: min(31vh, 240px);
+  opacity: .22;
+}
+.cit-tool-page .forest-floor path { fill: none !important; stroke-linecap: round; stroke-linejoin: round; }
+.cit-tool-page .fern-stem { stroke: var(--ws-cyan); stroke-width: 2.5; }
+.cit-tool-page .fern-leaf { fill: color-mix(in srgb, var(--ws-pink) 14%, transparent) !important; stroke: var(--ws-pink); stroke-width: 1.55; }
+.cit-tool-page .fern-stem.second,
+.cit-tool-page .fern-leaf.second { stroke: var(--ws-violet); }
+.cit-tool-page.theme-forest.mode-light .forest-floor { opacity: .13; }
+.cit-tool-page.theme-forest.mode-dark .forest-fireflies { opacity: .94; }
+.cit-tool-page.theme-forest.mode-dark .forest-canopy { opacity: .13; }
+.cit-tool-page.theme-forest.mode-dark .forest-vine { opacity: .37; }
+
+/* Coffee: amplify the crafted-studio mood without reintroducing retro UI. */
+.cit-tool-page.theme-coffee .coffee-rings { opacity: .16; }
+.cit-tool-page.theme-coffee .coffee-steam { opacity: .25; }
+.cit-tool-page.theme-coffee .coffee-cup { opacity: .24; }
+.cit-tool-page.theme-coffee.mode-dark .coffee-steam { opacity: .33; }
+.cit-tool-page.theme-coffee.mode-dark .coffee-cup { opacity: .30; }
+.cit-tool-page.theme-coffee .panel-title h2,
+.cit-tool-page.theme-coffee .slab-title span:first-child {
+  filter: drop-shadow(0 12px 30px color-mix(in srgb, var(--ws-pink) 11%, transparent));
+}
+
+/* Rose: add a botanical glass bloom and make satin/ribbon language visible. */
+.cit-tool-page .rose-bloom {
+  position: absolute;
+  left: calc(var(--ws-sidebar) - 36px);
+  bottom: -4px;
+  width: min(17vw, 240px);
+  height: min(34vh, 260px);
+  opacity: .22;
+  transform: rotate(-8deg);
+  filter: drop-shadow(0 0 22px color-mix(in srgb, var(--ws-pink) 18%, transparent));
+}
+.cit-tool-page .rose-bloom path { stroke-linecap: round; stroke-linejoin: round; }
+.cit-tool-page .bloom-stem { fill: none !important; stroke: var(--ws-mint); stroke-width: 2.2; }
+.cit-tool-page .bloom-leaf { fill: color-mix(in srgb, var(--ws-mint) 18%, transparent) !important; stroke: var(--ws-mint); stroke-width: 1.3; }
+.cit-tool-page .bloom-petal { fill: color-mix(in srgb, var(--ws-pink) 22%, transparent) !important; stroke: var(--ws-pink); stroke-width: 1.35; }
+.cit-tool-page .bloom-petal.alt { fill: color-mix(in srgb, var(--ws-violet) 20%, transparent) !important; stroke: var(--ws-violet); }
+.cit-tool-page .bloom-petal.soft { fill: color-mix(in srgb, var(--ws-cyan) 13%, transparent) !important; }
+.cit-tool-page.theme-rose.mode-light .rose-bloom { opacity: .13; }
+.cit-tool-page.theme-rose.mode-dark .rose-ribbon { opacity: .29; }
+.cit-tool-page.theme-rose.mode-dark .rose-filigree { opacity: .25; }
+.cit-tool-page.theme-rose.mode-dark .rose-petal { opacity: .43; }
+
+/* Keep the environment appropriately quiet on small screens. */
+@media (max-width: 970px) {
+  .cit-tool-page .ocean-reef,
+  .cit-tool-page .forest-floor,
+  .cit-tool-page .rose-bloom { display: none; }
+}
+
+/* ======================================================================
+   ADAPTIVE ARTIFACT SYSTEM — module-specific sidebar sculpture
+   Geometry follows the active workspace. Theme supplies material colour;
+   appearance controls illumination. Decorative only; live tool UI remains
+   the single source of truth.
+   ====================================================================== */
+.cit-tool-page .adaptive-artwork {
+  --art-primary: var(--ws-pink);
+  --art-secondary: var(--ws-cyan);
+  --art-tertiary: var(--ws-violet);
+  --art-line: color-mix(in srgb, var(--art-secondary) 32%, var(--ws-border));
+  --art-passive: color-mix(in srgb, var(--ws-copy) 26%, transparent);
+  --art-fill: color-mix(in srgb, var(--ws-panel-strong) 68%, transparent);
+  --art-fill-active: color-mix(in srgb, var(--art-primary) 18%, var(--ws-panel-strong));
+  --art-edge: color-mix(in srgb, var(--art-primary) 35%, transparent);
+  --art-glow: color-mix(in srgb, var(--art-primary) 21%, transparent);
+  --art-label: color-mix(in srgb, var(--ws-copy) 74%, transparent);
+  filter: drop-shadow(0 30px 46px color-mix(in srgb, var(--art-primary) 12%, transparent));
+  animation: citArtifactArrive .55s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.cit-tool-page .adaptive-artwork.art-learning {
+  --art-primary: var(--ws-violet);
+  --art-secondary: var(--ws-cyan);
+  --art-tertiary: var(--ws-pink);
+}
+
+.cit-tool-page .adaptive-artwork.art-deep {
+  --art-primary: var(--ws-cyan);
+  --art-secondary: var(--ws-violet);
+  --art-tertiary: var(--ws-pink);
+}
+
+.cit-tool-page.mode-dark .adaptive-artwork {
+  --art-line: color-mix(in srgb, var(--art-secondary) 53%, var(--ws-border));
+  --art-passive: color-mix(in srgb, var(--ws-copy) 40%, transparent);
+  --art-fill: color-mix(in srgb, var(--ws-panel-strong) 82%, transparent);
+  --art-fill-active: color-mix(in srgb, var(--art-primary) 25%, var(--ws-panel-strong));
+  --art-edge: color-mix(in srgb, var(--art-primary) 60%, transparent);
+  --art-glow: color-mix(in srgb, var(--art-primary) 40%, transparent);
+  --art-label: color-mix(in srgb, var(--ws-copy) 86%, transparent);
+  filter:
+    drop-shadow(0 30px 56px color-mix(in srgb, var(--art-primary) 22%, transparent))
+    drop-shadow(0 0 20px color-mix(in srgb, var(--art-secondary) 9%, transparent));
+}
+
+.cit-tool-page .adaptive-artwork::after {
+  display: none !important;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-halo {
+  position: absolute;
+  inset: 48px 5px 16px 8px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 52%, color-mix(in srgb, var(--art-primary) 18%, transparent), transparent 52%),
+    radial-gradient(circle at 68% 48%, color-mix(in srgb, var(--art-secondary) 17%, transparent), transparent 56%);
+  filter: blur(20px);
+  opacity: .85;
+}
+
+.cit-tool-page.mode-dark .adaptive-artwork .artifact-halo {
+  opacity: 1;
+  filter: blur(24px);
+}
+
+.cit-tool-page .adaptive-artwork .artifact-svg {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cit-tool-page .adaptive-artwork text {
+  fill: var(--art-label);
+  font-family: "IBM Plex Mono", "Space Mono", monospace;
+  font-size: 8px;
+  letter-spacing: .16em;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-status-line text {
+  font-size: 7.4px;
+  letter-spacing: .14em;
+}
+
+.cit-tool-page .adaptive-artwork .status-dot {
+  fill: color-mix(in srgb, var(--ws-copy) 22%, transparent);
+  stroke: color-mix(in srgb, var(--ws-copy) 35%, transparent);
+  stroke-width: 1;
+}
+
+.cit-tool-page .adaptive-artwork .status-dot.live {
+  fill: var(--art-primary);
+  stroke: color-mix(in srgb, var(--art-primary) 70%, white);
+  filter: drop-shadow(0 0 7px var(--art-glow));
+}
+
+@keyframes citArtifactArrive {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ----------------------------------------------------------------------
+   K-MAP ARTIFACT — live tile field and selected grouping membership.
+   ---------------------------------------------------------------------- */
+.cit-tool-page .kmap-artifact .artifact-grid-meta text,
+.cit-tool-page .kmap-artifact .artifact-axis text {
+  fill: color-mix(in srgb, var(--art-secondary) 52%, var(--ws-copy));
+  font-size: 7px;
+}
+
+.cit-tool-page .kmap-artifact .artifact-grid-meta path {
+  fill: none;
+  stroke: var(--art-passive);
+  stroke-width: 1;
+}
+
+.cit-tool-page .kmap-artifact .artifact-board-shadow rect {
+  fill: color-mix(in srgb, var(--art-secondary) 3%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 12%, transparent);
+  stroke-width: 1;
+}
+
+.cit-tool-page.mode-dark .kmap-artifact .artifact-board-shadow rect {
+  fill: color-mix(in srgb, var(--art-secondary) 6%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 23%, transparent);
+}
+
+.cit-tool-page .kmap-artifact .map-art-cell {
+  fill: var(--art-fill);
+  stroke: color-mix(in srgb, var(--art-secondary) 12%, var(--ws-border));
+  stroke-width: 1;
+  transition: fill .3s ease, stroke .3s ease;
+}
+
+.cit-tool-page .kmap-artifact .map-art-cell.active {
+  fill: var(--art-fill-active);
+  stroke: var(--art-edge);
+  filter: drop-shadow(0 5px 10px var(--art-glow));
+  animation: citMapTileSignal 2.7s ease-in-out infinite;
+}
+
+.cit-tool-page .kmap-artifact .map-art-cell.active:nth-child(3n + 1) {
+  fill: color-mix(in srgb, var(--art-secondary) 17%, var(--ws-panel-strong));
+  stroke: color-mix(in srgb, var(--art-secondary) 40%, transparent);
+  animation-delay: -.85s;
+}
+
+.cit-tool-page .kmap-artifact .map-art-group {
+  fill: none;
+  stroke-width: 1.2;
+  stroke-dasharray: 3 3;
+  opacity: .84;
+}
+
+.cit-tool-page .kmap-artifact .group-pink { stroke: var(--art-primary); }
+.cit-tool-page .kmap-artifact .group-cyan { stroke: var(--art-secondary); }
+.cit-tool-page .kmap-artifact .group-violet { stroke: var(--art-tertiary); }
+.cit-tool-page .kmap-artifact .group-mint { stroke: var(--ws-mint); }
+
+@keyframes citMapTileSignal {
+  0%, 100% { opacity: .88; }
+  50% { opacity: 1; }
+}
+
+/* ----------------------------------------------------------------------
+   LEARNING ARTIFACT — stateful A/B -> gate -> Q signal diagram.
+   ---------------------------------------------------------------------- */
+.cit-tool-page .learning-artifact .learning-board rect {
+  fill: color-mix(in srgb, var(--ws-panel-strong) 35%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 14%, transparent);
+}
+
+.cit-tool-page.mode-dark .learning-artifact .learning-board rect {
+  fill: color-mix(in srgb, var(--ws-panel-strong) 52%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 25%, transparent);
+}
+
+.cit-tool-page .learning-artifact .signal-wire {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ws-copy) 25%, transparent);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  transition: stroke .3s ease;
+}
+
+.cit-tool-page .learning-artifact .signal-wire.live {
+  stroke: var(--art-secondary);
+  stroke-dasharray: 8 6;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--art-secondary) 34%, transparent));
+  animation: citArtifactSignalFlow 1.9s linear infinite;
+}
+
+.cit-tool-page .learning-artifact .signal-wire.output.live {
+  stroke: var(--art-primary);
+}
+
+.cit-tool-page .learning-artifact .node {
+  fill: var(--art-fill);
+  stroke: var(--art-passive);
+  transition: fill .25s ease, stroke .25s ease;
+}
+
+.cit-tool-page .learning-artifact .node.active {
+  fill: color-mix(in srgb, var(--art-secondary) 19%, var(--ws-panel-strong));
+  stroke: color-mix(in srgb, var(--art-secondary) 60%, transparent);
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--art-secondary) 27%, transparent));
+}
+
+.cit-tool-page .learning-artifact .learning-input-node text:first-of-type,
+.cit-tool-page .learning-artifact .learning-output text:first-of-type {
+  fill: var(--ws-text);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.cit-tool-page .learning-artifact .logic-bit {
+  fill: var(--ws-muted);
+  font-size: 9px;
+  letter-spacing: 0;
+}
+
+.cit-tool-page .learning-artifact .logic-bit.active {
+  fill: var(--art-secondary);
+}
+
+.cit-tool-page .learning-artifact .learning-gate path:first-child {
+  fill: var(--art-fill);
+  stroke: var(--art-edge);
+  stroke-width: 1.3;
+}
+
+.cit-tool-page .learning-artifact .learning-gate .xor-mark {
+  fill: none;
+  stroke: var(--art-edge);
+  stroke-width: 1.3;
+}
+
+.cit-tool-page .learning-artifact .learning-gate .invert-ring {
+  fill: var(--ws-panel-strong);
+  stroke: var(--art-edge);
+  stroke-width: 1.1;
+}
+
+.cit-tool-page .learning-artifact .learning-gate text {
+  fill: var(--ws-text);
+  font-size: 8px;
+  font-weight: 600;
+  text-anchor: middle;
+  letter-spacing: .08em;
+}
+
+.cit-tool-page .learning-artifact .lamp {
+  fill: var(--art-fill);
+  stroke: var(--art-passive);
+}
+
+.cit-tool-page .learning-artifact .lamp.active {
+  fill: color-mix(in srgb, var(--art-primary) 24%, var(--ws-panel-strong));
+  stroke: color-mix(in srgb, var(--art-primary) 63%, transparent);
+  filter: drop-shadow(0 0 12px var(--art-glow));
+  animation: citArtifactLamp 2.4s ease-in-out infinite;
+}
+
+@keyframes citArtifactSignalFlow {
+  to { stroke-dashoffset: -28; }
+}
+
+@keyframes citArtifactLamp {
+  50% { filter: drop-shadow(0 0 18px color-mix(in srgb, var(--art-primary) 38%, transparent)); }
+}
+
+/* ----------------------------------------------------------------------
+   CIRCUIT IDE ARTIFACT — modular board rather than generic glass blocks.
+   ---------------------------------------------------------------------- */
+.cit-tool-page .circuit-artifact .circuit-board-outline path {
+  fill: color-mix(in srgb, var(--art-secondary) 4%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 30%, transparent);
+  stroke-width: 1;
+}
+
+.cit-tool-page .circuit-artifact .circuit-board-outline circle {
+  fill: var(--art-secondary);
+  opacity: .46;
+}
+
+.cit-tool-page .circuit-artifact .trace {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ws-copy) 27%, transparent);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.cit-tool-page .circuit-artifact .trace.live {
+  stroke: var(--art-primary);
+  stroke-dasharray: 7 6;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--art-primary) 40%, transparent));
+  animation: citArtifactSignalFlow 2.25s linear infinite;
+}
+
+.cit-tool-page .circuit-artifact .trace.delayed {
+  animation-delay: -.9s;
+  stroke: var(--art-secondary);
+}
+
+.cit-tool-page .circuit-artifact .module rect {
+  fill: var(--art-fill);
+  stroke: color-mix(in srgb, var(--art-primary) 34%, transparent);
+  stroke-width: 1;
+}
+
+.cit-tool-page.mode-dark .circuit-artifact .module rect {
+  fill: color-mix(in srgb, var(--art-primary) 10%, var(--ws-panel-strong));
+  stroke: color-mix(in srgb, var(--art-primary) 53%, transparent);
+}
+
+.cit-tool-page .circuit-artifact .module text {
+  fill: var(--ws-text);
+  font-size: 7px;
+}
+
+.cit-tool-page .circuit-artifact .module path {
+  stroke: color-mix(in srgb, var(--art-secondary) 45%, transparent);
+  fill: none;
+}
+
+.cit-tool-page .circuit-artifact .port {
+  fill: var(--art-passive);
+}
+
+.cit-tool-page .circuit-artifact .port.live {
+  fill: var(--art-primary);
+  filter: drop-shadow(0 0 8px var(--art-glow));
+}
+
+.cit-tool-page .circuit-artifact .port.pulse {
+  animation: citCircuitPort 2s ease-in-out infinite;
+}
+
+.cit-tool-page .circuit-artifact .circuit-bus path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--art-secondary) 22%, transparent);
+  stroke-width: 1;
+}
+
+.cit-tool-page .circuit-artifact .circuit-bus circle {
+  fill: color-mix(in srgb, var(--art-secondary) 38%, transparent);
+}
+
+@keyframes citCircuitPort {
+  50% { transform: scale(1.5); transform-origin: center; opacity: .66; }
+}
+
+/* Live Circuit IDE telemetry supplied by the real canvas state. */
+.cit-tool-page .circuit-artifact .circuit-telemetry text {
+  font-size: 6.6px;
+  fill: color-mix(in srgb, var(--art-secondary) 62%, var(--ws-copy));
+}
+
+.cit-tool-page .circuit-artifact .circuit-telemetry text:last-child {
+  text-anchor: end;
+  fill: color-mix(in srgb, var(--ws-copy) 57%, transparent);
+}
+
+.cit-tool-page .circuit-artifact .trace.secondary.live {
+  stroke: var(--art-tertiary);
+}
+
+.cit-tool-page .circuit-artifact .trace.clock.live {
+  stroke: var(--ws-mint);
+  animation-duration: 1.35s;
+}
+
+.cit-tool-page .circuit-artifact .module.selected rect {
+  fill: color-mix(in srgb, var(--art-primary) 11%, var(--art-fill));
+  stroke: color-mix(in srgb, var(--art-primary) 58%, transparent);
+  filter: drop-shadow(0 12px 20px color-mix(in srgb, var(--art-primary) 13%, transparent));
+}
+
+.cit-tool-page .circuit-artifact .module .selected-module-label {
+  fill: color-mix(in srgb, var(--art-secondary) 62%, var(--ws-copy));
+  font-size: 5.4px;
+  letter-spacing: .18em;
+  text-anchor: middle;
+}
+
+.cit-tool-page .circuit-artifact .module .gate-token {
+  fill: var(--ws-text);
+  font-size: 8.5px;
+  font-weight: 600;
+  text-anchor: middle;
+  letter-spacing: .05em;
+}
+
+.cit-tool-page .circuit-artifact .circuit-slot-bank .slot {
+  fill: color-mix(in srgb, var(--ws-copy) 12%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 16%, transparent);
+}
+
+.cit-tool-page .circuit-artifact .circuit-slot-bank .slot.live {
+  fill: color-mix(in srgb, var(--art-secondary) 35%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 58%, transparent);
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--art-secondary) 30%, transparent));
+}
+
+.cit-tool-page .circuit-artifact .circuit-template-label {
+  fill: color-mix(in srgb, var(--art-primary) 52%, var(--ws-copy));
+  font-size: 6px;
+  letter-spacing: .12em;
+  text-anchor: end;
+}
+
+/* Dark mode reads like an illuminated board, not light glass on navy. */
+.cit-tool-page.mode-dark .circuit-artifact .module.selected rect {
+  fill: color-mix(in srgb, var(--art-primary) 18%, var(--ws-panel-strong));
+  filter:
+    drop-shadow(0 12px 28px color-mix(in srgb, var(--art-primary) 22%, transparent))
+    drop-shadow(0 0 12px color-mix(in srgb, var(--art-secondary) 13%, transparent));
+}
+
+.cit-tool-page.mode-dark .circuit-artifact .circuit-slot-bank .slot.live {
+  fill: color-mix(in srgb, var(--art-secondary) 45%, transparent);
+}
+
+/* Theme materials are visible inside the geometry, not only on the page background. */
+.cit-tool-page.theme-rose .adaptive-artwork .artifact-halo {
+  background:
+    radial-gradient(circle at 34% 48%, rgba(255, 92, 164, .2), transparent 51%),
+    radial-gradient(circle at 68% 51%, rgba(214, 107, 203, .16), transparent 57%);
+}
+
+.cit-tool-page.theme-rose .learning-artifact .learning-board rect,
+.cit-tool-page.theme-rose .circuit-artifact .circuit-board-outline path {
+  stroke: color-mix(in srgb, var(--art-primary) 27%, transparent);
+}
+
+.cit-tool-page.theme-ocean .kmap-artifact .artifact-board-shadow rect,
+.cit-tool-page.theme-ocean .learning-artifact .learning-board rect,
+.cit-tool-page.theme-ocean .circuit-artifact .circuit-board-outline path {
+  fill: color-mix(in srgb, var(--art-secondary) 8%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 34%, transparent);
+}
+
+.cit-tool-page.theme-forest .adaptive-artwork .artifact-halo {
+  background:
+    radial-gradient(circle at 31% 55%, rgba(39, 162, 115, .2), transparent 52%),
+    radial-gradient(circle at 70% 47%, rgba(40, 188, 169, .14), transparent 57%);
+}
+
+.cit-tool-page.theme-forest .circuit-artifact .trace.live,
+.cit-tool-page.theme-forest .learning-artifact .signal-wire.live {
+  filter: drop-shadow(0 0 9px color-mix(in srgb, var(--ws-mint) 38%, transparent));
+}
+
+.cit-tool-page.theme-coffee .adaptive-artwork .artifact-halo {
+  background:
+    radial-gradient(circle at 35% 54%, rgba(187, 121, 77, .19), transparent 50%),
+    radial-gradient(circle at 68% 48%, rgba(224, 181, 111, .14), transparent 58%);
+}
+
+.cit-tool-page.theme-coffee .kmap-artifact .artifact-board-shadow rect,
+.cit-tool-page.theme-coffee .learning-artifact .learning-board rect,
+.cit-tool-page.theme-coffee .circuit-artifact .circuit-board-outline path {
+  fill: color-mix(in srgb, var(--art-secondary) 7%, transparent);
+  stroke: color-mix(in srgb, var(--art-primary) 30%, transparent);
+}
+
+/* Theme-specific material presence. Geometry remains mode-specific. */
+.cit-tool-page.theme-rose .adaptive-artwork {
+  --art-fill-active: color-mix(in srgb, var(--art-primary) 22%, var(--ws-panel-strong));
+}
+
+.cit-tool-page.theme-ocean .adaptive-artwork .artifact-halo {
+  background:
+    radial-gradient(circle at 35% 48%, color-mix(in srgb, var(--art-primary) 24%, transparent), transparent 52%),
+    radial-gradient(circle at 72% 44%, color-mix(in srgb, var(--art-secondary) 23%, transparent), transparent 58%);
+}
+
+.cit-tool-page.theme-forest .adaptive-artwork .artifact-svg {
+  filter: saturate(.92);
+}
+
+.cit-tool-page.theme-coffee .adaptive-artwork .artifact-svg {
+  filter: sepia(.08) saturate(.95);
+}
+
+@media (max-width: 970px) {
+  .cit-tool-page .adaptive-artwork { opacity: .74; }
+}
+
+/* Motion is user-controlled in CITools settings. Auto resolves the system preference in React. */
+.cit-tool-page.motion-reduced .adaptive-artwork,
+.cit-tool-page.motion-reduced .adaptive-artwork .map-art-cell.active,
+.cit-tool-page.motion-reduced .adaptive-artwork .signal-wire.live,
+.cit-tool-page.motion-reduced .adaptive-artwork .lamp.active,
+.cit-tool-page.motion-reduced .adaptive-artwork .trace.live,
+.cit-tool-page.motion-reduced .adaptive-artwork .port.pulse {
+  animation: none !important;
+}
+
+
+/* ======================================================================
+   STAGE C — THEME IDENTITY MATRIX
+   Module decides geometry. Theme now changes material details and motif;
+   light/dark changes optical treatment and signal illumination.
+   ====================================================================== */
+
+/* Material tokens shared by all three artifact geometries. */
+.cit-tool-page .adaptive-artwork {
+  --art-board-fill: color-mix(in srgb, var(--ws-panel-strong) 43%, transparent);
+  --art-board-edge: color-mix(in srgb, var(--art-secondary) 18%, transparent);
+  --art-glass-film: rgba(255, 255, 255, .46);
+  --art-glass-flare: color-mix(in srgb, var(--art-secondary) 11%, transparent);
+  --art-motif-stroke: color-mix(in srgb, var(--art-primary) 48%, transparent);
+  --art-motif-soft: color-mix(in srgb, var(--art-secondary) 30%, transparent);
+  --art-motif-fill: color-mix(in srgb, var(--art-primary) 13%, transparent);
+  --art-motif-fill-alt: color-mix(in srgb, var(--art-tertiary) 11%, transparent);
+  --art-screw: color-mix(in srgb, var(--art-secondary) 55%, transparent);
+}
+
+.cit-tool-page.mode-dark .adaptive-artwork {
+  --art-board-fill: color-mix(in srgb, var(--ws-panel-strong) 68%, transparent);
+  --art-board-edge: color-mix(in srgb, var(--art-secondary) 38%, transparent);
+  --art-glass-film: rgba(255, 255, 255, .065);
+  --art-glass-flare: color-mix(in srgb, var(--art-primary) 16%, transparent);
+  --art-motif-stroke: color-mix(in srgb, var(--art-primary) 68%, transparent);
+  --art-motif-soft: color-mix(in srgb, var(--art-secondary) 51%, transparent);
+  --art-motif-fill: color-mix(in srgb, var(--art-primary) 19%, transparent);
+  --art-motif-fill-alt: color-mix(in srgb, var(--art-tertiary) 17%, transparent);
+  --art-screw: color-mix(in srgb, var(--art-secondary) 74%, transparent);
+}
+
+/* A material film follows the module silhouette, while the SVG carries data. */
+.cit-tool-page .adaptive-artwork::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .86;
+  border: 1px solid var(--art-board-edge);
+  background:
+    linear-gradient(128deg, var(--art-glass-film), transparent 39%),
+    radial-gradient(circle at 82% 18%, var(--art-glass-flare), transparent 43%);
+  box-shadow: inset 0 1px rgba(255,255,255,.5);
+}
+
+.cit-tool-page .adaptive-artwork.art-kmap::before {
+  left: 69px;
+  top: 94px;
+  width: 149px;
+  height: 106px;
+  border-radius: 24px;
+}
+
+.cit-tool-page .adaptive-artwork.art-learning::before {
+  left: 24px;
+  top: 85px;
+  width: 247px;
+  height: 121px;
+  border-radius: 25px;
+}
+
+.cit-tool-page .adaptive-artwork.art-deep::before {
+  left: 27px;
+  top: 79px;
+  width: 242px;
+  height: 125px;
+  border-radius: 18px 28px 18px 22px;
+  clip-path: polygon(0 0, 93% 0, 100% 14%, 100% 100%, 8% 100%, 0 85%);
+}
+
+.cit-tool-page.mode-dark .adaptive-artwork::before {
+  opacity: .93;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.08),
+    0 0 28px color-mix(in srgb, var(--art-primary) 8%, transparent);
+}
+
+/* Explicit palette matrix: each theme gives each module its own material family. */
+.cit-tool-page.theme-original .adaptive-artwork.art-kmap {
+  --art-primary: #fb3ca6; --art-secondary: #1eb6ea; --art-tertiary: #8665ff;
+}
+.cit-tool-page.theme-original .adaptive-artwork.art-learning {
+  --art-primary: #8665ff; --art-secondary: #1eb6ea; --art-tertiary: #fb3ca6;
+}
+.cit-tool-page.theme-original .adaptive-artwork.art-deep {
+  --art-primary: #1eb6ea; --art-secondary: #8665ff; --art-tertiary: #fb3ca6;
+}
+
+.cit-tool-page.theme-rose .adaptive-artwork.art-kmap {
+  --art-primary: #ff4b91; --art-secondary: #f49db8; --art-tertiary: #d66bcb;
+}
+.cit-tool-page.theme-rose .adaptive-artwork.art-learning {
+  --art-primary: #d95ec9; --art-secondary: #ff669b; --art-tertiary: #f49db8;
+}
+.cit-tool-page.theme-rose .adaptive-artwork.art-deep {
+  --art-primary: #f58eaf; --art-secondary: #d66bcb; --art-tertiary: #ff4b91;
+}
+
+.cit-tool-page.theme-ocean .adaptive-artwork.art-kmap {
+  --art-primary: #18c5df; --art-secondary: #33d4ee; --art-tertiary: #3279ff;
+}
+.cit-tool-page.theme-ocean .adaptive-artwork.art-learning {
+  --art-primary: #3279ff; --art-secondary: #35d9ef; --art-tertiary: #18c5df;
+}
+.cit-tool-page.theme-ocean .adaptive-artwork.art-deep {
+  --art-primary: #33d4ee; --art-secondary: #3279ff; --art-tertiary: #13aaad;
+}
+
+.cit-tool-page.theme-forest .adaptive-artwork.art-kmap {
+  --art-primary: #27a273; --art-secondary: #28bca9; --art-tertiary: #58ab75;
+}
+.cit-tool-page.theme-forest .adaptive-artwork.art-learning {
+  --art-primary: #28bca9; --art-secondary: #58ab75; --art-tertiary: #27a273;
+}
+.cit-tool-page.theme-forest .adaptive-artwork.art-deep {
+  --art-primary: #58ab75; --art-secondary: #28bca9; --art-tertiary: #27a273;
+}
+
+.cit-tool-page.theme-coffee .adaptive-artwork.art-kmap {
+  --art-primary: #bb794d; --art-secondary: #e0b56f; --art-tertiary: #d19b69;
+}
+.cit-tool-page.theme-coffee .adaptive-artwork.art-learning {
+  --art-primary: #d19b69; --art-secondary: #e0b56f; --art-tertiary: #bb794d;
+}
+.cit-tool-page.theme-coffee .adaptive-artwork.art-deep {
+  --art-primary: #e0b56f; --art-secondary: #bb794d; --art-tertiary: #d19b69;
+}
+
+/* All theme motifs are authored in SVG; only the currently selected material is visible. */
+.cit-tool-page .adaptive-artwork .artifact-motif {
+  opacity: 0;
+  transition: opacity .46s ease;
+}
+
+.cit-tool-page.theme-original .adaptive-artwork .motif-original,
+.cit-tool-page.theme-rose .adaptive-artwork .motif-rose,
+.cit-tool-page.theme-ocean .adaptive-artwork .motif-ocean,
+.cit-tool-page.theme-forest .adaptive-artwork .motif-forest,
+.cit-tool-page.theme-coffee .adaptive-artwork .motif-coffee {
+  opacity: 1;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-line {
+  fill: none;
+  stroke: var(--art-motif-stroke);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-line.soft {
+  stroke: var(--art-motif-soft);
+  stroke-dasharray: 3 4;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-fill {
+  fill: var(--art-motif-fill);
+  stroke: var(--art-motif-stroke);
+  stroke-width: .9;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-fill.alt {
+  fill: var(--art-motif-fill-alt);
+  stroke: var(--art-motif-soft);
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-beacon {
+  fill: var(--art-primary);
+  filter: drop-shadow(0 0 6px var(--art-glow));
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-bubble {
+  fill: color-mix(in srgb, var(--art-secondary) 7%, transparent);
+  stroke: color-mix(in srgb, var(--art-secondary) 48%, transparent);
+  stroke-width: .9;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-bubble.small {
+  opacity: .72;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-ring {
+  fill: none;
+  stroke: color-mix(in srgb, var(--art-primary) 32%, transparent);
+  stroke-width: 1;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-motif .motif-ring.soft {
+  stroke: color-mix(in srgb, var(--art-secondary) 22%, transparent);
+  stroke-dasharray: 2.5 4;
+}
+
+.cit-tool-page.mode-dark .adaptive-artwork .artifact-motif .motif-line,
+.cit-tool-page.mode-dark .adaptive-artwork .artifact-motif .motif-ring {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--art-primary) 16%, transparent));
+}
+
+/* Apply the selected material to real module surfaces, not only to the halo. */
+.cit-tool-page .adaptive-artwork .artifact-board-shadow rect,
+.cit-tool-page .adaptive-artwork .learning-board rect,
+.cit-tool-page .adaptive-artwork .circuit-board-outline path {
+  fill: var(--art-board-fill);
+  stroke: var(--art-board-edge);
+}
+
+.cit-tool-page.theme-rose .adaptive-artwork::before {
+  background:
+    linear-gradient(132deg, rgba(255,255,255,.56), transparent 37%),
+    radial-gradient(ellipse at 24% 21%, color-mix(in srgb, var(--art-primary) 17%, transparent), transparent 44%),
+    radial-gradient(ellipse at 80% 76%, color-mix(in srgb, var(--art-tertiary) 13%, transparent), transparent 47%);
+}
+
+.cit-tool-page.theme-ocean .adaptive-artwork::before {
+  background:
+    linear-gradient(119deg, rgba(255,255,255,.49), transparent 34%),
+    repeating-linear-gradient(118deg, transparent 0 15px, color-mix(in srgb, var(--art-secondary) 5%, transparent) 16px 19px, transparent 20px 34px),
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--art-secondary) 18%, transparent), transparent 43%);
+}
+
+.cit-tool-page.theme-forest .adaptive-artwork::before {
+  background:
+    linear-gradient(132deg, rgba(255,255,255,.44), transparent 34%),
+    radial-gradient(ellipse at 20% 86%, color-mix(in srgb, var(--art-primary) 14%, transparent), transparent 46%),
+    linear-gradient(32deg, transparent 0 57%, color-mix(in srgb, var(--art-secondary) 7%, transparent) 58%, transparent 60%);
+}
+
+.cit-tool-page.theme-coffee .adaptive-artwork::before {
+  background:
+    linear-gradient(125deg, rgba(255,252,246,.38), transparent 37%),
+    radial-gradient(circle at 80% 74%, color-mix(in srgb, var(--art-primary) 13%, transparent), transparent 42%),
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--art-secondary) 10%, transparent), transparent 38%);
+}
+
+.cit-tool-page.theme-ocean .kmap-artifact .map-art-cell.active {
+  filter:
+    drop-shadow(0 4px 12px color-mix(in srgb, var(--art-secondary) 28%, transparent))
+    brightness(1.02);
+}
+
+.cit-tool-page.theme-forest .learning-artifact .signal-wire.live,
+.cit-tool-page.theme-forest .circuit-artifact .trace.live {
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--art-secondary) 42%, transparent));
+}
+
+.cit-tool-page.theme-coffee .learning-artifact .learning-gate path:first-child,
+.cit-tool-page.theme-coffee .circuit-artifact .module rect {
+  stroke: color-mix(in srgb, var(--art-primary) 48%, transparent);
+}
+
+.cit-tool-page.mode-dark.theme-rose .adaptive-artwork::before {
+  background:
+    linear-gradient(132deg, rgba(255,255,255,.08), transparent 35%),
+    radial-gradient(ellipse at 24% 21%, color-mix(in srgb, var(--art-primary) 23%, transparent), transparent 46%),
+    radial-gradient(ellipse at 80% 76%, color-mix(in srgb, var(--art-tertiary) 20%, transparent), transparent 50%);
+}
+
+.cit-tool-page.mode-dark.theme-ocean .adaptive-artwork::before {
+  background:
+    linear-gradient(119deg, rgba(255,255,255,.08), transparent 32%),
+    repeating-linear-gradient(118deg, transparent 0 15px, color-mix(in srgb, var(--art-secondary) 10%, transparent) 16px 19px, transparent 20px 34px),
+    radial-gradient(circle at 78% 18%, color-mix(in srgb, var(--art-secondary) 24%, transparent), transparent 45%);
+}
+
+.cit-tool-page.mode-dark.theme-forest .adaptive-artwork::before {
+  background:
+    linear-gradient(132deg, rgba(255,255,255,.07), transparent 34%),
+    radial-gradient(ellipse at 20% 86%, color-mix(in srgb, var(--art-primary) 21%, transparent), transparent 48%),
+    linear-gradient(32deg, transparent 0 57%, color-mix(in srgb, var(--art-secondary) 12%, transparent) 58%, transparent 60%);
+}
+
+.cit-tool-page.mode-dark.theme-coffee .adaptive-artwork::before {
+  background:
+    linear-gradient(125deg, rgba(255,252,246,.07), transparent 36%),
+    radial-gradient(circle at 80% 74%, color-mix(in srgb, var(--art-primary) 19%, transparent), transparent 44%),
+    radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--art-secondary) 16%, transparent), transparent 40%);
+}
+
+/* Preserve feature-list readability: sculpture remains strongest below the copy. */
+.cit-tool-page .identity-feature-list {
+  position: relative;
+  z-index: 4;
+}
+
+.cit-tool-page .identity-feature-list::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -18px -18px -16px -13px;
+  border-radius: 28px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ws-panel-strong) 57%, transparent), transparent 94%);
+  opacity: .62;
+  pointer-events: none;
+}
+
+.cit-tool-page.mode-dark .identity-feature-list::before {
+  opacity: .76;
+}
+
+/* Compact screens keep the thematic cue, but remove supplementary motifs. */
+@media (max-height: 760px), (max-width: 970px) {
+  .cit-tool-page .adaptive-artwork .artifact-theme-motifs {
+    display: none;
+  }
+
+  .cit-tool-page .adaptive-artwork::before {
+    opacity: .56;
+  }
+}
+
+
+/* ======================================================================
+   STAGE D — WORKSPACE CONTINUITY MOTION
+   Module navigation changes geometry with directional movement. Theme and
+   appearance changes crossfade material/illumination without remounting the
+   live artwork or restarting its signal loops.
+   ====================================================================== */
+
+/* Stable shared layers for same-document View Transitions. */
+.cit-tool-page .theme-environment {
+  view-transition-name: ws-theme-environment;
+}
+
+.cit-tool-page .identity-slab {
+  view-transition-name: ws-identity-surface;
+}
+
+.cit-tool-page .adaptive-artwork {
+  view-transition-name: ws-adaptive-artwork;
+  isolation: isolate;
+}
+
+.cit-tool-page .content-field {
+  view-transition-name: ws-content-field;
+}
+
+/* Card-to-workspace launch owns its own shared surface from Phase 3. */
+:root[data-cit-tool-transition] .cit-tool-page .theme-environment,
+:root[data-cit-tool-transition] .cit-tool-page .adaptive-artwork,
+:root[data-cit-tool-transition] .cit-tool-page .content-field {
+  view-transition-name: none;
+}
+
+/* Base capture behavior: keep snapshots clean and glass-like. */
+:root[data-ws-transition]::view-transition-old(ws-theme-environment),
+:root[data-ws-transition]::view-transition-new(ws-theme-environment),
+:root[data-ws-transition]::view-transition-old(ws-identity-surface),
+:root[data-ws-transition]::view-transition-new(ws-identity-surface),
+:root[data-ws-transition]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition]::view-transition-new(ws-adaptive-artwork),
+:root[data-ws-transition]::view-transition-old(ws-content-field),
+:root[data-ws-transition]::view-transition-new(ws-content-field) {
+  mix-blend-mode: normal;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+:root[data-ws-transition]::view-transition-group(ws-identity-surface) {
+  z-index: 2;
+}
+
+:root[data-ws-transition]::view-transition-group(ws-adaptive-artwork) {
+  z-index: 4;
+}
+
+:root[data-ws-transition]::view-transition-group(ws-content-field) {
+  z-index: 3;
+}
+
+/* ----------------------------------------------------------------------
+   Module switch: K-Map <-> Learning <-> Circuit IDE follows tab order.
+   Navigation and global environment stay anchored in place.
+   ---------------------------------------------------------------------- */
+:root[data-ws-transition="module"]::view-transition-old(root),
+:root[data-ws-transition="module"]::view-transition-new(root),
+:root[data-ws-transition="module"]::view-transition-old(ws-theme-environment),
+:root[data-ws-transition="module"]::view-transition-new(ws-theme-environment) {
+  animation: none;
+}
+
+:root[data-ws-transition="module"]::view-transition-old(ws-identity-surface),
+:root[data-ws-transition="module"]::view-transition-new(ws-identity-surface) {
+  animation-duration: 390ms;
+}
+
+:root[data-ws-transition="module"]::view-transition-old(ws-identity-surface) {
+  animation-name: wsIdentityOld;
+}
+
+:root[data-ws-transition="module"]::view-transition-new(ws-identity-surface) {
+  animation-name: wsIdentityNew;
+}
+
+:root[data-ws-transition="module"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition="module"]::view-transition-new(ws-adaptive-artwork) {
+  animation-duration: 590ms;
+}
+
+:root[data-ws-transition="module"]::view-transition-old(ws-content-field),
+:root[data-ws-transition="module"]::view-transition-new(ws-content-field) {
+  animation-duration: 520ms;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-old(ws-adaptive-artwork) {
+  animation-name: wsArtifactLeaveLeft;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-new(ws-adaptive-artwork) {
+  animation-name: wsArtifactEnterRight;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-old(ws-content-field) {
+  animation-name: wsContentLeaveLeft;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-new(ws-content-field) {
+  animation-name: wsContentEnterRight;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-old(ws-adaptive-artwork) {
+  animation-name: wsArtifactLeaveRight;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-new(ws-adaptive-artwork) {
+  animation-name: wsArtifactEnterLeft;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-old(ws-content-field) {
+  animation-name: wsContentLeaveRight;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-new(ws-content-field) {
+  animation-name: wsContentEnterLeft;
+}
+
+@keyframes wsIdentityOld {
+  from { opacity: 1; }
+  to { opacity: .58; }
+}
+
+@keyframes wsIdentityNew {
+  from { opacity: .38; }
+  to { opacity: 1; }
+}
+
+@keyframes wsArtifactLeaveLeft {
+  from { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+  to { opacity: 0; transform: translateX(-16px) scale(.982); filter: blur(2px); }
+}
+
+@keyframes wsArtifactEnterRight {
+  from { opacity: 0; transform: translateX(19px) scale(.98); filter: blur(2px); }
+  to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+}
+
+@keyframes wsArtifactLeaveRight {
+  from { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+  to { opacity: 0; transform: translateX(16px) scale(.982); filter: blur(2px); }
+}
+
+@keyframes wsArtifactEnterLeft {
+  from { opacity: 0; transform: translateX(-19px) scale(.98); filter: blur(2px); }
+  to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+}
+
+@keyframes wsContentLeaveLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-24px); }
+}
+
+@keyframes wsContentEnterRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes wsContentLeaveRight {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(24px); }
+}
+
+@keyframes wsContentEnterLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ----------------------------------------------------------------------
+   Theme switch: geometry remains anchored; only material and atmosphere
+   dissolve into the new palette.
+   ---------------------------------------------------------------------- */
+:root[data-ws-transition="theme"]::view-transition-old(root),
+:root[data-ws-transition="theme"]::view-transition-new(root) {
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+  animation-timing-function: ease;
+}
+
+:root[data-ws-transition="theme"]::view-transition-old(root) {
+  animation-name: wsPaletteFadeOld;
+}
+
+:root[data-ws-transition="theme"]::view-transition-new(root) {
+  animation-name: wsPaletteFadeNew;
+}
+
+:root[data-ws-transition="theme"]::view-transition-old(ws-theme-environment),
+:root[data-ws-transition="theme"]::view-transition-new(ws-theme-environment) {
+  animation-duration: 680ms;
+}
+
+:root[data-ws-transition="theme"]::view-transition-old(ws-theme-environment) {
+  animation-name: wsAtmosphereOld;
+}
+
+:root[data-ws-transition="theme"]::view-transition-new(ws-theme-environment) {
+  animation-name: wsAtmosphereNew;
+}
+
+:root[data-ws-transition="theme"]::view-transition-old(ws-identity-surface),
+:root[data-ws-transition="theme"]::view-transition-new(ws-identity-surface),
+:root[data-ws-transition="theme"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition="theme"]::view-transition-new(ws-adaptive-artwork) {
+  animation-duration: 560ms;
+}
+
+:root[data-ws-transition="theme"]::view-transition-old(ws-identity-surface),
+:root[data-ws-transition="theme"]::view-transition-old(ws-adaptive-artwork) {
+  animation-name: wsMaterialOld;
+}
+
+:root[data-ws-transition="theme"]::view-transition-new(ws-identity-surface),
+:root[data-ws-transition="theme"]::view-transition-new(ws-adaptive-artwork) {
+  animation-name: wsMaterialNew;
+}
+
+@keyframes wsPaletteFadeOld {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes wsPaletteFadeNew {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes wsAtmosphereOld {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.008); }
+}
+
+@keyframes wsAtmosphereNew {
+  from { opacity: 0; transform: scale(.994); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes wsMaterialOld {
+  from { opacity: 1; filter: saturate(1) brightness(1); }
+  to { opacity: 0; filter: saturate(1.05) brightness(1.03); }
+}
+
+@keyframes wsMaterialNew {
+  from { opacity: 0; filter: saturate(1.08) brightness(1.035); }
+  to { opacity: 1; filter: saturate(1) brightness(1); }
+}
+
+/* ----------------------------------------------------------------------
+   Light / Dark switch: a soft illumination dissolve, without a white flash.
+   ---------------------------------------------------------------------- */
+:root[data-ws-transition="appearance"]::view-transition-old(root),
+:root[data-ws-transition="appearance"]::view-transition-new(root) {
+  animation-duration: 570ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+
+:root[data-ws-transition="appearance"]::view-transition-old(root) {
+  animation-name: wsLightOld;
+}
+
+:root[data-ws-transition="appearance"]::view-transition-new(root) {
+  animation-name: wsLightNew;
+}
+
+:root[data-ws-transition="appearance"]::view-transition-old(ws-theme-environment),
+:root[data-ws-transition="appearance"]::view-transition-new(ws-theme-environment),
+:root[data-ws-transition="appearance"]::view-transition-old(ws-identity-surface),
+:root[data-ws-transition="appearance"]::view-transition-new(ws-identity-surface),
+:root[data-ws-transition="appearance"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition="appearance"]::view-transition-new(ws-adaptive-artwork) {
+  animation-duration: 610ms;
+}
+
+:root[data-ws-transition="appearance"]::view-transition-old(ws-theme-environment),
+:root[data-ws-transition="appearance"]::view-transition-old(ws-identity-surface),
+:root[data-ws-transition="appearance"]::view-transition-old(ws-adaptive-artwork) {
+  animation-name: wsIlluminationOld;
+}
+
+:root[data-ws-transition="appearance"]::view-transition-new(ws-theme-environment),
+:root[data-ws-transition="appearance"]::view-transition-new(ws-identity-surface),
+:root[data-ws-transition="appearance"]::view-transition-new(ws-adaptive-artwork) {
+  animation-name: wsIlluminationNew;
+}
+
+@keyframes wsLightOld {
+  from { opacity: 1; filter: brightness(1); }
+  to { opacity: 0; filter: brightness(.965); }
+}
+
+@keyframes wsLightNew {
+  from { opacity: 0; filter: brightness(.97); }
+  to { opacity: 1; filter: brightness(1); }
+}
+
+@keyframes wsIlluminationOld {
+  from { opacity: 1; filter: brightness(1) saturate(1); }
+  to { opacity: 0; filter: brightness(.97) saturate(.97); }
+}
+
+@keyframes wsIlluminationNew {
+  from { opacity: 0; filter: brightness(1.035) saturate(1.04); }
+  to { opacity: 1; filter: brightness(1) saturate(1); }
+}
+
+/* On smaller canvases use shorter travel while preserving direction. */
+@media (max-width: 970px) {
+  :root[data-ws-transition="module"]::view-transition-old(ws-adaptive-artwork),
+  :root[data-ws-transition="module"]::view-transition-new(ws-adaptive-artwork),
+  :root[data-ws-transition="module"]::view-transition-old(ws-content-field),
+  :root[data-ws-transition="module"]::view-transition-new(ws-content-field) {
+    animation-duration: 420ms;
+  }
+
+  @keyframes wsContentLeaveLeft {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-12px); }
+  }
+
+  @keyframes wsContentEnterRight {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes wsContentLeaveRight {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(12px); }
+  }
+
+  @keyframes wsContentEnterLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+}
+
+
+/* ======================================================================
+   STAGE E4 — MOTION PREFERENCE + RESPONSIVE SAFETY
+   Full preserves the intended CITools atmosphere. Auto follows the OS;
+   Reduced keeps state visible while avoiding continuous movement and
+   large workspace transition snapshots.
+   ====================================================================== */
+.cit-tool-page.motion-reduced *,
+.cit-tool-page.motion-reduced *::before,
+.cit-tool-page.motion-reduced *::after {
+  scroll-behavior: auto !important;
+  transition-duration: 1ms !important;
+}
+
+.cit-tool-page.motion-reduced .theme-environment *,
+.cit-tool-page.motion-reduced .adaptive-artwork,
+.cit-tool-page.motion-reduced .adaptive-artwork *,
+.cit-tool-page.motion-reduced .metric-wave,
+.cit-tool-page.motion-reduced .metric-wave *,
+.cit-tool-page.motion-reduced .page,
+.cit-tool-page.motion-reduced .view-transition {
+  animation: none !important;
+}
+
+.cit-tool-page.motion-reduced .ocean-particle,
+.cit-tool-page.motion-reduced .ocean-bubble,
+.cit-tool-page.motion-reduced .firefly,
+.cit-tool-page.motion-reduced .falling-leaf,
+.cit-tool-page.motion-reduced .rose-petal,
+.cit-tool-page.motion-reduced .dewdrop {
+  display: none !important;
+}
+
+.cit-tool-page.motion-reduced .theme-environment {
+  opacity: .72;
+}
+
+.cit-tool-page.motion-reduced .adaptive-artwork {
+  opacity: .9;
+}
+
+.cit-tool-page.motion-reduced .command-orbit:hover,
+.cit-tool-page.motion-reduced .orbit-command:hover,
+.cit-tool-page.motion-reduced .appearance-switch:hover,
+.cit-tool-page.motion-reduced .settings-trigger:hover {
+  transform: none !important;
+}
+
+:root[data-ws-motion="reduced"]::view-transition-old(root),
+:root[data-ws-motion="reduced"]::view-transition-new(root),
+:root[data-ws-motion="reduced"]::view-transition-old(ws-theme-environment),
+:root[data-ws-motion="reduced"]::view-transition-new(ws-theme-environment),
+:root[data-ws-motion="reduced"]::view-transition-old(ws-identity-surface),
+:root[data-ws-motion="reduced"]::view-transition-new(ws-identity-surface),
+:root[data-ws-motion="reduced"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-motion="reduced"]::view-transition-new(ws-adaptive-artwork),
+:root[data-ws-motion="reduced"]::view-transition-old(ws-content-field),
+:root[data-ws-motion="reduced"]::view-transition-new(ws-content-field) {
+  animation: none !important;
+}
+
+@media (max-width: 670px) {
+  .cit-tool-page .settings-popover {
+    width: min(276px, calc(100vw - 20px));
+    padding: 12px;
+  }
+
+  .cit-tool-page .motion-option {
+    height: 32px;
+    font-size: .67rem;
+  }
+}
+
+/* ======================================================================
+   STAGE F — LIVE LEARNING & SOLVER FEEDBACK POLISH
+   Sidebar artifacts now confirm user actions instead of only looping:
+   K-Map reports its simplified state, Learning visualises propagation,
+   and Circuit IDE flashes live telemetry when signals change.
+   ====================================================================== */
+
+/* Shared compact state readout underneath each adaptive artifact. */
+.cit-tool-page .adaptive-artwork .artifact-readout rect {
+  fill: color-mix(in srgb, var(--ws-panel-strong) 62%, transparent);
+  stroke: color-mix(in srgb, var(--art-primary) 18%, var(--ws-border));
+  stroke-width: 1;
+}
+
+.cit-tool-page .adaptive-artwork .artifact-readout text {
+  fill: color-mix(in srgb, var(--ws-text) 78%, var(--art-primary));
+  font-size: 7.1px;
+  font-weight: 550;
+  letter-spacing: .12em;
+}
+
+.cit-tool-page.mode-dark .adaptive-artwork .artifact-readout rect {
+  fill: color-mix(in srgb, var(--ws-panel-strong) 82%, transparent);
+  stroke: color-mix(in srgb, var(--art-primary) 30%, transparent);
+}
+
+/* K-Map: solved state is visible even while the main result panel is lower down. */
+.cit-tool-page .kmap-artifact.state-valid .artifact-board-shadow rect {
+  stroke: color-mix(in srgb, var(--art-primary) 29%, transparent);
+}
+
+.cit-tool-page .kmap-artifact.state-valid .artifact-status-line text {
+  fill: color-mix(in srgb, var(--art-primary) 68%, var(--ws-text));
+}
+
+.cit-tool-page .kmap-artifact.state-empty .artifact-readout {
+  opacity: .66;
+}
+
+.cit-tool-page .kmap-artifact .kmap-feedback-pulse rect {
+  fill: none;
+  stroke: color-mix(in srgb, var(--art-primary) 66%, transparent);
+  stroke-width: 1.35;
+  animation: wsKmapSolvePulse .72s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes wsKmapSolvePulse {
+  0% {
+    opacity: .82;
+    stroke-width: 1.5;
+    transform: scale(.98);
+    transform-origin: center;
+  }
+  100% {
+    opacity: 0;
+    stroke-width: .55;
+    transform: scale(1.075);
+    transform-origin: center;
+  }
+}
+
+/* Learning: each A/B/gate input triggers one causal pulse through the diagram. */
+.cit-tool-page .learning-artifact .learning-action-pulse {
+  pointer-events: none;
+}
+
+.cit-tool-page .learning-artifact .learning-action-pulse path {
+  fill: none;
+  stroke: var(--art-secondary);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-dasharray: 13 96;
+  stroke-dashoffset: 102;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--art-secondary) 40%, transparent));
+  animation: wsLearningPropagation .68s cubic-bezier(.2, .7, .25, 1) forwards;
+}
+
+.cit-tool-page .learning-artifact .learning-action-pulse .secondary {
+  animation-delay: .06s;
+}
+
+.cit-tool-page .learning-artifact .learning-action-pulse .pulse-output {
+  stroke: var(--art-primary);
+  stroke-dasharray: 11 42;
+  stroke-dashoffset: 53;
+  animation-delay: .25s;
+  animation-duration: .48s;
+}
+
+.cit-tool-page .learning-artifact .learning-action-pulse .pulse-lamp {
+  fill: none;
+  stroke: var(--art-primary);
+  stroke-width: 1.35;
+  opacity: 0;
+  transform-origin: 249px 144px;
+  animation: wsLearningLampConfirm .55s .4s cubic-bezier(.16, 1, .3, 1) forwards;
+}
+
+.cit-tool-page .learning-artifact.output-1 .artifact-readout rect {
+  stroke: color-mix(in srgb, var(--art-primary) 34%, transparent);
+}
+
+@keyframes wsLearningPropagation {
+  0% { opacity: 0; stroke-dashoffset: 102; }
+  10% { opacity: 1; }
+  100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+@keyframes wsLearningLampConfirm {
+  0% { opacity: .76; transform: scale(.84); }
+  100% { opacity: 0; transform: scale(1.32); }
+}
+
+/* Circuit IDE: state telemetry acknowledges new routing/output activity. */
+.cit-tool-page .circuit-artifact .circuit-activity-feedback {
+  pointer-events: none;
+}
+
+.cit-tool-page .circuit-artifact .circuit-activity-feedback path {
+  fill: none;
+  stroke: var(--art-secondary);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-dasharray: 10 96;
+  stroke-dashoffset: 106;
+  opacity: 0;
+  animation: wsCircuitTraceAcknowledge .64s ease-out both;
+}
+
+.cit-tool-page .circuit-artifact .circuit-activity-feedback .output-feedback {
+  stroke: var(--art-primary);
+  animation-delay: .13s;
+}
+
+.cit-tool-page .circuit-artifact .circuit-activity-feedback rect {
+  fill: none;
+  stroke: color-mix(in srgb, var(--art-primary) 50%, transparent);
+  stroke-width: 1;
+  opacity: 0;
+  animation: wsCircuitModuleAcknowledge .62s .14s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.cit-tool-page .circuit-artifact.activity-live .artifact-readout rect {
+  stroke: color-mix(in srgb, var(--art-secondary) 32%, transparent);
+}
+
+@keyframes wsCircuitTraceAcknowledge {
+  0% { opacity: .08; stroke-dashoffset: 106; }
+  18% { opacity: .96; }
+  100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+@keyframes wsCircuitModuleAcknowledge {
+  from { opacity: .82; transform: scale(.985); transform-origin: 148px 146px; }
+  to { opacity: 0; transform: scale(1.08); transform-origin: 148px 146px; }
+}
+
+/* State confirmation is optional movement; preserve readouts in Reduced mode. */
+.cit-tool-page.motion-reduced .kmap-feedback-pulse,
+.cit-tool-page.motion-reduced .learning-action-pulse,
+.cit-tool-page.motion-reduced .circuit-activity-feedback {
+  display: none;
+}
+
+
+
+/* ======================================================================
+   OPTION A — CLEAN DIRECTIONAL MODULE SWAP
+   Transition-only patch: internal tool layout/state stays unchanged.
+   The previous full-surface dissolve captured title and content at different
+   times, producing ghosted headings and module/content mismatch. This patch
+   keeps glass surfaces stable and swaps only changing information cleanly.
+   ====================================================================== */
+
+/* During module switching, do not snapshot the full glass slab or ambient
+   environment. They stay anchored through the already-visible new root. */
+:root[data-ws-transition="module"] .cit-tool-page .theme-environment,
+:root[data-ws-transition="module"] .cit-tool-page .identity-slab {
+  view-transition-name: none !important;
+}
+
+/* Capture only the parts whose information changes. Existing markup is used:
+   no module content or feature is modified. */
+:root[data-ws-transition="module"] .cit-tool-page .orbit-routes {
+  view-transition-name: ws-module-navigation;
+}
+
+:root[data-ws-transition="module"] .cit-tool-page .identity-slab-top {
+  view-transition-name: ws-module-copy;
+}
+
+:root[data-ws-transition="module"] .cit-tool-page .mini-ledger {
+  view-transition-name: ws-module-ledger;
+}
+
+/* The next root is the stable stage. Hiding the old root prevents two
+   transparent dashboards from being visible through each other. */
+:root[data-ws-transition="module"]::view-transition-old(root) {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+:root[data-ws-transition="module"]::view-transition-new(root) {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+:root[data-ws-transition="module"]::view-transition-old(ws-module-navigation),
+:root[data-ws-transition="module"]::view-transition-new(ws-module-navigation),
+:root[data-ws-transition="module"]::view-transition-old(ws-module-copy),
+:root[data-ws-transition="module"]::view-transition-new(ws-module-copy),
+:root[data-ws-transition="module"]::view-transition-old(ws-module-ledger),
+:root[data-ws-transition="module"]::view-transition-new(ws-module-ledger),
+:root[data-ws-transition="module"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition="module"]::view-transition-new(ws-adaptive-artwork),
+:root[data-ws-transition="module"]::view-transition-old(ws-content-field),
+:root[data-ws-transition="module"]::view-transition-new(ws-content-field) {
+  animation-duration: 350ms !important;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1) !important;
+  animation-fill-mode: both !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Navigation active state changes at the same hand-off point as content. */
+:root[data-ws-transition="module"]::view-transition-old(ws-module-navigation),
+:root[data-ws-transition="module"]::view-transition-old(ws-module-ledger) {
+  animation-name: wsCleanSwapOld !important;
+}
+
+:root[data-ws-transition="module"]::view-transition-new(ws-module-navigation),
+:root[data-ws-transition="module"]::view-transition-new(ws-module-ledger) {
+  animation-name: wsCleanSwapNew !important;
+}
+
+/* Forward means K-Map -> Learning -> Circuit IDE. */
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-old(ws-module-copy),
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-old(ws-content-field) {
+  animation-name: wsCleanLeaveLeft !important;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-new(ws-module-copy),
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-new(ws-adaptive-artwork),
+:root[data-ws-transition="module"][data-ws-direction="forward"]::view-transition-new(ws-content-field) {
+  animation-name: wsCleanEnterRight !important;
+}
+
+/* Backward means Circuit IDE -> Learning -> K-Map. */
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-old(ws-module-copy),
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-old(ws-adaptive-artwork),
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-old(ws-content-field) {
+  animation-name: wsCleanLeaveRight !important;
+}
+
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-new(ws-module-copy),
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-new(ws-adaptive-artwork),
+:root[data-ws-transition="module"][data-ws-direction="backward"]::view-transition-new(ws-content-field) {
+  animation-name: wsCleanEnterLeft !important;
+}
+
+@keyframes wsCleanSwapOld {
+  0%, 33% {
+    opacity: 1;
+  }
+
+  40%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes wsCleanSwapNew {
+  0%, 40% {
+    opacity: 0;
+  }
+
+  48%, 100% {
+    opacity: 1;
+  }
+}
+
+@keyframes wsCleanLeaveLeft {
+  0%, 31% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  40%, 100% {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}
+
+@keyframes wsCleanEnterRight {
+  0%, 40% {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wsCleanLeaveRight {
+  0%, 31% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  40%, 100% {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+
+@keyframes wsCleanEnterLeft {
+  0%, 40% {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 970px) {
+  :root[data-ws-transition="module"]::view-transition-old(ws-module-navigation),
+  :root[data-ws-transition="module"]::view-transition-new(ws-module-navigation),
+  :root[data-ws-transition="module"]::view-transition-old(ws-module-copy),
+  :root[data-ws-transition="module"]::view-transition-new(ws-module-copy),
+  :root[data-ws-transition="module"]::view-transition-old(ws-module-ledger),
+  :root[data-ws-transition="module"]::view-transition-new(ws-module-ledger),
+  :root[data-ws-transition="module"]::view-transition-old(ws-adaptive-artwork),
+  :root[data-ws-transition="module"]::view-transition-new(ws-adaptive-artwork),
+  :root[data-ws-transition="module"]::view-transition-old(ws-content-field),
+  :root[data-ws-transition="module"]::view-transition-new(ws-content-field) {
+    animation-duration: 290ms !important;
+  }
+}

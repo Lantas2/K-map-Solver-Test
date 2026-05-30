@@ -1,9 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import "./index.css";
 import CircuitIdeMode from "./modes/CircuitIdeMode";
 import CIToolsApp from "./platform/CIToolsApp";
+import ThemeEnvironment from "./components/ThemeEnvironment";
+import SidebarGlassArtwork from "./components/SidebarGlassArtwork";
+import ToolThemeMenu from "./components/ToolThemeMenu";
 
 const ALL_VARIABLES = ["A", "B", "C", "D"];
+const WORKSPACE_MODE_ORDER = {
+  kmap: 0,
+  learning: 1,
+  deep: 2,
+};
 
 function playMechanicalClick(type = "soft") {
   try {
@@ -2328,22 +2337,116 @@ function InteractiveLogicGateLab({
   );
 }
 
-export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMode }) {
+export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMode, onHome }) {
   const toolMode = initialMode;
   const [viewKey, setViewKey] = useState(0);
   const [variableCount, setVariableCount] = useState(3);
   const [active, setActive] = useState(new Set([2, 3, 4, 5, 6]));
   const [labelMode, setLabelMode] = useState("binary");
-  const [theme, setTheme] = useState("ocean");
+  const [theme, setTheme] = useState(() => window.localStorage.getItem("citools-theme") || "original");
   const [circuitMode, setCircuitMode] = useState("simplified");
   const [circuitZoom, setCircuitZoom] = useState(1);
-  const [appearance, setAppearance] = useState("dark");
+  const [appearance, setAppearance] = useState(() => window.localStorage.getItem("citools-appearance") || "light");
+  const [motionPreference, setMotionPreference] = useState(() => {
+    const savedMotion = window.localStorage.getItem("citools-motion");
+    return ["auto", "full", "reduced"].includes(savedMotion) ? savedMotion : "full";
+  });
+  const [systemPrefersReducedMotion, setSystemPrefersReducedMotion] = useState(() => (
+    typeof window.matchMedia === "function"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false
+  ));
+  const motionReduced = motionPreference === "reduced" || (
+    motionPreference === "auto" && systemPrefersReducedMotion
+  );
   const [labGate, setLabGate] = useState("AND");
   const [labA, setLabA] = useState(0);
   const [labB, setLabB] = useState(0);
+  const [artifactPulse, setArtifactPulse] = useState({ kmap: 0, learning: 0 });
   const [labZoom, setLabZoom] = useState(1);
   const [electricZoom, setElectricZoom] = useState(1);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [circuitArtifactState, setCircuitArtifactState] = useState({
+    nodeCount: 6,
+    edgeCount: 6,
+    activeEdgeCount: 3,
+    outputHighCount: 1,
+    selectedType: "XOR",
+    selectedLabel: "SUM XOR",
+    templateName: "Half Adder",
+    clockRunning: false,
+    clockLevel: false,
+  });
+  const workspaceTransitionRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return undefined;
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionChange = (event) => setSystemPrefersReducedMotion(event.matches);
+
+    setSystemPrefersReducedMotion(motionQuery.matches);
+
+    if (typeof motionQuery.addEventListener === "function") {
+      motionQuery.addEventListener("change", handleMotionChange);
+      return () => motionQuery.removeEventListener("change", handleMotionChange);
+    }
+
+    motionQuery.addListener?.(handleMotionChange);
+    return () => motionQuery.removeListener?.(handleMotionChange);
+  }, []);
+
+  function runWorkspaceTransition(kind, update, direction = null) {
+    const root = document.documentElement;
+    const supportsViewTransition = typeof document.startViewTransition === "function";
+
+    if (motionReduced || !supportsViewTransition) {
+      update();
+      return;
+    }
+
+    workspaceTransitionRef.current?.skipTransition?.();
+    root.dataset.wsTransition = kind;
+
+    if (direction) {
+      root.dataset.wsDirection = direction;
+    } else {
+      delete root.dataset.wsDirection;
+    }
+
+    const transition = document.startViewTransition(update);
+    workspaceTransitionRef.current = transition;
+
+    transition.finished.finally(() => {
+      if (workspaceTransitionRef.current === transition) {
+        workspaceTransitionRef.current = null;
+        delete root.dataset.wsTransition;
+        delete root.dataset.wsDirection;
+      }
+    });
+  }
+
+  function changeTheme(nextTheme) {
+    if (nextTheme === theme) return;
+
+    runWorkspaceTransition("theme", () => {
+      flushSync(() => setTheme(nextTheme));
+    });
+  }
+
+  function changeAppearance(nextAppearance) {
+    if (nextAppearance === appearance) return;
+
+    runWorkspaceTransition("appearance", () => {
+      flushSync(() => setAppearance(nextAppearance));
+    });
+  }
+
+  function changeMotionPreference(nextMotion) {
+    if (!["auto", "full", "reduced"].includes(nextMotion) || nextMotion === motionPreference) return;
+    setMotionPreference(nextMotion);
+  }
+
   const config = useMemo(() => makeConfig(variableCount), [variableCount]);
   const activeMinterms = useMemo(() => {
     return [...active].filter((m) => m <= config.maxMinterm).sort((a, b) => a - b);
@@ -2380,9 +2483,36 @@ export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMo
     playMechanicalClick(type);
   }
 
+  function pulseArtifact(kind) {
+    setArtifactPulse((current) => ({
+      ...current,
+      [kind]: current[kind] + 1,
+    }));
+  }
+
+  function setLearningGate(nextGate) {
+    setLabGate(nextGate);
+    pulseArtifact("learning");
+  }
+
+  function setLearningInputA(nextValue) {
+    setLabA((current) => (
+      typeof nextValue === "function" ? nextValue(current) : nextValue
+    ));
+    pulseArtifact("learning");
+  }
+
+  function setLearningInputB(nextValue) {
+    setLabB((current) => (
+      typeof nextValue === "function" ? nextValue(current) : nextValue
+    ));
+    pulseArtifact("learning");
+  }
+
   function changeVariableCount(count) {
     setVariableCount(count);
     setActive(new Set(sampleFor(count)));
+    pulseArtifact("kmap");
   }
 
   function toggleCell(minterm) {
@@ -2394,62 +2524,119 @@ export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMo
 
       return next;
     });
+    pulseArtifact("kmap");
   }
 
   function clearAll() {
     setActive(new Set());
+    pulseArtifact("kmap");
   }
 
   function setAll() {
     const all = Array.from({ length: config.maxMinterm + 1 }, (_, i) => i);
     setActive(new Set(all));
+    pulseArtifact("kmap");
   }
 
   function loadSample() {
     setActive(new Set(sampleFor(variableCount)));
+    pulseArtifact("kmap");
   }
 
   function switchToolMode(mode) {
     if (mode === toolMode) return;
 
-    setViewKey((prev) => prev + 1);
-    if (onNavigateMode) onNavigateMode(mode);
+    const direction =
+      WORKSPACE_MODE_ORDER[mode] > WORKSPACE_MODE_ORDER[toolMode]
+        ? "forward"
+        : "backward";
+
+    runWorkspaceTransition("module", () => {
+      flushSync(() => setViewKey((prev) => prev + 1));
+      onNavigateMode?.(mode);
+    }, direction);
   }
+
+  useEffect(() => {
+    window.localStorage.setItem("citools-theme", theme);
+    window.localStorage.setItem("citools-appearance", appearance);
+    window.localStorage.setItem("citools-motion", motionPreference);
+
+    document.body.classList.add("cit-tools-workspace-active");
+    document.body.dataset.toolAppearance = appearance;
+    document.body.dataset.toolTheme = theme;
+    document.body.dataset.toolMotion = motionReduced ? "reduced" : "full";
+    document.body.dataset.toolMotionPreference = motionPreference;
+    document.documentElement.dataset.wsMotion = motionReduced ? "reduced" : "full";
+
+    return () => {
+      document.body.classList.remove("cit-tools-workspace-active");
+      delete document.body.dataset.toolAppearance;
+      delete document.body.dataset.toolTheme;
+      delete document.body.dataset.toolMotion;
+      delete document.body.dataset.toolMotionPreference;
+      delete document.documentElement.dataset.wsMotion;
+    };
+  }, [theme, appearance, motionPreference, motionReduced]);
 
   const modeMeta = {
     kmap: {
       title: "K-Map Solver",
-      kicker: "Boolean Cartography",
-      copy: "Petakan minterm, grouping, SOP, validasi coverage, boolean steps, dan circuit dalam satu meja kerja.",
+      kicker: "Digital Logic Studio",
+      copy: "Simplify boolean expressions with precision and clarity.",
       code: `F(${config.variables.join(",")})`,
       chip: result.expression || "0",
       ledgerLabel: "Active minterms",
       ledgerValue: activeMinterms.length,
+      accent: "pink",
+      features: [
+        ["Variable Mode", "2, 3, and 4 variable maps"],
+        ["Smart Grouping", "Auto-detection & validation"],
+        ["Step by Step", "Visual simplification flow"],
+        ["Real-time Result", "Instant expression output"],
+      ],
     },
     learning: {
-      title: "Logic lab",
-      kicker: "Logic Gate Learning Bench",
-      copy: "Eksplorasi gerbang logika, truth table, analogi listrik, dan reasoning output dalam visual yang ramah pemula.",
+      title: "Learning Mode",
+      kicker: "Interactive Logic Lab",
+      copy: "Understand gates, truth tables, and signals through visual interaction.",
       code: "LEARN://GATES",
       chip: "interactive",
       ledgerLabel: "Gate family",
       ledgerValue: "7",
+      accent: "violet",
+      features: [
+        ["Seven Gate Families", "AND, OR, XOR, NAND and more"],
+        ["Truth Table", "Binary reasoning at a glance"],
+        ["Electric Analogy", "Understand current vs. logic"],
+        ["Realtime Output", "See state changes instantly"],
+      ],
     },
     deep: {
       title: "Circuit IDE",
-      kicker: "Advanced Circuit Studio",
-      copy: "Workspace profesional untuk merancang rangkaian digital, memantau sinyal, dan menyiapkan simulasi tingkat lanjut.",
+      kicker: "Digital Electronics Lab",
+      copy: "Design digital circuits visually with live signals and modular components.",
       code: "IDE://CIRCUIT",
-      chip: "offline editor",
-      ledgerLabel: "Build phase",
-      ledgerValue: "02",
+      chip: circuitArtifactState.clockRunning ? "clock running" : "offline editor",
+      ledgerLabel: "Live wires",
+      ledgerValue: `${circuitArtifactState.activeEdgeCount}/${circuitArtifactState.edgeCount}`,
+      accent: "cyan",
+      features: [
+        ["Component Registry", `${circuitArtifactState.nodeCount} modules on board`],
+        ["Realtime Wiring", `${circuitArtifactState.activeEdgeCount} high of ${circuitArtifactState.edgeCount} wires`],
+        ["Template Circuit", circuitArtifactState.templateName],
+        ["Selected Module", circuitArtifactState.selectedLabel],
+      ],
     },
   };
   const currentMode = modeMeta[toolMode] ?? modeMeta.kmap;
-  const modeTitle = currentMode.title;
   const modeKicker = currentMode.kicker;
   const modeCopy = currentMode.copy;
-  const modeCode = currentMode.code;
+  const modeHeading = toolMode === "kmap"
+    ? ["K-Map", "Solver"]
+    : toolMode === "learning"
+      ? ["Learning", "Mode"]
+      : ["Circuit", "IDE"];
 
   useEffect(() => {
   function handleSound(event) {
@@ -2484,103 +2671,137 @@ export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMo
 }, [soundEnabled]);
 
   return (
-    <div className={`page theme-${theme} mode-${appearance}`}>
-      <div className="signal-grid" aria-hidden="true" />
-      <div className="logic-sigil" aria-hidden="true">
-        <span>01</span>
-        <span>MAP</span>
-        <span>Σ</span>
-      </div>
+    <div
+      className={`page cit-tool-page theme-${theme} mode-${appearance} motion-${motionReduced ? "reduced" : "full"}`}
+      data-theme={theme}
+      data-mode={appearance}
+      data-motion={motionReduced ? "reduced" : "full"}
+      data-motion-preference={motionPreference}
+    >
+      <ThemeEnvironment theme={theme} appearance={appearance} />
 
-      <nav className="command-orbit" aria-label="Primary command navigation">
+      <nav className={`command-orbit orbit-${toolMode}`} aria-label="Primary command navigation">
+        <div className="orbit-routes">
+          <button
+            type="button"
+            className="orbit-command orbit-home"
+            onClick={() => onHome?.()}
+            aria-label="Back to CITools home"
+          >
+            <span>⌂</span>
+            Home
+          </button>
 
-        <button
-          type="button"
-          className="orbit-command utility"
-          onClick={() => setSoundEnabled((prev) => !prev)}
-        >
-          <span>{soundEnabled ? "♪" : "×"}</span>
-          {soundEnabled ? "Sound" : "Muted"}
-        </button>
+          <button
+            type="button"
+            className={toolMode === "kmap" ? "orbit-command active" : "orbit-command"}
+            onMouseDown={() => clickSound("toggle")}
+            onClick={() => switchToolMode("kmap")}
+          >
+            <span>01</span>
+            K-Map
+          </button>
 
-        <button
-          type="button"
-          className={toolMode === "kmap" ? "orbit-command active" : "orbit-command"}
-          onMouseDown={() => clickSound("toggle")}
-          onClick={() => switchToolMode("kmap")}
-        >
-          <span>01</span>
-          K-Map
-        </button>
+          <button
+            type="button"
+            className={toolMode === "learning" ? "orbit-command active" : "orbit-command"}
+            onClick={() => switchToolMode("learning")}
+          >
+            <span>02</span>
+            Learning
+          </button>
 
-        <button
-          type="button"
-          className={toolMode === "learning" ? "orbit-command active" : "orbit-command"}
-          onClick={() => switchToolMode("learning")}
-        >
-          <span>02</span>
-          Learning
-        </button>
+          <button
+            type="button"
+            className={toolMode === "deep" ? "orbit-command active" : "orbit-command"}
+            onClick={() => switchToolMode("deep")}
+          >
+            <span>03</span>
+            Circuit IDE
+          </button>
+        </div>
 
-        <button
-          type="button"
-          className={toolMode === "deep" ? "orbit-command active" : "orbit-command"}
-          onClick={() => switchToolMode("deep")}
-        >
-          <span>03</span>
-          Circuit IDE
-        </button>
-
-        <button
-          type="button"
-          className="orbit-command utility"
-          onMouseDown={() => clickSound("toggle")}
-          onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")}
-        >
-          <span>{appearance === "dark" ? "☾" : "☼"}</span>
-          {appearance === "dark" ? "Dark" : "Light"}
-        </button>
-
-        <select
-          className="orbit-command orbit-select"
-          value={theme}
-          onChange={(event) => setTheme(event.target.value)}
-          aria-label="Choose theme"
-        >
-          <option value="coffee">Coffee</option>
-          <option value="forest">Forest</option>
-          <option value="original">Original</option>
-          <option value="ocean">Ocean</option>
-          <option value="rose">Rose</option>
-        </select>
+        <ToolThemeMenu
+          theme={theme}
+          onThemeChange={changeTheme}
+          appearance={appearance}
+          onAppearanceChange={changeAppearance}
+          soundEnabled={soundEnabled}
+          onSoundToggle={() => setSoundEnabled((prev) => !prev)}
+          motionPreference={motionPreference}
+          motionReduced={motionReduced}
+          onMotionChange={changeMotionPreference}
+        />
       </nav>
 
       <main className="workspace-shell">
-        <section className="identity-slab">
-          <p className="slab-kicker">{modeKicker}</p>
-          <h1>{modeTitle}</h1>
-          <p>{modeCopy}</p>
+        <aside className={`identity-slab slab-${toolMode}`}>
+          <div className="identity-slab-top">
+            <a className="slab-brand" href="/" onClick={(event) => { event.preventDefault(); onHome?.(); }}>
+              <span className="slab-brand-mark">Ci</span>
+              <strong>CITools</strong>
+            </a>
 
-          <div className="formula-chip">
-            <span>{modeCode}</span>
-            <b>{currentMode.chip}</b>
+            <p className="slab-kicker">{modeKicker}</p>
+            <h1 className="slab-title">
+              <span>{modeHeading[0]}</span>
+              <span>{modeHeading[1]}</span>
+            </h1>
+            <p className="slab-copy">{modeCopy}</p>
+
+            <div className="identity-feature-list">
+              {currentMode.features?.map(([title, text], index) => (
+                <article key={title} className={`identity-feature-item feature-${index + 1}`}>
+                  <span className="feature-icon" aria-hidden="true" />
+                  <div>
+                    <strong>{title}</strong>
+                    <small>{text}</small>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
 
-          <div className="mini-ledger">
-            <span>{currentMode.ledgerLabel}</span>
-            <strong>{currentMode.ledgerValue}</strong>
+          <SidebarGlassArtwork
+            mode={toolMode}
+            activeMinterms={activeMinterms}
+            selectedGroups={result.selectedGroups}
+            variableCount={variableCount}
+            validationState={validation.isEmpty ? "empty" : validation.isValid ? "valid" : "invalid"}
+            expression={result.expression || "0"}
+            groupCount={result.selectedGroups.length}
+            kmapPulseKey={artifactPulse.kmap}
+            gate={labGate}
+            a={labA}
+            b={labB}
+            output={evalGate(labGate, labA, labB) ? 1 : 0}
+            learningPulseKey={artifactPulse.learning}
+            circuitState={circuitArtifactState}
+          />
+
+          <div className="identity-slab-bottom">
+            <div className="mini-ledger">
+              <div>
+                <span>{currentMode.ledgerLabel}</span>
+                <strong>{currentMode.ledgerValue}</strong>
+              </div>
+              <svg className="metric-wave" viewBox="0 0 72 28" aria-hidden="true">
+                <path d="M2 21h14c5 0 5-12 10-12s5 12 10 12h8c5 0 5-17 11-17s6 17 15 17" />
+              </svg>
+            </div>
+            <p className="slab-footer">© 2026 CITools · Cokroaminoto Informatika</p>
           </div>
-        </section>
+        </aside>
 
         <section key={viewKey} className="content-field view-transition">
           {toolMode === "learning" ? (
             <InteractiveLogicGateLab
               gate={labGate}
-              setGate={setLabGate}
+              setGate={setLearningGate}
               a={labA}
-              setA={setLabA}
+              setA={setLearningInputA}
               b={labB}
-              setB={setLabB}
+              setB={setLearningInputB}
               labZoom={labZoom}
               setLabZoom={setLabZoom}
               electricZoom={electricZoom}
@@ -2588,7 +2809,7 @@ export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMo
               soundEnabled={soundEnabled}
             />
           ) : toolMode === "deep" ? (
-            <CircuitIdeMode />
+            <CircuitIdeMode onArtifactChange={setCircuitArtifactState} />
           ) : (
             <>
               <section className="control-ribbon" aria-label="K-Map controls">
@@ -2778,7 +2999,7 @@ export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMo
                 <section className="panel group-panel">
                   <div className="panel-title stack-title">
                     <div>
-                      <h2>Grouping</h2>
+                      <h2>Grouping Overview</h2>
                       <p>Area grouping divisualkan sebagai overlay berwarna pada map.</p>
                     </div>
                     <span className="badge">{result.selectedGroups.length} group</span>
@@ -2808,8 +3029,8 @@ export function DigitalElectronicsWorkspace({ initialMode = "kmap", onNavigateMo
                 <section className="panel boolean-panel">
                   <div className="panel-title stack-title">
                     <div>
-                      <h2>Boolean Simplification</h2>
-                      <p>Penyelesaian manual berbasis minterm dan grouping K-Map.</p>
+                      <h2>Simplification Steps</h2>
+                      <p>Step-by-step penyelesaian K-Map.</p>
                     </div>
                     <span className="badge">Step-by-step</span>
                   </div>

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
 /* =====================================================
    CITOOLS PLATFORM — PROFESSIONAL EDUCATION SHELL
    Scoped to .citools-site and .cit-tool-route only.
@@ -842,7 +844,7 @@
 .cit-tool-route {
   min-height: 100vh;
   position: relative;
-  background: #080909;
+  background: transparent;
 }
 
 .cit-toolroute-bar {
@@ -1335,3 +1337,4694 @@
   .cit-origin-link-card { min-height: 0; }
   .cit-origin-disclaimer { flex-direction: column; align-items: flex-start; }
 }
+
+
+/* ========================================================================
+   CITOOLS HOME V4 — PORCELAIN SIGNAL ATELIER
+   Reference direction: luminous product gallery / sculptural web showcase.
+   Keeps tool workspaces and routing untouched.
+   ======================================================================== */
+
+.citools-site {
+  --cit-bg: #f5f2ed;
+  --cit-bg-soft: #ebe6df;
+  --cit-panel: rgba(255, 253, 249, .72);
+  --cit-panel-strong: rgba(255, 253, 249, .93);
+  --cit-border: rgba(24, 24, 22, .1);
+  --cit-border-bright: rgba(24, 24, 22, .24);
+  --cit-cyan: #171a21;
+  --cit-cyan-strong: #16191e;
+  --cit-green: #ff6a31;
+  --cit-violet: #8871ef;
+  --cit-text: #151719;
+  --cit-muted: #79736c;
+  --cit-soft: #433e38;
+  --atelier-cream: #f7f4ef;
+  --atelier-paper: #fffdf8;
+  --atelier-ink: #141518;
+  --atelier-accent: #f46331;
+  --atelier-apricot: #ffb377;
+  --atelier-lilac: #9285ed;
+  --atelier-shadow: rgba(63, 52, 44, .11);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 82% 8%, rgba(255, 189, 149, .29), transparent 24%),
+    radial-gradient(circle at 9% 15%, rgba(209, 201, 247, .28), transparent 28%),
+    linear-gradient(130deg, #f8f6f2 0%, #f1eee8 54%, #f7f5ef 100%);
+  color: var(--cit-text);
+  font-family: "Bricolage Grotesque", sans-serif;
+}
+
+.cit-background-grid {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255,255,255,.82), transparent 45%),
+    linear-gradient(rgba(20, 21, 24, .035) 1px, transparent 1px) 0 0 / 68px 68px,
+    linear-gradient(90deg, rgba(20, 21, 24, .035) 1px, transparent 1px) 0 0 / 68px 68px;
+  mask-image: radial-gradient(ellipse at 50% 24%, black 10%, rgba(0,0,0,.75) 40%, transparent 86%);
+}
+
+.cit-ambient-sculpture {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cit-ambient-sculpture span {
+  position: absolute;
+  display: block;
+  filter: blur(60px);
+  opacity: .42;
+  animation: atelierDrift 14s ease-in-out infinite alternate;
+}
+
+.cit-ambient-sculpture span:first-child {
+  width: min(44vw, 610px);
+  height: min(44vw, 610px);
+  right: -18vw;
+  top: 6vh;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 173, 118, .5), transparent 70%);
+}
+
+.cit-ambient-sculpture span:nth-child(2) {
+  width: min(38vw, 560px);
+  height: min(30vw, 440px);
+  left: -16vw;
+  top: 38vh;
+  border-radius: 48%;
+  background: radial-gradient(circle, rgba(143, 127, 239, .26), transparent 70%);
+  animation-delay: -5s;
+}
+
+.cit-ambient-sculpture span:nth-child(3) {
+  width: min(42vw, 580px);
+  height: min(26vw, 370px);
+  left: 34%;
+  bottom: -12vh;
+  background: radial-gradient(circle, rgba(255, 183, 120, .24), transparent 68%);
+  animation-delay: -8s;
+}
+
+@keyframes atelierDrift {
+  to { transform: translate3d(2vw, -2.2vh, 0) scale(1.08); }
+}
+
+.cit-main {
+  width: min(1440px, calc(100% - clamp(28px, 7vw, 104px)));
+  margin: 0 auto;
+}
+
+/* Navigation — quiet gallery header, not a dark dashboard pill */
+.cit-navbar {
+  padding: clamp(18px, 3vw, 30px) clamp(16px, 4vw, 52px) 0;
+  backdrop-filter: none;
+}
+
+.cit-nav-inner {
+  width: min(1440px, 100%);
+  padding: 0 0 17px;
+  border: 0;
+  border-bottom: 1px solid rgba(20, 21, 24, .1);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.cit-brand {
+  gap: 14px;
+  color: var(--atelier-ink);
+}
+
+.cit-brand-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(20, 21, 24, .14);
+  background: var(--atelier-paper);
+  color: var(--atelier-ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 600;
+  font-size: .8rem;
+  letter-spacing: -.06em;
+  box-shadow: 0 10px 28px rgba(38, 30, 24, .06);
+}
+
+.cit-brand-mark.large {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  font-size: .9rem;
+}
+
+.cit-brand-copy strong {
+  font-size: 1.08rem;
+  font-weight: 650;
+  letter-spacing: -.045em;
+}
+
+.cit-brand-copy small {
+  color: var(--cit-muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .63rem;
+  letter-spacing: .12em;
+}
+
+.cit-nav-links { gap: clamp(14px, 2.4vw, 32px); }
+.cit-nav-links a {
+  color: #554f48;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.cit-nav-links a:hover { color: var(--atelier-accent); }
+
+.cit-nav-toggle { display: none; }
+
+/* Reusable controls */
+.cit-badge {
+  padding: 8px 13px;
+  border-color: rgba(20, 21, 24, .1);
+  background: rgba(255,253,248,.7);
+  color: #716b64;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .64rem;
+  letter-spacing: .16em;
+}
+.cit-badge-active {
+  border-color: rgba(244, 99, 49, .24);
+  background: rgba(244, 99, 49, .065);
+  color: var(--atelier-accent);
+}
+.cit-badge-soon {
+  border-color: rgba(20, 21, 24, .1);
+  background: rgba(255,255,255,.45);
+  color: #918a82;
+}
+
+.cit-button {
+  min-height: 54px;
+  padding: 0 20px 0 24px;
+  gap: 22px;
+  border-radius: 999px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .76rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, background .3s ease;
+}
+.cit-button i { font-style: normal; font-size: 1.02rem; }
+.cit-button:hover { transform: translateY(-3px); }
+.cit-button-primary {
+  color: #fffdfa;
+  background: #17191e;
+  box-shadow: 0 22px 34px rgba(27, 23, 20, .16);
+}.cit-button-primary:hover {
+  background: #fa4f92;
+  box-shadow: 0 24px 40px rgba(250, 79, 146, .26);
+}
+.cit-button-secondary, .cit-button-ghost {
+  color: #1d1d20;
+  border-color: rgba(20, 21, 24, .13);
+  background: rgba(255, 253, 248, .67);
+}
+.cit-button-secondary:hover, .cit-button-ghost:hover { border-color: rgba(244,99,49,.25); background: var(--atelier-paper); }
+
+/* Home hero — editorial showroom with floating instruments */
+.cit-atelier-hero {
+  min-height: min(950px, calc(100vh - 82px));
+  display: grid;
+  grid-template-columns: minmax(400px, .93fr) minmax(500px, 1.07fr);
+  align-items: center;
+  gap: clamp(34px, 5vw, 76px);
+  padding: clamp(50px, 8vh, 94px) 0 clamp(72px, 8vw, 114px);
+}
+
+.cit-atelier-copy {
+  position: relative;
+  z-index: 2;
+  animation: atelierRise .75s cubic-bezier(.2,.82,.18,1) both;
+}
+
+.cit-hero-label-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.cit-live-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #6d665f;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .66rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.cit-live-mark i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--atelier-accent);
+  box-shadow: 0 0 0 5px rgba(244,99,49,.12);
+}
+
+.cit-edition {
+  margin: clamp(38px, 6vh, 62px) 0 16px;
+  color: #827a72;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.cit-atelier-copy h1 {
+  margin: 0 0 26px;
+  font-family: "Bricolage Grotesque", sans-serif;
+  color: var(--atelier-ink);
+  font-size: clamp(4rem, 6.6vw, 7.1rem);
+  font-weight: 650;
+  line-height: .89;
+  letter-spacing: -.095em;
+}
+.cit-atelier-copy h1 span {
+  display: block;
+  font-family: "Instrument Serif", serif;
+  font-size: .87em;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -.055em;
+  color: #615b54;
+}
+
+.cit-atelier-lead {
+  max-width: 530px;
+  margin: 0 0 36px;
+  color: #5f5952;
+  font-size: clamp(1.02rem, 1.35vw, 1.14rem);
+  line-height: 1.76;
+}
+
+.cit-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.cit-atelier-metrics {
+  display: flex;
+  gap: clamp(24px, 4vw, 48px);
+  margin-top: clamp(48px, 7vh, 74px);
+}
+.cit-atelier-metrics div { position: relative; display: grid; gap: 7px; padding-left: 17px; }
+.cit-atelier-metrics div::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  height: 37px;
+  width: 1px;
+  background: rgba(20,21,24,.15);
+}
+.cit-atelier-metrics strong {
+  color: var(--atelier-ink);
+  font-size: clamp(1.7rem, 2.8vw, 2.35rem);
+  font-weight: 500;
+  letter-spacing: -.07em;
+}
+.cit-atelier-metrics span {
+  color: #7f7870;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .62rem;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+}
+
+.cit-atelier-preview {
+  position: relative;
+  min-height: clamp(580px, 59vw, 704px);
+  animation: atelierRise .9s .12s cubic-bezier(.2,.82,.18,1) both;
+  perspective: 1150px;
+}
+.cit-preview-halo {
+  position: absolute;
+  width: min(82%, 620px);
+  height: 54%;
+  top: 25%;
+  left: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,196,154,.42), rgba(206,199,243,.13) 44%, transparent 70%);
+  filter: blur(25px);
+}
+.cit-preview-floor {
+  position: absolute;
+  bottom: 64px;
+  right: 6%;
+  width: 76%;
+  height: 76px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(35,29,24,.14), transparent 65%);
+  filter: blur(12px);
+}
+
+.cit-glass-monitor {
+  position: absolute;
+  top: 92px;
+  right: clamp(4px, 4vw, 50px);
+  width: min(91%, 596px);
+  border: 1px solid rgba(31,27,22,.11);
+  border-radius: 28px;
+  background: rgba(255,254,251,.62);
+  box-shadow:
+    0 45px 90px rgba(56,45,38,.13),
+    0 5px 14px rgba(56,45,38,.06),
+    inset 0 1px 0 rgba(255,255,255,.92);
+  backdrop-filter: blur(22px);
+  transform: rotateY(-4deg) rotateX(2deg);
+  overflow: hidden;
+  animation: floatPanel 7s ease-in-out infinite;
+}
+.cit-monitor-header {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 19px;
+  border-bottom: 1px solid rgba(20,21,24,.08);
+  color: #857d75;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .63rem;
+  letter-spacing: .18em;
+}
+.cit-monitor-lights { display: flex; gap: 6px; }
+.cit-monitor-lights span {
+  width: 7px; height: 7px; border-radius: 50%; background: #d3ccc5;
+}
+.cit-monitor-lights span:nth-child(2) { background: var(--atelier-accent); }
+.cit-monitor-lights span:nth-child(3) { background: #ae9fec; }
+.cit-atelier-circuit { display: block; width: 100%; height: auto; padding: 22px 14px 0; }
+.cit-atelier-watermark {
+  fill: rgba(21,23,25,.043);
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 50px;
+  font-weight: 700;
+  letter-spacing: -3px;
+  text-anchor: middle;
+}
+.cit-track {
+  stroke: rgba(33,33,34,.13);
+  stroke-width: 2.5;
+  fill: none;
+}
+.cit-active-track {
+  stroke: url(#atelierSignal);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 9 7;
+  animation: lineTravel 1.7s linear infinite;
+}
+.cit-monitor-node rect, .cit-monitor-gate rect {
+  fill: rgba(255,253,249,.9);
+  stroke: rgba(20,21,24,.13);
+}
+.cit-monitor-gate rect { fill: rgba(240,236,247,.94); stroke: rgba(136,113,239,.28); }
+.cit-monitor-node text, .cit-monitor-gate text {
+  fill: #302c28;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+  font-size: 17px;
+}
+.cit-monitor-gate text { text-anchor: middle; font-size: 14px; }
+.cit-monitor-node .cit-hot { fill: var(--atelier-accent); }
+.cit-monitor-node.low text:last-child { fill: #a19a92; }
+.cit-monitor-console {
+  height: 60px;
+  padding: 0 20px;
+  border-top: 1px solid rgba(20,21,24,.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "IBM Plex Mono", monospace;
+}
+.cit-monitor-console span {
+  color: #958d84;
+  font-size: .63rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.cit-monitor-console strong {
+  color: #2a2825;
+  font-size: .77rem;
+  font-weight: 500;
+}
+.cit-monitor-console b { color: var(--atelier-accent); }
+
+.cit-float-card {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: 9px;
+  padding: 18px;
+  color: var(--atelier-ink);
+  text-decoration: none;
+  border: 1px solid rgba(20,21,24,.1);
+  border-radius: 22px;
+  background: rgba(255,253,249,.8);
+  box-shadow: 0 26px 52px rgba(56,45,38,.12), inset 0 1px rgba(255,255,255,.9);
+  backdrop-filter: blur(16px);
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+.cit-float-card:hover {
+  transform: translateY(-7px) rotate(0deg) !important;
+  box-shadow: 0 36px 64px rgba(56,45,38,.16), inset 0 1px rgba(255,255,255,.9);
+}
+.cit-float-card strong { font-weight: 600; letter-spacing: -.035em; }
+.cit-float-code {
+  color: #898179;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .57rem;
+  letter-spacing: .17em;
+}
+.cit-float-map {
+  top: 42px;
+  left: clamp(0px, 2vw, 26px);
+  width: 178px;
+  transform: rotate(-6deg);
+  animation: floatCardA 7s .5s ease-in-out infinite;
+}
+.cit-mini-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 8px; }
+.cit-mini-map span {
+  height: 19px;
+  border-radius: 5px;
+  border: 1px solid rgba(20,21,24,.08);
+  background: #eeebe5;
+}
+.cit-mini-map .on { background: #ff8a56; border-color: rgba(244,99,49,.25); }
+.cit-float-ide {
+  right: 0;
+  bottom: 100px;
+  width: 194px;
+  transform: rotate(4deg);
+  animation: floatCardB 7.4s ease-in-out infinite;
+}
+.cit-float-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--atelier-accent);
+}
+.cit-float-ide small { color: #756e67; font-size: .72rem; }
+.cit-float-learn {
+  left: clamp(8px, 5vw, 64px);
+  bottom: 44px;
+  width: 173px;
+  transform: rotate(-3deg);
+  animation: floatCardA 8s -2s ease-in-out infinite;
+}
+.cit-truth-row { display: flex; gap: 6px; }
+.cit-truth-row span, .cit-truth-row b {
+  display: grid; place-items: center; width: 30px; height: 25px;
+  border-radius: 7px; background: #efece7; font-family: "IBM Plex Mono", monospace; font-size: .68rem;
+}
+.cit-truth-row b { color: #fff; background: var(--atelier-accent); }
+
+@keyframes lineTravel { to { stroke-dashoffset: -32; } }
+@keyframes atelierRise { from { transform: translateY(28px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes floatPanel { 50% { transform: rotateY(-4deg) rotateX(2deg) translateY(-9px); } }
+@keyframes floatCardA { 50% { transform: rotate(-4deg) translateY(-10px); } }
+@keyframes floatCardB { 50% { transform: rotate(3deg) translateY(-12px); } }
+
+/* Module directory — sloped product trays */
+.cit-atelier-modules {
+  position: relative;
+  padding: clamp(82px, 11vw, 148px) 0 clamp(74px, 9vw, 112px);
+  border-top: 1px solid rgba(20,21,24,.08);
+}
+.cit-atelier-section-head {
+  display: grid;
+  grid-template-columns: minmax(380px, .94fr) minmax(270px, .48fr);
+  gap: clamp(32px, 8vw, 100px);
+  align-items: end;
+  margin-bottom: clamp(42px, 6vw, 74px);
+}
+.cit-section-number {
+  display: block;
+  margin-bottom: 17px;
+  color: #9a928a;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .7rem;
+  letter-spacing: .18em;
+}
+.cit-atelier-section-head h2,
+.cit-method-intro h2 {
+  margin: 19px 0 0;
+  color: var(--atelier-ink);
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(3rem, 5.2vw, 5.5rem);
+  font-weight: 400;
+  letter-spacing: -.06em;
+  line-height: .96;
+}
+.cit-atelier-section-head > p {
+  margin: 0;
+  color: #655f58;
+  line-height: 1.76;
+}
+.cit-atelier-subject-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.7vw, 21px);
+}
+.cit-subject-card {
+  position: relative;
+  min-height: 270px;
+  padding: clamp(19px, 2vw, 25px);
+  border: 1px solid rgba(20,21,24,.09);
+  border-radius: 25px;
+  color: var(--atelier-ink);
+  background: rgba(255,253,249,.64);
+  box-shadow: 0 15px 34px rgba(53,44,38,.045), inset 0 1px rgba(255,255,255,.8);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease, border-color .4s ease;
+}
+.cit-subject-card:nth-child(2) { transform: translateY(24px); }
+.cit-subject-card:nth-child(3) { transform: translateY(-10px); }
+.cit-subject-card:nth-child(5) { transform: translateY(20px); }
+.cit-subject-card.is-active {
+  min-height: 330px;
+  grid-column: span 2;
+  background:
+    radial-gradient(circle at 84% 18%, rgba(255,170,116,.24), transparent 30%),
+    var(--atelier-paper);
+}
+.cit-subject-card.is-active:hover { transform: translateY(-7px); border-color: rgba(244,99,49,.23); box-shadow: 0 32px 70px rgba(53,44,38,.12); }
+.cit-subject-card.is-disabled:hover { transform: translateY(-3px); }
+.cit-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cit-card-meta > span {
+  color: #948c83;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .62rem;
+  letter-spacing: .16em;
+}
+.cit-card-body { margin-top: auto; padding-top: clamp(30px, 4vw, 55px); }
+.cit-card-body h3 {
+  margin: 0 0 11px;
+  color: var(--atelier-ink);
+  font-size: clamp(1.32rem, 2.3vw, 1.75rem);
+  font-weight: 560;
+  letter-spacing: -.055em;
+}
+.cit-subject-card.is-active h3 { font-size: clamp(2rem, 3.2vw, 2.8rem); }
+.cit-card-body p {
+  max-width: 460px;
+  margin: 0;
+  color: #706961;
+  font-size: .9rem;
+  line-height: 1.64;
+}
+.cit-card-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(20,21,24,.08);
+  color: #797169;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.cit-card-link b { color: var(--atelier-accent); font-size: 1.2rem; }
+.cit-card-sheen {
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.48), transparent 55%);
+  transform: translateX(-55%);
+  opacity: 0;
+  transition: transform .65s ease, opacity .3s ease;
+  pointer-events: none;
+}
+.cit-subject-card:hover .cit-card-sheen { transform: translateX(45%); opacity: 1; }
+
+/* Method / benefit section */
+.cit-atelier-method {
+  display: grid;
+  grid-template-columns: minmax(330px, .86fr) minmax(430px, 1fr);
+  gap: clamp(44px, 8vw, 112px);
+  padding: clamp(62px, 10vw, 136px) 0;
+}
+.cit-method-intro h2 { font-size: clamp(2.8rem, 4.4vw, 4.7rem); }
+.cit-feature-stack { display: grid; }
+.cit-feature-strip {
+  display: grid;
+  grid-template-columns: 52px 1fr 38px;
+  gap: 22px;
+  align-items: start;
+  padding: clamp(22px, 3vw, 31px) 0;
+  border-bottom: 1px solid rgba(20,21,24,.1);
+}
+.cit-feature-strip:first-child { border-top: 1px solid rgba(20,21,24,.1); }
+.cit-feature-strip > span {
+  color: #958d85;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .67rem;
+  letter-spacing: .12em;
+  padding-top: 7px;
+}
+.cit-feature-strip h3 {
+  margin: 0 0 8px;
+  color: var(--atelier-ink);
+  font-size: 1.35rem;
+  font-weight: 550;
+  letter-spacing: -.045em;
+}
+.cit-feature-strip p { margin: 0; color: #6b645d; line-height: 1.64; }
+.cit-feature-strip i {
+  font-style: normal;
+  font-size: 1.3rem;
+  color: var(--atelier-accent);
+  opacity: 0;
+  transform: translateX(-7px);
+  transition: opacity .24s ease, transform .24s ease;
+}
+.cit-feature-strip:hover i { opacity: 1; transform: none; }
+
+/* Editorial CTA */
+.cit-atelier-cta {
+  position: relative;
+  overflow: hidden;
+  margin: clamp(40px, 7vw, 82px) 0 clamp(78px, 10vw, 130px);
+  padding: clamp(42px, 8vw, 90px) clamp(26px, 9vw, 112px);
+  border: 1px solid rgba(20,21,24,.1);
+  border-radius: clamp(28px, 4vw, 50px);
+  background:
+    radial-gradient(circle at 82% 52%, rgba(244,99,49,.14), transparent 25%),
+    rgba(255,253,249,.73);
+  text-align: center;
+  box-shadow: 0 32px 72px rgba(53,44,38,.07);
+}
+.cit-atelier-cta h2 {
+  margin: 24px 0 18px;
+  color: var(--atelier-ink);
+  font-size: clamp(3rem, 6vw, 6.6rem);
+  line-height: .9;
+  font-weight: 600;
+  letter-spacing: -.09em;
+}
+.cit-atelier-cta h2 span {
+  font-family: "Instrument Serif", serif;
+  color: #625b54;
+  font-weight: 400;
+  font-style: italic;
+}
+.cit-atelier-cta p {
+  max-width: 610px;
+  margin: 0 auto 32px;
+  color: #615a53;
+  line-height: 1.72;
+}
+.cit-atelier-cta .cit-hero-actions { justify-content: center; }
+.cit-cta-orbit {
+  position: absolute;
+  right: -50px;
+  top: -48px;
+  width: clamp(160px, 22vw, 270px);
+  height: clamp(160px, 22vw, 270px);
+  border: 1px solid rgba(244,99,49,.13);
+  border-radius: 50%;
+}
+.cit-cta-orbit::before, .cit-cta-orbit::after {
+  content: ""; position: absolute; inset: 22px; border: 1px solid rgba(20,21,24,.06); border-radius: 50%;
+}
+.cit-cta-orbit::after { inset: 52px; }
+.cit-cta-orbit span { display: none; }
+
+/* Footer becomes a calm editorial closing plate */
+.cit-footer {
+  width: min(1440px, calc(100% - clamp(28px, 7vw, 104px)));
+  padding: clamp(34px, 5vw, 52px) 0 24px;
+  border-top: 1px solid rgba(20,21,24,.1);
+  color: var(--atelier-ink);
+  background: transparent;
+}
+.cit-footer-overline {
+  display: block;
+  margin-bottom: 22px;
+  color: #9b928a;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.cit-footer-lockup { display: flex; align-items: flex-start; gap: 16px; }
+.cit-footer-brand strong { color: var(--atelier-ink); font-size: 1.15rem; }
+.cit-footer-brand p, .cit-footer-brand small, .cit-footer-university p { color: #756e67; }
+.cit-footer-university, .cit-footer-links { border-color: rgba(20,21,24,.08); background: transparent; }
+.cit-footer-university strong, .cit-footer-links strong { color: var(--atelier-ink); }
+.cit-academic-label { color: var(--atelier-accent); }
+.cit-university-logo { filter: none; opacity: .76; }
+.cit-footer-links a { color: #625b54; }
+.cit-footer-links a:hover { color: var(--atelier-accent); }
+.cit-copyright { color: #90877e; border-color: rgba(20,21,24,.08); }
+
+/* Supporting CITools public pages inherit the gallery palette */
+.cit-course-hero, .cit-about-hero, .cit-about-card, .cit-module-card, .cit-offline-note,
+.cit-origin-hero, .cit-campus-monitor, .cit-academic-card, .cit-origin-link-card, .cit-origin-disclaimer {
+  color: var(--atelier-ink);
+}
+.cit-course-hero h1, .cit-about-hero h1, .cit-about-card h2, .cit-module-card h3,
+.cit-offline-note h2, .cit-origin-copy h1, .cit-academic-identity h2, .cit-origin-link-card h3 {
+  color: var(--atelier-ink);
+}
+.cit-course-hero p, .cit-about-hero p, .cit-about-card p, .cit-module-card p, .cit-offline-note p,
+.cit-origin-copy p, .cit-academic-identity p, .cit-origin-link-card p { color: #6d665e; }
+.cit-course-hero, .cit-about-card, .cit-module-card, .cit-offline-note, .cit-academic-card, .cit-origin-link-card, .cit-origin-disclaimer {
+  border-color: rgba(20,21,24,.1);
+  background: rgba(255,253,249,.66);
+}
+
+@media (max-width: 1180px) {
+  .cit-atelier-hero { grid-template-columns: 1fr; padding-top: 60px; }
+  .cit-atelier-copy { max-width: 790px; }
+  .cit-atelier-preview { max-width: 820px; width: 100%; justify-self: center; }
+  .cit-atelier-subject-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cit-subject-card.is-active { grid-column: 1 / -1; }
+  .cit-subject-card:nth-child(n) { transform: none; }
+  .cit-atelier-method { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .cit-navbar { padding: 15px 14px 0; }
+  .cit-nav-inner { position: relative; align-items: center; padding-bottom: 14px; }
+  .cit-brand-mark { width: 43px; height: 43px; }
+  .cit-brand-copy strong { font-size: 1rem; }
+  .cit-brand-copy small { font-size: .55rem; max-width: 190px; }
+  .cit-nav-toggle {
+    display: grid;
+    grid-template-columns: 16px auto;
+    align-items: center;
+    gap: 2px 9px;
+    border: 1px solid rgba(20,21,24,.12);
+    border-radius: 999px;
+    background: rgba(255,253,249,.76);
+    padding: 10px 13px;
+    color: #37332e;
+  }
+  .cit-nav-toggle span { display: block; grid-column: 1; width: 16px; height: 1px; background: currentColor; }
+  .cit-nav-toggle b { grid-column: 2; grid-row: 1 / span 3; font: 500 .62rem "IBM Plex Mono", monospace; letter-spacing: .13em; text-transform: uppercase; }
+  .cit-nav-links {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px;
+    border: 1px solid rgba(20,21,24,.1);
+    border-radius: 18px;
+    background: rgba(255,253,249,.94);
+    box-shadow: 0 26px 54px rgba(40,32,26,.12);
+    backdrop-filter: blur(18px);
+  }
+  .cit-nav-links.is-open { display: flex; }
+  .cit-nav-links a { padding: 13px; border-radius: 10px; }
+  .cit-nav-links a:hover { background: rgba(244,99,49,.06); }
+  .cit-main { width: calc(100% - 28px); }
+  .cit-atelier-hero { min-height: 0; gap: 42px; padding: 46px 0 66px; }
+  .cit-edition { margin: 36px 0 15px; }
+  .cit-atelier-copy h1 { font-size: clamp(3.15rem, 17.2vw, 4.5rem); }
+  .cit-atelier-copy h1 span { font-size: .86em; }
+  .cit-atelier-lead { line-height: 1.66; }
+  .cit-hero-actions .cit-button { width: 100%; }
+  .cit-atelier-metrics { margin-top: 42px; justify-content: space-between; gap: 12px; }
+  .cit-atelier-preview { min-height: 500px; display: flex; flex-direction: column; gap: 12px; }
+  .cit-preview-halo { width: 100%; left: 0; top: 18%; height: 48%; }
+  .cit-preview-floor { display: none; }
+  .cit-glass-monitor {
+    position: relative;
+    inset: auto;
+    order: 1;
+    width: 100%;
+    border-radius: 22px;
+    transform: none;
+    animation: none;
+  }
+  .cit-atelier-circuit { padding: 8px 6px 0; }
+  .cit-monitor-console { padding: 0 14px; height: 52px; }
+  .cit-monitor-console strong { font-size: .66rem; }
+  .cit-float-card {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    transform: none;
+    animation: none;
+    border-radius: 18px;
+    padding: 16px;
+  }
+  .cit-float-map { order: 2; }
+  .cit-float-learn { order: 3; }
+  .cit-float-ide { order: 4; }
+  .cit-atelier-modules { padding: 60px 0; }
+  .cit-atelier-section-head { display: block; margin-bottom: 34px; }
+  .cit-atelier-section-head > p { margin-top: 25px; }
+  .cit-atelier-subject-grid { grid-template-columns: 1fr; }
+  .cit-subject-card, .cit-subject-card.is-active { min-height: 242px; grid-column: auto; }
+  .cit-atelier-method { padding: 56px 0; gap: 35px; }
+  .cit-feature-strip { grid-template-columns: 38px 1fr; gap: 14px; }
+  .cit-feature-strip i { display: none; }
+  .cit-atelier-cta { text-align: left; padding: 35px 21px; margin-bottom: 65px; }
+  .cit-atelier-cta h2 { font-size: clamp(2.7rem, 14vw, 4rem); }
+  .cit-atelier-cta .cit-hero-actions { justify-content: flex-start; }
+  .cit-cta-orbit { opacity: .45; }
+  .cit-footer { width: calc(100% - 28px); }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .citools-site *, .citools-site *::before, .citools-site *::after {
+    animation: none !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ======================================================================
+   CITOOLS / GLASS EDITORIAL PRODUCT SHOWCASE V2
+   Bright showcase skin — overrides the older command-center direction.
+   ====================================================================== */
+
+.citools-site {
+  --cit-bg: #f4f3f1;
+  --cit-bg-high: #ffffff;
+  --cit-bg-soft: #ecebea;
+  --cit-panel: rgba(255,255,255,.62);
+  --cit-panel-solid: rgba(255,255,255,.9);
+  --cit-border: rgba(17,17,17,.075);
+  --cit-border-bright: rgba(17,17,17,.115);
+  --cit-text: #111111;
+  --cit-soft: #2b2b2b;
+  --cit-muted: #77736d;
+  --cit-pink: #fa4f92;
+  --cit-coral: #ff785c;
+  --cit-cyan: #41d6df;
+  --cit-violet: #8a77ff;
+  --cit-shadow: 0 36px 110px rgba(24, 18, 15, .10);
+  --cit-shadow-soft: 0 18px 55px rgba(24, 18, 15, .07);
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--cit-text);
+  font-family: "Bricolage Grotesque", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 74% 9%, rgba(255,255,255,.98), transparent 25%),
+    radial-gradient(circle at 84% 22%, rgba(248, 70, 143, .08), transparent 20%),
+    radial-gradient(circle at 48% 45%, rgba(70, 211, 223, .06), transparent 25%),
+    linear-gradient(132deg, #faf9f8 0%, #f3f2f0 38%, #eceae8 100%);
+}
+
+.citools-site::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  opacity: .17;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E");
+}
+
+.cit-background-grid {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: .5;
+  background:
+    linear-gradient(rgba(20,20,20,.024) 1px, transparent 1px) 0 0 / 64px 64px,
+    linear-gradient(90deg, rgba(20,20,20,.024) 1px, transparent 1px) 0 0 / 64px 64px;
+  mask-image: radial-gradient(ellipse 78% 58% at 50% 30%, #000 12%, transparent 78%);
+}
+
+.cit-ambient-sculpture {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cit-ambient-sculpture span:nth-child(1) {
+  position: absolute;
+  top: 3vh;
+  left: 56vw;
+  width: 45vw;
+  height: 40vw;
+  max-height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.98) 0 22%, rgba(247,81,148,.05) 46%, transparent 70%);
+  filter: blur(5px);
+}
+
+.cit-ambient-sculpture span:nth-child(2) {
+  position: absolute;
+  top: 52vh;
+  left: -10vw;
+  width: 44vw;
+  height: 33vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(62,215,224,.08), transparent 67%);
+  filter: blur(28px);
+}
+
+.cit-ambient-sculpture span:nth-child(3) {
+  position: absolute;
+  right: -12vw;
+  bottom: 10vh;
+  width: 36vw;
+  height: 30vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(138,119,255,.08), transparent 68%);
+  filter: blur(30px);
+}
+
+.cit-navbar, .cit-main, .cit-footer { position: relative; z-index: 2; }
+
+.cit-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 20px clamp(18px, 5vw, 64px) 0;
+  background: linear-gradient(180deg, rgba(244,243,241,.86), transparent);
+  backdrop-filter: blur(10px);
+}
+
+.cit-nav-inner {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  min-height: 62px;
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.cit-brand { color: var(--cit-text); display: inline-flex; align-items: center; gap: 13px; text-decoration: none; }
+.cit-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  border: 1px solid rgba(17,17,17,.12);
+  border-radius: 50%;
+  background: rgba(255,255,255,.75);
+  color: #161515;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: -.04em;
+  box-shadow: inset 0 1px rgba(255,255,255,.9), 0 10px 26px rgba(12,12,12,.05);
+}
+.cit-brand-mark.large { width: 66px; height: 66px; border-radius: 50%; font-size: .9rem; }
+.cit-brand-copy { display: grid; gap: 2px; }
+.cit-brand-copy strong { color: #111; font-size: 1rem; font-weight: 600; letter-spacing: -.04em; }
+.cit-brand-copy small { color: #837d76; font-size: .64rem; font-family: "IBM Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+
+.cit-nav-links { display: flex; align-items: center; justify-content: flex-end; gap: 27px; }
+.cit-nav-links a { color: #393633; text-decoration: none; font-size: .89rem; font-weight: 450; transition: color .25s ease, transform .25s ease; }
+.cit-nav-links a:hover { color: #111; transform: translateY(-1px); }
+.cit-nav-links .cit-nav-pill {
+  padding: 11px 18px;
+  border: 1px solid rgba(17,17,17,.09);
+  border-radius: 999px;
+  background: rgba(255,255,255,.68);
+  box-shadow: 0 10px 24px rgba(10,10,10,.035);
+}
+.cit-nav-toggle { display: none; }
+
+.cit-main {
+  width: min(1440px, calc(100% - clamp(34px, 9vw, 128px)));
+  margin: 0 auto;
+}
+
+.cit-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid rgba(20,20,20,.08);
+  border-radius: 999px;
+  color: #756f69;
+  background: rgba(255,255,255,.58);
+  backdrop-filter: blur(12px);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .64rem;
+  line-height: 1;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.cit-badge-active { color: #272421; background: rgba(255,255,255,.78); }
+.cit-badge-active::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, var(--cit-pink), var(--cit-coral)); box-shadow: 0 0 13px rgba(250,79,146,.5); }
+.cit-badge-soon { color: #928e89; }
+
+.cit-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  min-height: 55px;
+  padding: 0 24px;
+  overflow: hidden;
+  border: 1px solid rgba(17,17,17,.09);
+  border-radius: 999px;
+  font-size: .9rem;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  text-decoration: none;
+  transition: transform .28s ease, box-shadow .28s ease, background .28s ease;
+}
+.cit-button::after { content: ""; position: absolute; top: -40%; left: -28%; width: 46%; height: 190%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.58), transparent); transform: translateX(-180%) rotate(24deg); transition: transform .65s ease; }
+.cit-button:hover { transform: translateY(-3px); }
+.cit-button:hover::after { transform: translateX(410%) rotate(24deg); }
+.cit-button i { font-style: normal; font-family: "IBM Plex Mono", monospace; }
+.cit-button-primary { color: #fff; border-color: #111; background: #131313; box-shadow: 0 20px 38px rgba(17,17,17,.16); }
+.cit-button-secondary { color: #171717; background: rgba(255,255,255,.58); backdrop-filter: blur(16px); box-shadow: 0 16px 34px rgba(17,17,17,.045); }
+.cit-button-ghost { min-height: 45px; color: #1d1b18; background: rgba(255,255,255,.48); }
+
+.cit-reveal { opacity: 0; transform: translateY(25px); animation: citReveal .88s cubic-bezier(.16,1,.3,1) forwards; }
+.cit-delay-1 { animation-delay: .05s; }
+.cit-delay-2 { animation-delay: .12s; }
+.cit-delay-3 { animation-delay: .19s; }
+.cit-delay-4 { animation-delay: .27s; }
+.cit-delay-5 { animation-delay: .38s; }
+@keyframes citReveal { to { opacity: 1; transform: translateY(0); } }
+
+/* HERO — giant product showcase */
+.cit-showcase-hero { padding: clamp(58px, 7vw, 98px) 0 clamp(92px, 11vw, 160px); }
+.cit-showcase-copy { max-width: 920px; margin: 0 auto; text-align: center; }
+.cit-minimal-eyebrow {
+  margin: 27px 0 18px;
+  color: #817b75;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .68rem;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+.cit-showcase-copy h1 {
+  margin: 0;
+  color: #111;
+  font-size: clamp(4.4rem, 9.5vw, 9.9rem);
+  line-height: .94;
+  letter-spacing: -.055em;
+  font-weight: 500;
+}
+.cit-showcase-copy h1 span {
+  display: block;
+  margin-top: .04em;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  background: linear-gradient(93deg, #151515 0 32%, #f34f8e 55%, #3dd2e0 88%);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.cit-showcase-lead { width: min(660px, 100%); margin: 32px auto 38px; color: #635e59; font-size: clamp(1rem, 1.35vw, 1.16rem); line-height: 1.75; font-weight: 400; }
+.cit-showcase-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+.cit-stage-wrap { margin-top: clamp(70px, 9vw, 112px); }
+.cit-product-stage { position: relative; min-height: clamp(580px, 52vw, 740px); perspective: 1400px; }
+.cit-stage-light { position: absolute; left: 50%; top: 20px; width: min(1050px, 84vw); height: 480px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(ellipse, rgba(255,255,255,.96), rgba(255,255,255,0) 68%); filter: blur(4px); }
+.cit-stage-shadow { position: absolute; left: 50%; bottom: 50px; width: min(870px, 76vw); height: 60px; transform: translateX(-50%); border-radius: 50%; background: rgba(36,30,29,.13); filter: blur(30px); }
+.cit-ribbon-sculpture { position: absolute; left: 50%; top: 12px; width: min(970px, 88vw); height: 270px; transform: translateX(-50%); pointer-events: none; }
+.cit-ribbon { position: absolute; border-radius: 999px; filter: blur(.1px); box-shadow: inset 0 2px 7px rgba(255,255,255,.7), 0 22px 52px rgba(243,79,143,.12); }
+.cit-ribbon.ribbon-one { left: 12%; top: 46px; width: 61%; height: 62px; transform: rotate(-4deg) skewX(-14deg); background: linear-gradient(98deg, rgba(255,255,255,.82), #fb588e 18%, #ff896d 37%, #9a7eff 62%, #4bd6e1 88%); animation: ribbonFloat 7s ease-in-out infinite; }
+.cit-ribbon.ribbon-two { left: 23%; top: 95px; width: 61%; height: 51px; transform: rotate(6deg) skewX(-16deg); background: linear-gradient(95deg, #58dae1, #8c80ff 32%, #fc5795 64%, rgba(255,255,255,.9)); opacity: .74; animation: ribbonFloat 8s 1s ease-in-out infinite reverse; }
+.cit-ribbon.ribbon-three { left: 30%; top: 63px; width: 35%; height: 36px; transform: rotate(-14deg); background: linear-gradient(90deg, rgba(255,255,255,.75), rgba(255,255,255,.13)); }
+.cit-glass-pearl { position: absolute; right: 16%; top: 58px; width: 82px; height: 82px; border-radius: 50%; border: 1px solid rgba(255,255,255,.85); background: radial-gradient(circle at 34% 25%, #fff, rgba(255,255,255,.35) 33%, rgba(238,232,248,.34)); box-shadow: 0 22px 42px rgba(23,15,25,.09); }
+@keyframes ribbonFloat { 0%,100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+
+.cit-product-window {
+  position: absolute;
+  left: 50%;
+  top: 128px;
+  width: min(900px, 76vw);
+  transform: translateX(-50%) rotateX(2deg);
+  overflow: hidden;
+  border: 1px solid rgba(16,16,16,.08);
+  border-radius: clamp(28px, 3vw, 38px);
+  background: rgba(255,255,255,.63);
+  backdrop-filter: blur(26px);
+  box-shadow: 0 52px 120px rgba(31,25,25,.115), inset 0 1px rgba(255,255,255,.98);
+  animation: monitorFloat 9s ease-in-out infinite;
+}
+@keyframes monitorFloat { 0%,100% { transform: translateX(-50%) rotateX(2deg) translateY(0); } 50% { transform: translateX(-50%) rotateX(2deg) translateY(-8px); } }
+.cit-window-header { height: 62px; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; gap: 22px; border-bottom: 1px solid rgba(18,18,18,.06); background: rgba(255,255,255,.46); }
+.cit-window-word { color: #151515; font-weight: 600; letter-spacing: -.04em; }
+.cit-window-tabs { display: flex; gap: 8px; padding: 6px; border-radius: 999px; background: rgba(240,238,236,.68); }
+.cit-window-tabs span { padding: 7px 16px; color: #89847f; font-size: .73rem; }
+.cit-window-tabs .active { color: #151515; border-radius: 999px; background: #fff; box-shadow: 0 7px 18px rgba(15,15,15,.045); }
+.cit-status-dot { display: inline-flex; align-items: center; gap: 7px; color: #77716b; font-family: "IBM Plex Mono", monospace; font-size: .66rem; text-transform: uppercase; letter-spacing: .12em; }
+.cit-status-dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cit-cyan); box-shadow: 0 0 14px var(--cit-cyan); }
+.cit-window-canvas { position: relative; height: clamp(305px, 32vw, 386px); padding-top: 34px; background: linear-gradient(128deg, rgba(255,255,255,.3), rgba(246,244,242,.38)); }
+.cit-window-label { position: absolute; top: 20px; left: 28px; z-index: 2; color: #928d86; font-family: "IBM Plex Mono", monospace; font-size: .62rem; letter-spacing: .14em; }
+.cit-product-circuit { width: 100%; height: 100%; display: block; }
+.cit-wire-base { fill: none; stroke: rgba(32,31,29,.1); stroke-width: 2; }
+.cit-wire-active { fill: none; stroke: url(#citActiveLine); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 10 13; animation: lineDrift 1.1s linear infinite; }
+@keyframes lineDrift { to { stroke-dashoffset: -46; } }
+.cit-canvas-node rect { fill: url(#citCardFill); stroke: rgba(18,18,18,.1); }
+.cit-canvas-node text { fill: #242220; font: 500 18px "IBM Plex Mono", monospace; }
+.cit-canvas-node .hot { fill: #fa4f92; }
+.cit-canvas-node .port { fill: #cbc7c2; }
+.cit-canvas-node .port.hot { fill: #fa4f92; }
+.cit-canvas-gate rect { fill: rgba(255,255,255,.78); stroke: rgba(138,119,255,.32); }
+.cit-canvas-gate text { fill: #1e1c1a; text-anchor: middle; font: 500 16px "IBM Plex Mono", monospace; }
+.cit-window-footer { height: 63px; display: flex; align-items: center; justify-content: space-between; padding: 0 29px; border-top: 1px solid rgba(18,18,18,.06); color: #89837c; font-family: "IBM Plex Mono", monospace; font-size: .65rem; letter-spacing: .13em; text-transform: uppercase; }
+.cit-window-footer strong { color: #2e2b28; font-size: .76rem; font-weight: 500; }
+.cit-window-footer i { color: #fa4f92; font-style: normal; }
+
+.cit-product-tile {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  gap: 9px;
+  padding: 18px;
+  border: 1px solid rgba(17,17,17,.07);
+  border-radius: 23px;
+  color: #171513;
+  text-decoration: none;
+  background: rgba(255,255,255,.73);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 28px 62px rgba(32,26,25,.09), inset 0 1px rgba(255,255,255,.98);
+  transition: transform .36s cubic-bezier(.16,1,.3,1), box-shadow .36s ease;
+}
+.cit-product-tile:hover { transform: translateY(-9px) rotate(0deg); box-shadow: 0 35px 76px rgba(32,26,25,.13); }
+.cit-product-tile span { color: #8c877f; font: 500 .61rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.cit-product-tile strong { font-size: 1.03rem; font-weight: 500; letter-spacing: -.035em; }
+.cit-product-tile small { color: #77736d; font-size: .76rem; }
+.tile-map { left: max(calc(50% - 550px), 0px); top: 260px; width: 192px; transform: rotate(-4deg); }
+.tile-learning { left: max(calc(50% - 405px), 4vw); top: 514px; width: 206px; transform: rotate(-2deg); }
+.tile-ide { right: max(calc(50% - 545px), 0px); top: 368px; width: 191px; transform: rotate(4deg); }
+.cit-mini-map, .cit-tile-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin-top: 7px; }
+.cit-tile-grid i { height: 18px; border-radius: 5px; background: #efedeb; }
+.cit-tile-grid .hot { background: rgba(250,79,146,.8); }
+.cit-tile-grid .cyan { background: rgba(65,214,223,.74); }
+.cit-tile-orb { width: 35px; height: 35px; border-radius: 50%; margin-bottom: 4px; background: conic-gradient(var(--cit-pink), var(--cit-coral), var(--cit-cyan), var(--cit-violet), var(--cit-pink)); filter: blur(.1px); box-shadow: 0 9px 24px rgba(250,79,146,.18); }
+
+/* Collection and glossy tiles */
+.cit-collection-section { padding: 0 0 clamp(104px, 11vw, 178px); }
+.cit-editorial-head { display: grid; grid-template-columns: minmax(340px,.92fr) minmax(250px,.55fr); gap: clamp(46px, 11vw, 150px); align-items: end; margin-bottom: clamp(48px, 6vw, 76px); }
+.cit-editorial-head h2 { margin: 18px 0 0; color: #111; font-size: clamp(3.1rem, 5.1vw, 5.4rem); font-weight: 450; line-height: .98; letter-spacing: -.05em; }
+.cit-editorial-head h2 em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; }
+.cit-editorial-head p { margin: 0; color: #716c65; line-height: 1.75; }
+.cit-product-collection { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(16px, 2vw, 25px); }
+.cit-subject-card {
+  position: relative;
+  min-height: 358px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px 22px 22px;
+  border: 1px solid rgba(17,17,17,.075);
+  border-radius: 30px;
+  color: #111;
+  text-decoration: none;
+  background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(248,247,246,.55));
+  backdrop-filter: blur(19px);
+  box-shadow: var(--cit-shadow-soft), inset 0 1px rgba(255,255,255,.96);
+  transition: transform .36s cubic-bezier(.16,1,.3,1), box-shadow .36s ease, border-color .36s ease;
+}
+.cit-subject-card.is-active { grid-column: span 2; min-height: 382px; background: linear-gradient(128deg, rgba(255,255,255,.94), rgba(255,247,251,.8)); }
+.cit-subject-card:hover { transform: translateY(-9px) rotate(.3deg); box-shadow: 0 38px 74px rgba(33,27,27,.12), inset 0 1px #fff; border-color: rgba(250,79,146,.16); }
+.cit-card-meta { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.cit-card-meta > span { color: #8d8881; font: 500 .62rem "IBM Plex Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.cit-card-body { position: relative; z-index: 2; margin-top: auto; max-width: 390px; }
+.cit-card-body h3 { margin: 0 0 10px; color: #151313; font-size: clamp(1.68rem, 2.4vw, 2.42rem); font-weight: 500; line-height: 1.06; letter-spacing: -.04em; }
+.cit-subject-card.is-active .cit-card-body h3 { font-size: clamp(2.3rem, 3.3vw, 3.4rem); }
+.cit-card-body p { margin: 0 0 20px; color: #746f68; font-size: .9rem; line-height: 1.56; }
+.cit-card-link { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid rgba(17,17,17,.06); color: #48443f; font-size: .82rem; }
+.cit-card-link b { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #131313; color: #fff; font-weight: 400; }
+.cit-subject-visual { position: absolute; right: -8px; top: 43px; width: 160px; height: 145px; opacity: .75; }
+.cit-subject-card.is-active .cit-subject-visual { right: 34px; top: 76px; width: 280px; height: 210px; }
+.cit-subject-disc { position: absolute; right: 34px; top: 27px; width: 84px; height: 84px; border-radius: 50%; background: radial-gradient(circle at 35% 28%, #fff, rgba(255,255,255,.3) 34%, rgba(250,79,146,.32)); box-shadow: 0 30px 40px rgba(250,79,146,.12); }
+.cit-subject-visual.active .cit-subject-disc { width: 122px; height: 122px; background: conic-gradient(from 30deg, rgba(255,255,255,.82), rgba(65,214,223,.42), rgba(250,79,146,.48), rgba(255,255,255,.92)); }
+.cit-subject-line { position: absolute; right: 12px; top: 100px; width: 130px; height: 1px; background: linear-gradient(90deg, transparent, rgba(250,79,146,.42), transparent); }
+.cit-subject-visual b { position: absolute; right: 5px; bottom: 6px; color: rgba(17,17,17,.06); font-size: 4.7rem; font-weight: 500; letter-spacing: -.08em; }
+.cit-card-sheen { position: absolute; inset: -40%; z-index: 1; background: linear-gradient(115deg, transparent 36%, rgba(255,255,255,.63) 50%, transparent 64%); opacity: 0; transform: translateX(-40%); transition: opacity .35s ease, transform .8s ease; }
+.cit-subject-card:hover .cit-card-sheen { opacity: 1; transform: translateX(32%); }
+
+/* Methods */
+.cit-showcase-method { padding: 0 0 clamp(105px, 12vw, 170px); display: grid; grid-template-columns: .68fr 1fr; align-items: start; gap: clamp(48px, 10vw, 140px); }
+.cit-method-count { display: block; color: #9a948d; font: 500 .67rem "IBM Plex Mono", monospace; letter-spacing: .18em; margin-bottom: 26px; }
+.cit-method-title h2 { margin: 0; font-size: clamp(3.2rem, 4.9vw, 5.2rem); line-height: .99; font-weight: 450; letter-spacing: -.052em; }
+.cit-method-title h2 em { font-family: "Instrument Serif", serif; font-weight: 400; }
+.cit-method-panels { display: grid; gap: 0; }
+.cit-method-panel { display: grid; grid-template-columns: 54px 1fr; column-gap: 25px; padding: 27px 0; border-bottom: 1px solid rgba(17,17,17,.08); transition: transform .28s ease; }
+.cit-method-panel:hover { transform: translateX(10px); }
+.cit-method-panel > span { grid-row: span 2; color: #a09992; font: 500 .68rem "IBM Plex Mono", monospace; padding-top: 9px; }
+.cit-method-panel h3 { margin: 0 0 8px; font-size: 1.42rem; font-weight: 500; letter-spacing: -.04em; }
+.cit-method-panel p { margin: 0; color: #726e68; line-height: 1.62; }
+
+/* CTA */
+.cit-showcase-cta { position: relative; overflow: hidden; margin-bottom: clamp(94px, 11vw, 148px); padding: clamp(58px, 8vw, 100px); border: 1px solid rgba(17,17,17,.07); border-radius: clamp(38px, 5vw, 62px); text-align: center; background: linear-gradient(130deg, rgba(255,255,255,.8), rgba(249,246,247,.62)); box-shadow: var(--cit-shadow-soft); }
+.cit-showcase-cta h2 { position: relative; margin: 25px 0 18px; color: #111; font-size: clamp(3.5rem, 6vw, 6.2rem); font-weight: 450; letter-spacing: -.055em; line-height: .98; }
+.cit-showcase-cta h2 em { font-family: "Instrument Serif", serif; font-weight: 400; }
+.cit-showcase-cta p { position: relative; width: min(580px, 100%); margin: 0 auto 36px; color: #736e67; line-height: 1.7; }
+.cit-cta-object { position: absolute; inset: 0; pointer-events: none; }
+.cit-cta-object i:nth-child(1) { position: absolute; left: 13%; top: 18%; width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(140deg, rgba(255,255,255,.92), rgba(250,79,146,.2)); box-shadow: 0 30px 55px rgba(250,79,146,.12); }
+.cit-cta-object i:nth-child(2) { position: absolute; right: 13%; top: 33%; width: 108px; height: 36px; border-radius: 99px; transform: rotate(-27deg); background: linear-gradient(90deg, rgba(65,214,223,.46), rgba(138,119,255,.28), rgba(250,79,146,.42)); filter: blur(.2px); }
+.cit-cta-object i:nth-child(3) { position: absolute; left: 37%; bottom: 22px; width: 190px; height: 25px; border-radius: 50%; background: rgba(30,25,25,.06); filter: blur(14px); }
+
+/* DIGITAL ELECTRONICS SHOWCASE */
+.cit-course-showcase-hero { padding: clamp(58px,7vw,102px) 0 clamp(94px,10vw,148px); display: grid; grid-template-columns: .72fr 1fr; align-items: center; gap: clamp(48px, 7vw, 112px); }
+.cit-course-copy h1 { margin: 21px 0 24px; color: #111; font-size: clamp(4.6rem, 7.2vw, 7.8rem); font-weight: 450; line-height: .94; letter-spacing: -.058em; }
+.cit-course-copy h1 em { font-family: "Instrument Serif", serif; font-weight: 400; font-style: italic; background: linear-gradient(100deg, #101010 0 20%, #f44c91 60%, #42d5e7); color: transparent; background-clip: text; -webkit-background-clip: text; }
+.cit-course-copy > p:not(.cit-minimal-eyebrow) { margin: 0 0 34px; max-width: 460px; color: #706a64; line-height: 1.7; }
+.cit-course-copy .cit-showcase-actions { justify-content: flex-start; }
+.cit-course-stage { position: relative; min-height: 590px; }
+.cit-course-glow { position: absolute; inset: 24px 0 auto; height: 450px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.98), rgba(250,79,146,.055), transparent 68%); }
+.cit-course-ribbon { position: absolute; top: 45px; left: 2%; width: 77%; height: 48px; border-radius: 999px; transform: rotate(-8deg); background: linear-gradient(93deg, rgba(255,255,255,.86), rgba(250,79,146,.72), rgba(138,119,255,.56), rgba(65,214,223,.65)); box-shadow: inset 0 2px rgba(255,255,255,.78), 0 21px 38px rgba(250,79,146,.12); }
+.cit-course-interface { position: absolute; z-index: 2; top: 104px; right: 0; width: min(690px, 100%); overflow: hidden; border-radius: 38px; border: 1px solid rgba(17,17,17,.08); background: rgba(255,255,255,.67); backdrop-filter: blur(25px); box-shadow: 0 46px 105px rgba(24,18,17,.11), inset 0 1px #fff; animation: courseDrift 8s ease-in-out infinite; }
+@keyframes courseDrift { 50% { translate: 0 -8px; } }
+.cit-course-interface header { height: 59px; display: flex; justify-content: space-between; align-items: center; padding: 0 26px; border-bottom: 1px solid rgba(17,17,17,.06); color: #918c86; font: 500 .64rem "IBM Plex Mono", monospace; letter-spacing: .15em; text-transform: uppercase; }
+.cit-course-interface header b { color: #35322e; font-weight: 500; }
+.cit-course-interface-body { position: relative; height: 295px; padding: 58px 42px; background: radial-gradient(circle at 73% 43%, rgba(250,79,146,.075), transparent 22%), linear-gradient(138deg, rgba(255,255,255,.2), rgba(246,244,242,.34)); }
+.cit-interface-copy small { color: #98918b; font: .62rem "IBM Plex Mono", monospace; letter-spacing: .18em; }
+.cit-interface-copy strong { display: block; margin-top: 25px; color: #151412; font-size: clamp(2.7rem, 4.1vw, 3.45rem); font-weight: 450; letter-spacing: -.047em; line-height: 1.02; }
+.cit-interface-copy p { color: #8d8680; font-family: "IBM Plex Mono", monospace; font-size: .7rem; letter-spacing: .12em; }
+.cit-interface-orbit {
+  position: absolute;
+  right: 49px;
+  top: 73px;
+  width: 143px;
+  height: 143px;
+  border-radius: 50%;
+  border: 1px solid rgba(250,79,146,.15);
+  transform-origin: center;
+  animation: citInterfaceOrbitSpin 8s linear infinite;
+  will-change: transform;
+}
+.cit-interface-orbit i:nth-child(1) { position: absolute; inset: 22px; border-radius: 50%; background: conic-gradient(from 120deg, rgba(250,79,146,.6), rgba(65,214,223,.6), rgba(255,255,255,.8), rgba(250,79,146,.6)); }
+.cit-interface-orbit i:nth-child(2) { position: absolute; inset: 48px; border-radius: 50%; background: #fff; }
+.cit-interface-orbit i:nth-child(3) {
+  position: absolute;
+  top: 2px;
+  left: 65px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fc4e92;
+  box-shadow: 0 0 22px rgba(250,79,146,.45);
+  animation: citInterfaceOrbitPulse 1.7s ease-in-out infinite;
+}
+.cit-interface-tabs { display: grid; grid-template-columns: repeat(3,1fr); padding: 10px; gap: 8px; border-top: 1px solid rgba(17,17,17,.06); }
+.cit-interface-tabs button { min-height: 51px; border: 1px solid transparent; border-radius: 17px; color: #5e5954; background: transparent; font: 500 .83rem "Bricolage Grotesque", sans-serif; cursor: pointer; transition: background .22s ease, border-color .22s ease; }
+.cit-interface-tabs button:hover { background: #fff; border-color: rgba(17,17,17,.065); }
+
+.cit-workspaces-section { padding: 0 0 clamp(90px,10vw,145px); }
+.cit-editorial-head.compact { margin-bottom: clamp(44px,5vw,62px); }
+.cit-module-gallery { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: clamp(16px,2vw,24px); }
+.cit-module-card {
+  --module-accent: var(--cit-pink);
+  position: relative;
+  min-height: 488px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid rgba(17,17,17,.075);
+  border-radius: 31px;
+  color: #151412;
+  text-decoration: none;
+  background: rgba(255,255,255,.65);
+  backdrop-filter: blur(22px);
+  box-shadow: var(--cit-shadow-soft), inset 0 1px rgba(255,255,255,.95);
+  transition: transform .38s cubic-bezier(.16,1,.3,1), box-shadow .38s ease;
+}
+.cit-module-card.module-logic-lab { --module-accent: var(--cit-cyan); transform: translateY(28px); }
+.cit-module-card.module-circuit-ide { --module-accent: var(--cit-violet); transform: translateY(-10px); }
+.cit-module-card:hover { transform: translateY(-11px) rotate(.45deg); box-shadow: 0 40px 88px rgba(29,22,22,.12), inset 0 1px #fff; }
+.cit-module-top { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; }
+.cit-module-code { width: 47px; height: 47px; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(17,17,17,.08); color: #858079; font: 500 .68rem "IBM Plex Mono", monospace; }
+.cit-module-preview {
+  position: relative;
+  height: 142px;
+  margin: 28px 0 25px;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(255,255,255,.82), transparent 48%),
+    linear-gradient(136deg, rgba(255,255,255,.74), rgba(245,242,241,.52));
+  border: 1px solid rgba(17,17,17,.055);
+  isolation: isolate;
+  transition: border-color .32s ease, background .32s ease;
+}
+
+.cit-module-card:hover .cit-module-preview {
+  border-color: rgba(17,17,17,.085);
+  background:
+    radial-gradient(circle at 50% 32%, rgba(255,255,255,.94), transparent 52%),
+    linear-gradient(136deg, rgba(255,255,255,.85), rgba(245,242,241,.57));
+}
+
+/* Animated K-Map: cells change grouping while a cyan cursor inspects the map. */
+.preview-map {
+  display: grid;
+  place-items: center;
+}
+
+.preview-map-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 29px);
+  gap: 6px;
+}
+
+.preview-map .map-cell {
+  width: 29px;
+  height: 29px;
+  border-radius: 7px;
+  background: #eeece9;
+}
+
+.preview-map .cell-1,
+.preview-map .cell-2,
+.preview-map .cell-5,
+.preview-map .cell-6 {
+  animation: kmap-left-cells 5.4s cubic-bezier(.42, 0, .2, 1) infinite;
+}
+
+.preview-map .cell-3,
+.preview-map .cell-4,
+.preview-map .cell-7,
+.preview-map .cell-8 {
+  animation: kmap-right-cells 5.4s cubic-bezier(.42, 0, .2, 1) infinite;
+}
+
+.preview-map .map-group {
+  position: absolute;
+  z-index: 2;
+  top: -5px;
+  width: 69px;
+  height: 69px;
+  border: 1.5px solid rgba(250,79,146,.63);
+  border-radius: 13px;
+  background: rgba(250,79,146,.025);
+  pointer-events: none;
+}
+
+.preview-map .group-left {
+  left: -5px;
+  animation: kmap-group-left 5.4s ease infinite;
+}
+
+.preview-map .group-right {
+  right: -5px;
+  animation: kmap-group-right 5.4s ease infinite;
+}
+
+.preview-map .map-cursor {
+  position: absolute;
+  z-index: 3;
+  width: 29px;
+  height: 29px;
+  top: 0;
+  left: 0;
+  border-radius: 7px;
+  background: rgba(65,214,223,.82);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.8), 0 11px 22px rgba(65,214,223,.3);
+  animation: kmap-cursor 5.4s cubic-bezier(.65, 0, .3, 1) infinite;
+}
+
+@keyframes citInterfaceOrbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes citInterfaceOrbitPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 22px rgba(250,79,146,.45);
+  }
+
+  50% {
+    transform: scale(1.22);
+    opacity: .76;
+    box-shadow: 0 0 30px rgba(250,79,146,.62);
+  }
+}
+
+@keyframes kmap-left-cells {
+  0%, 7%, 43% {
+    background: rgba(250,79,146,.67);
+    box-shadow: 0 7px 18px rgba(250,79,146,.14);
+  }
+  52%, 96%, 100% {
+    background: #eeece9;
+    box-shadow: none;
+  }
+}
+
+@keyframes kmap-right-cells {
+  0%, 7%, 43% {
+    background: #eeece9;
+    box-shadow: none;
+  }
+  52%, 96%, 100% {
+    background: rgba(250,79,146,.67);
+    box-shadow: 0 7px 18px rgba(250,79,146,.14);
+  }
+}
+
+@keyframes kmap-group-left {
+  0%, 7%, 42% { opacity: 1; transform: scale(1); }
+  48%, 100% { opacity: 0; transform: scale(.92); }
+}
+
+@keyframes kmap-group-right {
+  0%, 47% { opacity: 0; transform: scale(.92); }
+  53%, 95% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(.92); }
+}
+
+@keyframes kmap-cursor {
+  0%, 37% { transform: translate(70px, 0); }
+  43%, 48% { transform: translate(70px, 35px); }
+  56%, 91% { transform: translate(35px, 35px); }
+  97%, 100% { transform: translate(70px, 0); }
+}
+
+/* Animated Learning Mode: a live signal passes through changing gate families. */
+.preview-gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 17px;
+  color: #69645f;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.gate-side {
+  position: relative;
+  flex: 0 0 25px;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+}
+
+.gate-port-label {
+  color: #958e88;
+  font-size: .57rem;
+  letter-spacing: .16em;
+}
+
+.preview-gate .gate-state {
+  padding: 0;
+  border-radius: 0;
+  color: #24211e;
+  background: transparent;
+  box-shadow: none;
+  font-size: .8rem;
+}
+
+.gate-wire {
+  position: relative;
+  flex: 1 1 35px;
+  max-width: 38px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(65,214,223,.18);
+}
+
+.gate-wire i {
+  position: absolute;
+  top: -2px;
+  left: -18px;
+  width: 19px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--module-accent);
+  box-shadow: 0 0 11px rgba(65,214,223,.62);
+  animation: gate-signal 2.35s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+
+.gate-wire.wire-output i {
+  animation-delay: .48s;
+}
+
+.gate-chip {
+  position: relative;
+  z-index: 2;
+  width: 70px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 5px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 33px rgba(20,20,20,.055);
+}
+
+.gate-chip small {
+  color: #afa9a3;
+  font-size: .47rem;
+  letter-spacing: .18em;
+}
+
+.preview-gate .gate-name {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 15px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0;
+  color: #24211e;
+  background: transparent;
+  box-shadow: none;
+  font-size: .71rem;
+  text-align: center;
+}
+
+.gate-name span {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(13px);
+  animation: gate-name-cycle 6s cubic-bezier(.32, .72, .28, 1) infinite;
+}
+
+.gate-name span:nth-child(2) { animation-delay: 2s; }
+.gate-name span:nth-child(3) { animation-delay: 4s; }
+
+.gate-led {
+  position: absolute;
+  top: 30px;
+  right: -4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--module-accent);
+  box-shadow: 0 0 10px rgba(65,214,223,.55);
+  animation: gate-led 2.35s ease infinite .68s;
+}
+
+@keyframes gate-signal {
+  0% { transform: translateX(0); opacity: 0; }
+  13% { opacity: 1; }
+  66% { transform: translateX(55px); opacity: 1; }
+  78%, 100% { transform: translateX(55px); opacity: 0; }
+}
+
+@keyframes gate-name-cycle {
+  0%, 5% { opacity: 0; transform: translateY(13px); }
+  11%, 29% { opacity: 1; transform: translateY(0); }
+  34%, 100% { opacity: 0; transform: translateY(-13px); }
+}
+
+@keyframes gate-led {
+  0%, 43% { transform: scale(.7); opacity: .24; }
+  57%, 73% { transform: scale(1.38); opacity: 1; }
+  100% { transform: scale(.7); opacity: .24; }
+}
+
+/* Animated Circuit IDE: three realtime buses carry running pulses. */
+.preview-ide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 27px;
+}
+
+.ide-wire-bank {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ide-wire-bank > span {
+  position: relative;
+  width: 15px;
+  height: 68px;
+  overflow: hidden;
+  border-radius: 99px;
+  transform: skewY(-18deg);
+  background: linear-gradient(180deg, rgba(138,119,255,.13), rgba(138,119,255,.3));
+}
+
+.ide-wire-bank > span i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -45px;
+  height: 42px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, rgba(255,255,255,.76), var(--module-accent));
+  box-shadow: 0 12px 20px rgba(138,119,255,.33);
+  animation: ide-data-flow 2.25s cubic-bezier(.55, 0, .2, 1) infinite;
+}
+
+.ide-wire-bank > span:nth-child(2) i { animation-delay: .25s; }
+.ide-wire-bank > span:nth-child(3) i { animation-delay: .5s; }
+
+.ide-terminal {
+  display: grid;
+  gap: 10px;
+  align-content: center;
+}
+
+.preview-ide .ide-terminal b {
+  margin: 0;
+  color: #282522;
+  font: 500 1.45rem "IBM Plex Mono", monospace;
+}
+
+.ide-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #8b8580;
+  font: 500 .55rem "IBM Plex Mono", monospace;
+  letter-spacing: .18em;
+}
+
+.ide-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--module-accent);
+  box-shadow: 0 0 10px rgba(138,119,255,.64);
+  animation: ide-live-led 1.3s ease infinite;
+}
+
+@keyframes ide-data-flow {
+  0% { transform: translateY(0); opacity: 0; }
+  17% { opacity: 1; }
+  68% { transform: translateY(116px); opacity: 1; }
+  82%, 100% { transform: translateY(116px); opacity: 0; }
+}
+
+@keyframes ide-live-led {
+  0%, 100% { transform: scale(.85); opacity: .45; }
+  46% { transform: scale(1.34); opacity: 1; }
+}
+
+.cit-module-card:hover .preview-map .map-cell,
+.cit-module-card:hover .preview-map .map-group,
+.cit-module-card:hover .preview-map .map-cursor { animation-duration: 4.35s; }
+.cit-module-card:hover .preview-gate .gate-name span { animation-duration: 4.9s; }
+.cit-module-card:hover .preview-gate .gate-wire i,
+.cit-module-card:hover .preview-gate .gate-led { animation-duration: 1.82s; }
+.cit-module-card:hover .preview-ide .ide-wire-bank i { animation-duration: 1.75s; }
+.cit-module-card:hover .preview-ide .ide-live i { animation-duration: 1s; }
+
+.cit-module-content { position: relative; z-index: 2; }
+.cit-module-content h3 { margin: 0 0 12px; font-size: clamp(1.8rem,2.45vw,2.32rem); font-weight: 500; letter-spacing: -.042em; }
+.cit-module-content p { min-height: 72px; margin: 0 0 20px; color: #726d66; line-height: 1.56; font-size: .9rem; }
+.cit-module-content ul { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; padding: 0; margin: 0 0 24px; }
+.cit-module-content li { padding: 7px 11px; border-radius: 999px; color: #625d58; background: rgba(255,255,255,.62); border: 1px solid rgba(17,17,17,.055); font-size: .72rem; }
+.cit-module-arrow { position: relative; z-index: 2; margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 17px; border-top: 1px solid rgba(17,17,17,.065); color: #4e4944; font-size: .84rem; }
+.cit-module-arrow b { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 50%; background: #151515; color: #fff; font-weight: 400; }
+.cit-module-glare { position: absolute; inset: -40%; background: linear-gradient(116deg, transparent 42%, rgba(255,255,255,.68) 51%, transparent 60%); transform: translateX(-32%); opacity: 0; transition: transform .8s ease, opacity .3s; }
+.cit-module-card:hover .cit-module-glare { transform: translateX(32%); opacity: 1; }
+
+.cit-offline-glass-note { position: relative; display: grid; grid-template-columns: 1fr .75fr auto; gap: clamp(30px,5vw,76px); align-items: center; margin-bottom: clamp(90px,11vw,145px); padding: clamp(32px,4vw,56px); overflow: hidden; border-radius: 38px; border: 1px solid rgba(17,17,17,.075); background: rgba(255,255,255,.62); box-shadow: var(--cit-shadow-soft); }
+.cit-offline-glass-note::after { content: ""; position: absolute; right: -70px; top: -90px; width: 250px; height: 250px; border-radius: 50%; background: radial-gradient(circle, rgba(65,214,223,.19), transparent 68%); }
+.cit-offline-glass-note h2 { margin: 18px 0 0; color: #151412; font-size: clamp(2.2rem,3.4vw,3.45rem); line-height: 1.06; font-weight: 450; letter-spacing: -.045em; }
+.cit-offline-glass-note h2 em { font-family: "Instrument Serif", serif; font-weight: 400; }
+.cit-offline-glass-note p { position: relative; z-index: 2; margin: 0; color: #716b65; line-height: 1.65; }
+
+/* Existing About and Academic pages inherit the editorial surface. */
+.cit-about-hero, .cit-origin-hero { padding: clamp(68px,8vw,105px) 0 clamp(55px,7vw,92px); }
+.cit-about-hero h1, .cit-origin-copy h1 { color: #111; font-size: clamp(3.7rem,6vw,6.8rem); line-height: .98; font-weight: 450; letter-spacing: -.055em; }
+.cit-origin-copy h1 span { font-family: "Instrument Serif", serif; font-weight: 400; color: #111; }
+.cit-about-hero p, .cit-origin-copy p { color: #716c65; }
+.cit-about-grid, .cit-origin-link-grid { gap: 18px; }
+.cit-about-card, .cit-academic-card, .cit-origin-link-card, .cit-origin-disclaimer, .cit-campus-monitor {
+  border-color: rgba(17,17,17,.075) !important;
+  background: rgba(255,255,255,.65) !important;
+  box-shadow: var(--cit-shadow-soft) !important;
+  color: #111 !important;
+}
+.cit-about-card h2, .cit-academic-card h2, .cit-origin-link-card h3 { color: #111 !important; font-weight: 500; }
+.cit-about-card p, .cit-academic-card p, .cit-origin-link-card p { color: #716c65 !important; }
+
+/* Footer */
+.cit-footer {
+  width: min(1440px, calc(100% - clamp(34px, 9vw, 128px)));
+  margin: 0 auto;
+  padding: clamp(44px, 6vw, 64px) 0 27px;
+  display: grid;
+  grid-template-columns: 1.05fr .92fr .55fr;
+  gap: clamp(28px,5vw,74px);
+  border-top: 1px solid rgba(17,17,17,.08);
+  color: #111;
+}
+.cit-footer-overline, .cit-academic-label { color: #918b85; font: 500 .64rem "IBM Plex Mono", monospace; letter-spacing: .16em; text-transform: uppercase; }
+.cit-footer-lockup { display: flex; align-items: flex-start; gap: 18px; margin-top: 22px; }
+.cit-footer-lockup strong { font-size: 1.34rem; font-weight: 500; letter-spacing: -.045em; }
+.cit-footer-lockup p { max-width: 330px; margin: 9px 0; color: #716c65; line-height: 1.55; }
+.cit-footer-lockup small { color: #98928b; }
+.cit-footer-university { display: grid; align-content: start; gap: 13px; }
+.cit-university-logo { width: auto; height: 62px; max-width: 190px; object-fit: contain; object-position: left center; opacity: .7; filter: grayscale(.1); transition: opacity .25s ease; }
+.cit-university-logo:hover { opacity: .95; }
+.cit-footer-university strong { font-size: .93rem; font-weight: 500; }
+.cit-footer-university p { margin: 0; max-width: 245px; color: #817b75; font-size: .84rem; line-height: 1.55; }
+.cit-footer-links { display: grid; align-content: start; gap: 12px; }
+.cit-footer-links strong { margin-bottom: 5px; font-size: .85rem; font-weight: 500; }
+.cit-footer-links a { color: #716c65; text-decoration: none; font-size: .87rem; transition: color .2s; }
+.cit-footer-links a:hover { color: #111; }
+.cit-copyright { grid-column: 1 / -1; margin: 35px 0 0; padding-top: 22px; border-top: 1px solid rgba(17,17,17,.055); color: #918b85; font-size: .76rem; }
+
+/* Tools keep their existing logic/UI; route bridge now matches product skin. */
+.cit-toolroute-bar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 100;
+  transform: translateX(-50%);
+  min-width: min(640px, calc(100% - 26px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 17px;
+  padding: 8px 9px;
+  border: 1px solid rgba(17,17,17,.075);
+  border-radius: 999px;
+  background: rgba(255,255,255,.74);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 18px 44px rgba(17,17,17,.09);
+}
+.cit-toolroute-bar button { display: inline-flex; align-items: center; gap: 10px; border: 0; background: transparent; color: #322f2c; font-size: .8rem; cursor: pointer; }
+.cit-toolroute-bar button span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: #111; border: 1px solid rgba(17,17,17,.09); font: .63rem "IBM Plex Mono", monospace; }
+.cit-toolroute-bar div { display: grid; justify-items: center; }
+.cit-toolroute-bar small { color: #8a857e; font: .58rem "IBM Plex Mono", monospace; letter-spacing: .15em; text-transform: uppercase; }
+.cit-toolroute-bar strong { color: #111; font-size: .83rem; font-weight: 500; }
+
+@media (max-width: 1120px) {
+  .cit-product-window { width: min(900px, 88vw); }
+  .tile-map { left: 1vw; }
+  .tile-ide { right: 1vw; }
+  .cit-product-collection { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .cit-subject-card.is-active { grid-column: 1 / -1; }
+  .cit-showcase-method { grid-template-columns: 1fr; gap: 45px; }
+  .cit-course-showcase-hero { grid-template-columns: 1fr; gap: 56px; }
+  .cit-course-copy { text-align: center; max-width: 720px; margin: 0 auto; }
+  .cit-course-copy > p:not(.cit-minimal-eyebrow) { margin-inline: auto; }
+  .cit-course-copy .cit-showcase-actions { justify-content: center; }
+  .cit-course-stage { min-height: 540px; }
+  .cit-course-interface { left: 50%; right: auto; transform: translateX(-50%); width: min(690px, 92%); }
+  .cit-module-gallery { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .cit-offline-glass-note { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 850px) {
+  .cit-navbar { padding: 13px 16px 0; }
+  .cit-nav-inner { min-height: 58px; }
+  .cit-nav-toggle {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 14px;
+    border: 1px solid rgba(17,17,17,.075); border-radius: 999px; background: rgba(255,255,255,.65); color: #222;
+  }
+  .cit-nav-toggle span { width: 12px; height: 1px; background: #222; }
+  .cit-nav-toggle b { margin-left: 5px; font-size: .75rem; font-weight: 500; }
+  .cit-nav-links {
+    display: none; position: absolute; top: calc(100% + 7px); left: 16px; right: 16px;
+    flex-direction: column; align-items: stretch; gap: 3px; padding: 10px;
+    border: 1px solid rgba(17,17,17,.075); border-radius: 22px; background: rgba(255,255,255,.92);
+    backdrop-filter: blur(22px); box-shadow: 0 22px 48px rgba(17,17,17,.09);
+  }
+  .cit-nav-links.is-open { display: flex; }
+  .cit-nav-links a { padding: 13px 14px; border-radius: 13px; }
+  .cit-nav-links a:hover { background: #f3f1ef; }
+  .cit-nav-links .cit-nav-pill { background: #f6f4f2; box-shadow: none; }
+  .cit-main { width: min(100% - 32px, 680px); }
+  .cit-showcase-hero { padding-top: 44px; }
+  .cit-showcase-copy h1 { font-size: clamp(3.15rem, 16.7vw, 5.2rem); }
+  .cit-stage-wrap { margin-top: 56px; }
+  .cit-product-stage { min-height: 696px; }
+  .cit-ribbon-sculpture { width: 100%; height: 160px; }
+  .cit-ribbon.ribbon-one { top: 34px; left: 7%; height: 42px; width: 78%; }
+  .cit-ribbon.ribbon-two { top: 67px; left: 14%; height: 35px; width: 73%; }
+  .cit-glass-pearl { width: 55px; height: 55px; top: 37px; right: 8%; }
+  .cit-product-window { top: 107px; width: 100%; border-radius: 27px; }
+  .cit-window-header { height: 53px; padding: 0 16px; }
+  .cit-window-tabs { display: none; }
+  .cit-window-canvas { height: 240px; padding-top: 19px; }
+  .cit-window-label { left: 15px; top: 11px; font-size: .55rem; }
+  .cit-window-footer { height: 56px; padding: 0 16px; font-size: .55rem; }
+  .cit-window-footer strong { font-size: .66rem; }
+  .tile-map, .tile-learning, .tile-ide { position: absolute; width: calc(50% - 7px); transform: none; top: auto; }
+  .tile-map { left: 0; bottom: 125px; }
+  .tile-learning { left: calc(50% + 7px); bottom: 125px; }
+  .tile-ide { right: 0; bottom: 0; width: 100%; display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; }
+  .tile-ide .cit-tile-orb { margin: 0; }
+  .cit-product-collection, .cit-module-gallery { grid-template-columns: 1fr; }
+  .cit-subject-card.is-active { grid-column: auto; }
+  .cit-subject-card { min-height: 320px; }
+  .cit-module-card.module-logic-lab, .cit-module-card.module-circuit-ide { transform: none; }
+  .cit-editorial-head { grid-template-columns: 1fr; gap: 26px; }
+  .cit-editorial-head h2 { font-size: clamp(2.75rem, 12vw, 4rem); }
+  .cit-course-stage { min-height: 500px; }
+  .cit-course-interface-body { height: 265px; padding: 42px 25px; }
+  .cit-interface-orbit { opacity: .58; right: 18px; top: 65px; }
+  .cit-interface-copy strong { font-size: 2.45rem; }
+  .cit-footer { width: calc(100% - 32px); grid-template-columns: 1fr; gap: 38px; }
+}
+
+@media (max-width: 520px) {
+  .cit-brand-copy small { max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cit-showcase-lead { line-height: 1.62; }
+  .cit-product-stage { min-height: 655px; }
+  .cit-product-tile { padding: 14px; border-radius: 19px; }
+  .cit-product-tile strong { font-size: .9rem; }
+  .cit-tile-grid i { height: 14px; }
+  .cit-window-canvas { height: 215px; }
+  .cit-course-copy h1 { font-size: clamp(3.4rem, 18vw, 4.9rem); }
+  .cit-course-interface { border-radius: 27px; }
+  .cit-interface-orbit { width: 104px; height: 104px; }
+  .cit-interface-orbit i:nth-child(2) { inset: 34px; }
+  .cit-interface-orbit i:nth-child(3) { left: 47px; }
+  .cit-interface-tabs { gap: 4px; padding: 7px; }
+  .cit-interface-tabs button { font-size: .73rem; }
+  .cit-showcase-cta { padding: 44px 21px; border-radius: 32px; }
+  .cit-showcase-cta .cit-showcase-actions { flex-direction: column; }
+  .cit-showcase-cta .cit-button { width: 100%; }
+  .cit-toolroute-bar { top: 10px; min-width: calc(100% - 18px); }
+  .cit-toolroute-bar div { display: none; }
+}
+
+/* ======================================================================
+   HOTFIX — showcase hero visibility / reduced-motion safety
+   Hero content must remain visible even when animations are disabled by
+   browser accessibility settings or automated preview environments.
+   ====================================================================== */
+.cit-home-showcase .cit-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cit-home-showcase .cit-reveal {
+    opacity: 0 !important;
+    transform: translateY(25px) !important;
+    animation: citReveal .88s cubic-bezier(.16, 1, .3, 1) forwards !important;
+  }
+
+  .cit-home-showcase .cit-delay-1 { animation-delay: .05s !important; }
+  .cit-home-showcase .cit-delay-2 { animation-delay: .12s !important; }
+  .cit-home-showcase .cit-delay-3 { animation-delay: .19s !important; }
+  .cit-home-showcase .cit-delay-4 { animation-delay: .27s !important; }
+  .cit-home-showcase .cit-delay-5 { animation-delay: .38s !important; }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .cit-home-showcase .cit-product-window,
+  .cit-home-showcase .cit-product-tile,
+  .cit-home-showcase .cit-ribbon,
+  .cit-home-showcase .cit-ambient-sculpture span {
+    animation: none !important;
+  }
+}
+
+
+/* ======================================================================
+   ALIGNMENT CORRECTION — clean product grids, no accidental stagger
+   The showcase keeps depth inside each tile, not through messy placement.
+   ====================================================================== */
+.cit-product-collection {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  grid-auto-rows: 1fr;
+}
+
+.cit-product-collection .cit-subject-card,
+.cit-product-collection .cit-subject-card.is-active,
+.cit-product-collection .cit-subject-card:nth-child(n) {
+  grid-column: auto !important;
+  min-height: 350px !important;
+  height: 100%;
+  transform: none !important;
+}
+
+.cit-product-collection .cit-subject-card.is-active {
+  background:
+    radial-gradient(circle at 80% 16%, rgba(250, 79, 146, .11), transparent 30%),
+    linear-gradient(138deg, rgba(255, 255, 255, .95), rgba(251, 246, 249, .8));
+}
+
+.cit-product-collection .cit-subject-card.is-active .cit-card-body h3 {
+  font-size: clamp(1.85rem, 2.3vw, 2.3rem) !important;
+}
+
+.cit-product-collection .cit-subject-card.is-active .cit-subject-visual {
+  right: 22px !important;
+  top: 68px !important;
+  width: 188px !important;
+  height: 155px !important;
+  opacity: .72;
+}
+
+.cit-product-collection .cit-subject-card:hover,
+.cit-product-collection .cit-subject-card.is-active:hover {
+  transform: translateY(-7px) rotate(.15deg) !important;
+}
+
+.cit-module-gallery {
+  align-items: stretch !important;
+}
+
+.cit-module-gallery .cit-module-card,
+.cit-module-gallery .cit-module-card.module-logic-lab,
+.cit-module-gallery .cit-module-card.module-circuit-ide {
+  height: 100%;
+  min-height: 520px;
+  transform: none !important;
+}
+
+.cit-module-gallery .cit-module-card:hover,
+.cit-module-gallery .cit-module-card.module-logic-lab:hover,
+.cit-module-gallery .cit-module-card.module-circuit-ide:hover {
+  transform: translateY(-9px) rotate(.18deg) !important;
+}
+
+/* Tool pages already have a native command bar; do not float a second platform bar above it. */
+.cit-tool-route .cit-toolroute-bar {
+  display: none !important;
+}
+
+@media (max-width: 1120px) {
+  .cit-product-collection {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 850px) {
+  .cit-product-collection,
+  .cit-module-gallery {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cit-product-collection .cit-subject-card,
+  .cit-product-collection .cit-subject-card.is-active {
+    min-height: 288px !important;
+  }
+
+  .cit-module-gallery .cit-module-card,
+  .cit-module-gallery .cit-module-card.module-logic-lab,
+  .cit-module-gallery .cit-module-card.module-circuit-ide {
+    min-height: unset;
+  }
+}
+
+/* ======================================================================
+   INTERACTIVE HERO PREVIEW + SUBJECT ORBIT POLISH
+   - interactive preview tabs on homepage
+   - clickable A/B, K-Map cells, and learning gate preview
+   - subject card orbit circles rotate on hover
+   ====================================================================== */
+
+.cit-window-tabs button {
+  appearance: none;
+  border: 0;
+  padding: 7px 16px;
+  border-radius: 999px;
+  color: #89847f;
+  font: inherit;
+  font-size: .73rem;
+  background: transparent;
+  transition: background .24s ease, color .24s ease, box-shadow .24s ease, transform .24s ease;
+}
+
+.cit-window-tabs button:hover {
+  color: #151515;
+  transform: translateY(-1px);
+}
+
+.cit-window-tabs button.active {
+  color: #151515;
+  background: #fff;
+  box-shadow: 0 7px 18px rgba(15,15,15,.045);
+}
+
+.cit-canvas-node.interactive,
+.cit-preview-map-row button,
+.cit-learning-switches button,
+.cit-learning-gate-labels button {
+  cursor: pointer;
+}
+
+.cit-canvas-node.interactive rect,
+.cit-canvas-node.interactive text,
+.cit-canvas-node.interactive .port {
+  transition: transform .22s ease, fill .22s ease, stroke .22s ease, opacity .22s ease;
+}
+
+.cit-canvas-node.interactive:hover rect {
+  stroke: rgba(250,79,146,.34);
+}
+
+.cit-canvas-node.interactive:hover {
+  transform: translateY(-2px);
+}
+
+.cit-preview-map-board {
+  width: min(100%, 640px);
+  margin: 28px auto 0;
+  display: grid;
+  gap: 12px;
+}
+
+.cit-preview-map-labels,
+.cit-preview-map-row {
+  display: grid;
+  grid-template-columns: 72px repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
+}
+
+.cit-preview-map-labels span,
+.cit-preview-map-labels b,
+.cit-preview-map-row > span {
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  border-radius: 16px;
+  color: #7f7a74;
+  background: rgba(255,255,255,.44);
+  border: 1px solid rgba(17,17,17,.06);
+  font: 500 .72rem "IBM Plex Mono", monospace;
+  letter-spacing: .06em;
+}
+
+.cit-preview-map-row button {
+  min-height: 94px;
+  border-radius: 22px;
+  border: 1px solid rgba(17,17,17,.07);
+  background: rgba(255,255,255,.76);
+  box-shadow: 0 16px 28px rgba(34,28,28,.05);
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  color: #151515;
+  transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease, background .24s ease;
+}
+
+.cit-preview-map-row button:hover {
+  transform: translateY(-3px);
+}
+
+.cit-preview-map-row button strong {
+  font-size: 1.55rem;
+  font-weight: 500;
+  letter-spacing: -.05em;
+}
+
+.cit-preview-map-row button small {
+  color: #8e8882;
+  font-size: .69rem;
+}
+
+.cit-preview-map-row button.is-on {
+  border-color: rgba(23,184,243,.42);
+  background: linear-gradient(145deg, rgba(230,249,255,.96), rgba(205,244,255,.72));
+  box-shadow: inset 0 0 0 1px rgba(23,184,243,.22), 0 18px 38px rgba(23,184,243,.12);
+}
+
+.cit-preview-learning {
+  width: min(100%, 664px);
+  margin: 8px auto 0;
+  display: grid;
+  gap: 18px;
+}
+
+.cit-learning-switches {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cit-learning-switches button,
+.cit-learning-gate-labels button {
+  appearance: none;
+  border: 1px solid rgba(17,17,17,.07);
+  background: rgba(255,255,255,.68);
+  color: #171513;
+  border-radius: 999px;
+  box-shadow: 0 14px 34px rgba(31,25,25,.06);
+}
+
+.cit-learning-switches button {
+  min-width: 86px;
+  min-height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cit-learning-switches button.is-on {
+  border-color: rgba(250,79,146,.3);
+  box-shadow: 0 16px 36px rgba(250,79,146,.12);
+}
+
+.cit-learning-switches button b {
+  color: #fa4f92;
+  font-weight: 600;
+}
+
+.cit-learning-gate-row {
+  display: grid;
+  grid-template-columns: 215px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.cit-learning-gate-labels {
+  display: grid;
+  gap: 10px;
+}
+
+.cit-learning-gate-labels button {
+  min-height: 68px;
+  padding: 12px 16px;
+  display: grid;
+  justify-items: start;
+  text-align: left;
+  transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+}
+
+.cit-learning-gate-labels button.active {
+  border-color: rgba(134,100,255,.28);
+  box-shadow: 0 18px 38px rgba(134,100,255,.12);
+}
+
+.cit-learning-gate-labels button span {
+  color: #161513;
+  font-weight: 600;
+  font-size: .94rem;
+}
+
+.cit-learning-gate-labels button small {
+  color: #7d786f;
+  font-size: .75rem;
+}
+
+.cit-learning-diagram {
+  position: relative;
+  min-height: 238px;
+  display: grid;
+  place-items: center;
+}
+
+.cit-learning-gate-body,
+.cit-learning-output,
+.cit-learning-diagram .left-port {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(17,17,17,.07);
+  background: rgba(255,255,255,.8);
+  box-shadow: 0 16px 36px rgba(34,28,28,.07);
+}
+
+.cit-learning-diagram .left-port {
+  left: 10px;
+  width: 84px;
+  height: 56px;
+  border-radius: 18px;
+  color: #222;
+  font: 500 1rem "IBM Plex Mono", monospace;
+}
+
+.cit-learning-diagram .left-port.lower { top: 146px; }
+.cit-learning-diagram .left-port:not(.lower) { top: 42px; }
+.cit-learning-gate-body {
+  width: 148px;
+  height: 88px;
+  border-radius: 28px;
+  color: #171513;
+  font: 500 1.2rem "IBM Plex Mono", monospace;
+}
+
+.cit-learning-output {
+  right: 12px;
+  width: 112px;
+  height: 60px;
+  border-radius: 22px;
+  top: 88px;
+  font: 500 1rem "IBM Plex Mono", monospace;
+}
+
+.cit-learning-output b { color: #fa4f92; font-weight: 600; }
+
+.cit-learning-wire,
+.cit-learning-wire.lower {
+  position: absolute;
+  left: 94px;
+  width: 154px;
+  height: 2px;
+  background: rgba(38,35,34,.12);
+}
+
+.cit-learning-wire { top: 69px; }
+.cit-learning-wire.lower { top: 173px; }
+.cit-learning-wire.hot {
+  background: linear-gradient(90deg, #ff4b91, #45d4e6);
+  box-shadow: 0 0 12px rgba(255,75,145,.18);
+}
+
+.cit-subject-visual {
+  overflow: visible;
+}
+
+.cit-subject-disc.primary,
+.cit-subject-disc.secondary,
+.cit-subject-orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform .55s cubic-bezier(.16,1,.3,1), opacity .45s ease;
+}
+
+.cit-subject-disc.primary {
+  width: 108px;
+  height: 108px;
+  top: 0;
+  right: 24px;
+  background: radial-gradient(circle at 34% 35%, rgba(255,255,255,.88), rgba(255,255,255,.18) 42%, rgba(250,79,146,.12) 66%, rgba(61,210,224,.16));
+  box-shadow: 0 24px 52px rgba(250,79,146,.1);
+}
+
+.cit-subject-disc.secondary {
+  width: 64px;
+  height: 64px;
+  top: 50px;
+  right: 118px;
+  background: radial-gradient(circle at 36% 32%, rgba(255,255,255,.95), rgba(255,255,255,.18) 34%, rgba(61,210,224,.24));
+  box-shadow: 0 16px 30px rgba(61,210,224,.08);
+}
+
+.cit-subject-orbit-ring {
+  width: 134px;
+  height: 134px;
+  top: -12px;
+  right: 12px;
+  border: 1px solid rgba(250,79,146,.13);
+}
+
+.cit-subject-card:hover .cit-subject-disc.primary,
+.cit-subject-card.is-active:hover .cit-subject-disc.primary {
+  transform: rotate(26deg) translate3d(-6px, -7px, 0);
+}
+
+.cit-subject-card:hover .cit-subject-disc.secondary,
+.cit-subject-card.is-active:hover .cit-subject-disc.secondary {
+  transform: rotate(-28deg) translate3d(-14px, 6px, 0);
+}
+
+.cit-subject-card:hover .cit-subject-orbit-ring,
+.cit-subject-card.is-active:hover .cit-subject-orbit-ring {
+  transform: rotate(110deg) scale(1.04);
+}
+
+.cit-subject-card.is-disabled .cit-subject-disc.primary,
+.cit-subject-card.is-disabled .cit-subject-disc.secondary,
+.cit-subject-card.is-disabled .cit-subject-orbit-ring {
+  opacity: .42;
+}
+
+@media (max-width: 850px) {
+  .cit-learning-gate-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cit-preview-map-labels,
+  .cit-preview-map-row {
+    grid-template-columns: 58px repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .cit-preview-map-row button {
+    min-height: 76px;
+  }
+}
+
+/* ==========================================================
+   Fix pass: animated module previews + clean dual-disc hover
+   + bent learning wires in hero preview
+   ========================================================== */
+
+/* Module card illustrations are animated in the gallery animation block above. */
+
+/* Learning preview: use bent wires, not straight lines */
+.cit-learning-diagram {
+  overflow: hidden;
+}
+
+.cit-learning-wiring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cit-learning-wiring .wire-base {
+  fill: none;
+  stroke: rgba(38,35,34,.14);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.cit-learning-wiring .wire-active,
+.cit-learning-wiring .wire-output {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.cit-learning-wiring .wire-active {
+  stroke: url(#citLearnActive);
+  stroke-dasharray: 10 12;
+  animation: citLearnFlow 1.1s linear infinite;
+}
+
+.cit-learning-wiring .wire-output {
+  stroke: rgba(69,212,230,.85);
+  stroke-dasharray: 10 12;
+  animation: citLearnFlow 1.3s linear infinite;
+}
+
+@keyframes citLearnFlow {
+  to { stroke-dashoffset: -44; }
+}
+
+.cit-learning-wire,
+.cit-learning-wire.lower {
+  display: none;
+}
+
+.cit-learning-diagram .left-port {
+  left: 12px;
+}
+
+.cit-learning-gate-body {
+  left: 50%;
+  top: 50%;
+  transform: translate(-20%, -8%);
+}
+
+.cit-learning-output {
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Subject card visual: keep only two discs, rotate them on hover */
+.cit-subject-orbit-ring {
+  display: none !important;
+}
+
+.cit-subject-visual {
+  overflow: visible;
+}
+
+.cit-subject-disc.primary,
+.cit-subject-disc.secondary {
+  animation: none;
+  will-change: transform;
+}
+
+.cit-subject-disc.primary {
+  background: conic-gradient(from 24deg, rgba(255,255,255,.96), rgba(255,255,255,.42), rgba(250,79,146,.38), rgba(61,210,224,.32), rgba(255,255,255,.96));
+}
+
+.cit-subject-disc.secondary {
+  background: radial-gradient(circle at 36% 32%, rgba(255,255,255,.98), rgba(255,255,255,.2) 34%, rgba(61,210,224,.26));
+}
+
+.cit-subject-card:hover .cit-subject-disc.primary,
+.cit-subject-card.is-active:hover .cit-subject-disc.primary {
+  transform: rotate(180deg) translate3d(-6px, -7px, 0);
+}
+
+.cit-subject-card:hover .cit-subject-disc.secondary,
+.cit-subject-card.is-active:hover .cit-subject-disc.secondary {
+  transform: rotate(-180deg) translate3d(-10px, 6px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .preview-map span,
+  .preview-gate b,
+  .preview-ide span,
+  .preview-ide b,
+  .cit-learning-wiring .wire-active,
+  .cit-learning-wiring .wire-output {
+    animation: none !important;
+  }
+}
+
+/* ======================================================================
+   Home precision correction — existing disk only, premium icon motion,
+   and properly routed Learning preview SVG.
+   ====================================================================== */
+
+/* Existing subject plate only: no duplicated circle/ring. */
+.cit-subject-visual .cit-subject-disc.secondary,
+.cit-subject-visual .cit-subject-orbit-ring { display:none !important; }
+
+.cit-subject-visual .cit-subject-disc {
+  position:absolute;
+  right:34px;
+  top:27px;
+  width:84px;
+  height:84px;
+  border-radius:50%;
+  background: conic-gradient(from 34deg, rgba(255,255,255,.96), rgba(65,214,223,.38), rgba(250,79,146,.42), rgba(255,255,255,.95));
+  box-shadow:0 28px 46px rgba(250,79,146,.12);
+  transform-origin:center;
+  transition:transform .85s cubic-bezier(.16,1,.3,1), box-shadow .55s ease, opacity .55s ease;
+}
+.cit-subject-card.is-active .cit-subject-visual .cit-subject-disc {
+  width:122px;
+  height:122px;
+}
+.cit-subject-card:hover .cit-subject-visual .cit-subject-disc {
+  transform:rotate(210deg);
+  box-shadow:0 34px 60px rgba(250,79,146,.16);
+}
+.cit-subject-card.is-disabled .cit-subject-visual .cit-subject-disc { opacity:.42; }
+
+/* Module illustration motion is handled by the functional animated previews above. */
+
+/* Learning hero preview is a single coordinate system so every wire meets its port. */
+.cit-learning-diagram { min-height:250px; overflow:visible; }
+.cit-learning-diagram-svg { display:block; width:100%; height:250px; overflow:visible; }
+.cit-learning-diagram-svg .wire-base {
+  fill:none; stroke:rgba(37,34,32,.13); stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+.cit-learning-diagram-svg .wire-active,
+.cit-learning-diagram-svg .wire-output {
+  fill:none; stroke:url(#citLearnActive); stroke-width:3; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:9 11; animation:citPreviewFlow 1.2s linear infinite;
+}
+@keyframes citPreviewFlow { to { stroke-dashoffset:-40; } }
+.cit-learning-diagram-svg .preview-node rect,
+.cit-learning-diagram-svg .preview-gate rect {
+  fill:rgba(255,255,255,.84); stroke:rgba(17,17,17,.08); stroke-width:1;
+}
+.cit-learning-diagram-svg .preview-node { cursor:pointer; }
+.cit-learning-diagram-svg .preview-node:hover rect { stroke:rgba(250,79,146,.3); }
+.cit-learning-diagram-svg text {
+  fill:#242220; font:500 14px "IBM Plex Mono", monospace; dominant-baseline:middle;
+}
+.cit-learning-diagram-svg .preview-gate text { text-anchor:middle; font-size:15px; }
+.cit-learning-diagram-svg .hot { fill:#fa4f92; }
+.cit-learning-diagram-svg circle { fill:#cac6c1; }
+.cit-learning-diagram-svg circle.active { fill:#fa4f92; }
+.cit-learning-wire,
+.cit-learning-wire.lower,
+.cit-learning-gate-body,
+.cit-learning-output,
+.cit-learning-diagram .left-port { display:none !important; }
+
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .preview-map span, .preview-gate b, .preview-ide span, .cit-learning-diagram-svg .wire-active, .cit-learning-diagram-svg .wire-output { animation:none !important; }
+  .cit-subject-card:hover .cit-subject-visual .cit-subject-disc { transform:none; }
+}
+
+/* ======================================================================
+   HERO TYPE FINISH — controlled line rhythm and unclipped italic wordmark
+   ====================================================================== */
+.cit-showcase-copy { max-width: min(1030px, 100%); }
+.cit-showcase-copy h1 {
+  display: grid;
+  justify-items: center;
+  gap: clamp(8px, .9vw, 15px);
+  overflow: visible;
+  font-size: clamp(4.15rem, 9vw, 9.35rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+.cit-showcase-copy h1 .cit-hero-primary {
+  display: block;
+  margin: 0;
+  padding: 0 .02em;
+  color: #111;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: .985;
+  letter-spacing: -.047em;
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+.cit-showcase-copy h1 .cit-hero-accent {
+  display: block;
+  margin: 0 -.055em -.11em;
+  padding: .015em .055em .14em;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  line-height: .98;
+  letter-spacing: -.018em;
+  background: linear-gradient(93deg, #151515 0 25%, #f34f8e 57%, #3dd2e0 91%);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+.cit-showcase-lead {
+  margin-top: clamp(25px, 2.3vw, 34px);
+}
+@media (max-width: 720px) {
+  .cit-showcase-copy h1 { gap: 8px; font-size: clamp(3rem, 16vw, 5rem); }
+  .cit-showcase-copy h1 .cit-hero-primary { letter-spacing: -.043em; }
+  .cit-showcase-copy h1 .cit-hero-accent { margin-bottom: -.06em; padding-bottom: .11em; }
+}
+
+/* ======================================================================
+   HOME PRODUCT STAGE — Learning preview missing-style repair
+   The current JSX renders `.cit-learnfix-*`; without these rules SVG
+   rect/path elements fall back to browser-black. This block restores the
+   intended light glass preview while preserving all interactions.
+   ====================================================================== */
+.cit-learnfix {
+  position: relative;
+  min-height: 100%;
+  padding: 22px 32px 16px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  color: #262422;
+}
+.cit-learnfix-switches {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.cit-learnfix-switches button {
+  min-width: 92px;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 18px;
+  border: 1px solid rgba(17, 17, 17, .075);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .74);
+  color: #554f49;
+  font: 500 .84rem "IBM Plex Mono", monospace;
+  box-shadow: 0 13px 30px rgba(52, 47, 42, .045), inset 0 1px rgba(255,255,255,.86);
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+.cit-learnfix-switches button:hover { transform: translateY(-1px); }
+.cit-learnfix-switches button.is-on {
+  border-color: rgba(250,79,146,.27);
+  color: #302c2a;
+  box-shadow: 0 14px 32px rgba(250,79,146,.10), inset 0 1px rgba(255,255,255,.9);
+}
+.cit-learnfix-switches button b { color: #b3aaa3; font-weight: 500; }
+.cit-learnfix-switches button.is-on b { color: var(--cit-pink); }
+.cit-learnfix-workbench {
+  min-height: 285px;
+  display: grid;
+  grid-template-columns: minmax(174px, .82fr) minmax(370px, 1.55fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 48px);
+}
+.cit-learnfix-picker { display: grid; align-content: center; gap: 12px; }
+.cit-learnfix-picker button {
+  width: 100%;
+  min-height: 67px;
+  padding: 0 18px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 3px;
+  border: 1px solid rgba(17,17,17,.07);
+  border-radius: 22px;
+  background: rgba(255,255,255,.48);
+  color: #292724;
+  text-align: left;
+  box-shadow: inset 0 1px rgba(255,255,255,.8);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.cit-learnfix-picker button:hover { transform: translateX(2px); }
+.cit-learnfix-picker button.active {
+  border-color: rgba(138,119,255,.28);
+  background: rgba(255,255,255,.72);
+  box-shadow: 0 17px 35px rgba(138,119,255,.08), inset 0 1px rgba(255,255,255,.92);
+}
+.cit-learnfix-picker strong { font-size: 1.04rem; font-weight: 520; letter-spacing: -.035em; }
+.cit-learnfix-picker small { color: #857e77; font-size: .76rem; }
+.cit-learnfix-diagram { min-width: 0; overflow: visible; }
+.cit-learnfix-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cit-learnfix-wire-base {
+  fill: none !important;
+  stroke: rgba(40, 36, 33, .14);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cit-learnfix-wire-live {
+  fill: none !important;
+  stroke: url(#citLearnFixSignal);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 9 10;
+  animation: citLearnFixFlow 1.12s linear infinite;
+}
+.cit-learnfix-wire-live.output { stroke-width: 2.8; }
+@keyframes citLearnFixFlow { to { stroke-dashoffset: -38; } }
+.cit-learnfix-node rect {
+  fill: url(#citLearnFixNodeFill) !important;
+  stroke: rgba(20, 18, 17, .075);
+  stroke-width: 1;
+}
+.cit-learnfix-node text {
+  fill: #282522 !important;
+  dominant-baseline: middle;
+  font: 500 14px "IBM Plex Mono", monospace;
+}
+.cit-learnfix-node .value { fill: #a29a93 !important; }
+.cit-learnfix-node.is-on .value { fill: var(--cit-pink) !important; }
+.cit-learnfix-node circle {
+  fill: #c8c2bc !important;
+  stroke: rgba(255,255,255,.78);
+  stroke-width: 1;
+}
+.cit-learnfix-node circle.gate-port { fill: #bab4ae !important; }
+.cit-learnfix-node.is-on circle,
+.cit-learnfix-node circle.gate-port.is-on {
+  fill: var(--cit-pink) !important;
+  filter: drop-shadow(0 0 5px rgba(250,79,146,.34));
+}
+.cit-learnfix-node.gate text { text-anchor: middle; font-size: 15px; }
+.cit-learnfix-node.gate rect {
+  stroke: rgba(138,119,255,.17);
+  fill: rgba(255,255,255,.8) !important;
+}
+@media (max-width: 860px) {
+  .cit-learnfix { padding: 16px 14px; }
+  .cit-learnfix-workbench { grid-template-columns: 1fr; gap: 13px; }
+  .cit-learnfix-picker { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .cit-learnfix-picker button { min-height: 56px; padding: 0 10px; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .cit-learnfix-wire-live { animation: none; }
+}
+
+/* ======================================================================
+   HOME PRODUCT STAGE — floating contextual facts + cinematic view swap
+   Facts orbit the product window again, but each view receives safe anchor
+   positions so the live diagram remains readable and clickable.
+   ====================================================================== */
+.cit-home-showcase .cit-product-stage {
+  min-height: clamp(658px, 57vw, 778px);
+  --cit-window-half: min(450px, 38vw);
+}
+.cit-home-showcase .cit-stage-shadow {
+  bottom: 66px;
+  width: min(900px, 75vw);
+}
+.cit-window-footer {
+  gap: clamp(12px, 2vw, 25px);
+}
+.cit-window-footer-status {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.cit-window-footer-status span { color: #928b84; }
+.cit-window-footer-status strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cit-window-footer-actions {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+.cit-window-footer-actions a {
+  min-height: 35px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(18, 18, 18, .07);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .62);
+  color: #625d57;
+  font: 500 .61rem "IBM Plex Mono", monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: inset 0 1px rgba(255,255,255,.86);
+  transition: transform .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.cit-window-footer-actions a:hover {
+  color: #151515;
+  transform: translateY(-1px);
+  border-color: rgba(250, 79, 146, .18);
+  box-shadow: 0 10px 25px rgba(250, 79, 146, .07), inset 0 1px rgba(255,255,255,.86);
+}
+
+/* The current live view shrinks out; the next view glides in from the clicked-tab direction. */
+.cit-window-canvas {
+  overflow: hidden;
+}
+.cit-preview-swap {
+  position: relative;
+  height: 100%;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity, filter;
+}
+.cit-preview-swap.phase-exiting.swipe-forward {
+  animation: citPreviewExitForward .215s cubic-bezier(.4, 0, 1, 1) both;
+  pointer-events: none;
+}
+.cit-preview-swap.phase-exiting.swipe-backward {
+  animation: citPreviewExitBackward .215s cubic-bezier(.4, 0, 1, 1) both;
+  pointer-events: none;
+}
+.cit-preview-swap.phase-entering.swipe-forward {
+  animation: citPreviewEnterForward .5s cubic-bezier(.16, 1, .3, 1) both;
+}
+.cit-preview-swap.phase-entering.swipe-backward {
+  animation: citPreviewEnterBackward .5s cubic-bezier(.16, 1, .3, 1) both;
+}
+.cit-window-footer-status.phase-exiting { opacity: .2; transition: opacity .18s ease; }
+.cit-window-footer-status.phase-entering { animation: citFooterTextEnter .44s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes citPreviewExitForward {
+  to { opacity: 0; transform: translateX(-22px) scale(.962); filter: blur(3px); }
+}
+@keyframes citPreviewExitBackward {
+  to { opacity: 0; transform: translateX(22px) scale(.962); filter: blur(3px); }
+}
+@keyframes citPreviewEnterForward {
+  from { opacity: 0; transform: translateX(26px) scale(.946); filter: blur(4px); }
+  to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+}
+@keyframes citPreviewEnterBackward {
+  from { opacity: 0; transform: translateX(-26px) scale(.946); filter: blur(4px); }
+  to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+}
+@keyframes citFooterTextEnter {
+  from { opacity: 0; transform: translateX(9px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Floating information cards: non-interactive so they never block the live canvas. */
+.cit-floating-facts {
+  --fact-accent: var(--cit-pink);
+  --fact-accent-2: var(--cit-violet);
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  pointer-events: none;
+}
+.cit-floating-facts.facts-map {
+  --fact-accent: #fa4f92;
+  --fact-accent-2: #42d5e7;
+}
+.cit-floating-facts.facts-learn {
+  --fact-accent: #8a77ff;
+  --fact-accent-2: #fa4f92;
+}
+.cit-floating-facts.facts-circuit {
+  --fact-accent: #42d5e7;
+  --fact-accent-2: #8a77ff;
+}
+.cit-floating-facts .cit-fact-card {
+  --card-tilt: rotate(0deg);
+  --card-anchor: translateX(0);
+  --float-distance: -7px;
+  position: absolute;
+  width: clamp(188px, 17vw, 218px);
+  min-height: 108px;
+  overflow: hidden;
+  padding: 15px 16px 15px;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  pointer-events: none;
+  border: 1px solid rgba(17,17,17,.072);
+  border-radius: 22px;
+  color: #171513;
+  background:
+    radial-gradient(circle at 92% 4%, color-mix(in srgb, var(--fact-accent) 12%, transparent), transparent 40%),
+    rgba(255,255,255,.78);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 29px 66px rgba(32,26,25,.095), inset 0 1px rgba(255,255,255,.98);
+  transform: var(--card-anchor) var(--card-tilt);
+  will-change: transform, opacity, filter;
+}
+.cit-floating-facts .cit-fact-card::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--fact-accent) 50%, transparent), color-mix(in srgb, var(--fact-accent-2) 40%, transparent), transparent);
+}
+.cit-floating-facts .cit-fact-card span {
+  color: color-mix(in srgb, var(--fact-accent) 68%, #756e67);
+  font: 500 .53rem "IBM Plex Mono", monospace;
+  letter-spacing: .145em;
+  text-transform: uppercase;
+}
+.cit-floating-facts .cit-fact-card strong {
+  color: #181614;
+  font-size: clamp(.91rem, 1.05vw, 1.01rem);
+  font-weight: 530;
+  letter-spacing: -.034em;
+  line-height: 1.16;
+}
+.cit-floating-facts .cit-fact-card p {
+  display: -webkit-box;
+  max-width: 28ch;
+  margin: 0;
+  overflow: hidden;
+  color: #766f69;
+  font-size: .67rem;
+  line-height: 1.48;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Circuit safe slots: cards frame the empty top edge and footer side, not the nodes. */
+.cit-floating-facts.facts-circuit .fact-slot-1 {
+  left: calc(50% - var(--cit-window-half) + 24px);
+  top: 206px;
+  --card-anchor: translateX(-74%);
+  --card-tilt: rotate(-5deg);
+}
+.cit-floating-facts.facts-circuit .fact-slot-2 {
+  right: calc(50% - var(--cit-window-half) + 24px);
+  top: 226px;
+  --card-anchor: translateX(74%);
+  --card-tilt: rotate(4deg);
+}
+.cit-floating-facts.facts-circuit .fact-slot-3 {
+  left: calc(50% - var(--cit-window-half) + 104px);
+  top: 536px;
+  --card-anchor: translateX(-62%);
+  --card-tilt: rotate(-3deg);
+}
+
+/* Map safe slots: stay above the grid and beneath its outer frame. */
+.cit-floating-facts.facts-map .fact-slot-1 {
+  left: calc(50% - var(--cit-window-half) + 22px);
+  top: 206px;
+  --card-anchor: translateX(-74%);
+  --card-tilt: rotate(-5deg);
+}
+.cit-floating-facts.facts-map .fact-slot-2 {
+  right: calc(50% - var(--cit-window-half) + 22px);
+  top: 207px;
+  --card-anchor: translateX(74%);
+  --card-tilt: rotate(4deg);
+}
+.cit-floating-facts.facts-map .fact-slot-3 {
+  right: calc(50% - var(--cit-window-half) + 90px);
+  top: 540px;
+  --card-anchor: translateX(61%);
+  --card-tilt: rotate(3deg);
+}
+
+/* Learn safe slots: avoid the left gate picker and the right signal chain. */
+.cit-floating-facts.facts-learn .fact-slot-1 {
+  left: calc(50% - var(--cit-window-half) + 20px);
+  top: 196px;
+  --card-anchor: translateX(-80%);
+  --card-tilt: rotate(-5deg);
+}
+.cit-floating-facts.facts-learn .fact-slot-2 {
+  right: calc(50% - var(--cit-window-half) + 20px);
+  top: 215px;
+  --card-anchor: translateX(78%);
+  --card-tilt: rotate(4deg);
+}
+.cit-floating-facts.facts-learn .fact-slot-3 {
+  left: calc(50% - var(--cit-window-half) + 52px);
+  top: 544px;
+  --card-anchor: translateX(-74%);
+  --card-tilt: rotate(-3deg);
+}
+
+/* Staggered shrink/swipe exit and soft spring entrance. */
+.cit-floating-facts.phase-idle .fact-slot-1 {
+  animation: citFactFloat 7.6s ease-in-out infinite;
+}
+.cit-floating-facts.phase-idle .fact-slot-2 {
+  --float-distance: -10px;
+  animation: citFactFloat 8.1s -2.2s ease-in-out infinite;
+}
+.cit-floating-facts.phase-idle .fact-slot-3 {
+  --float-distance: -8px;
+  animation: citFactFloat 7.8s -3.8s ease-in-out infinite;
+}
+.cit-floating-facts.phase-exiting.swipe-forward .fact-slot-1 { animation: citFactExitForward .2s cubic-bezier(.42,0,1,1) both; }
+.cit-floating-facts.phase-exiting.swipe-forward .fact-slot-2 { animation: citFactExitForward .2s 34ms cubic-bezier(.42,0,1,1) both; }
+.cit-floating-facts.phase-exiting.swipe-forward .fact-slot-3 { animation: citFactExitForward .2s 68ms cubic-bezier(.42,0,1,1) both; }
+.cit-floating-facts.phase-exiting.swipe-backward .fact-slot-1 { animation: citFactExitBackward .2s cubic-bezier(.42,0,1,1) both; }
+.cit-floating-facts.phase-exiting.swipe-backward .fact-slot-2 { animation: citFactExitBackward .2s 34ms cubic-bezier(.42,0,1,1) both; }
+.cit-floating-facts.phase-exiting.swipe-backward .fact-slot-3 { animation: citFactExitBackward .2s 68ms cubic-bezier(.42,0,1,1) both; }
+.cit-floating-facts.phase-entering.swipe-forward .fact-slot-1 { animation: citFactEnterForward .47s 44ms cubic-bezier(.16,1,.3,1) both; }
+.cit-floating-facts.phase-entering.swipe-forward .fact-slot-2 { animation: citFactEnterForward .47s 88ms cubic-bezier(.16,1,.3,1) both; }
+.cit-floating-facts.phase-entering.swipe-forward .fact-slot-3 { animation: citFactEnterForward .47s 132ms cubic-bezier(.16,1,.3,1) both; }
+.cit-floating-facts.phase-entering.swipe-backward .fact-slot-1 { animation: citFactEnterBackward .47s 44ms cubic-bezier(.16,1,.3,1) both; }
+.cit-floating-facts.phase-entering.swipe-backward .fact-slot-2 { animation: citFactEnterBackward .47s 88ms cubic-bezier(.16,1,.3,1) both; }
+.cit-floating-facts.phase-entering.swipe-backward .fact-slot-3 { animation: citFactEnterBackward .47s 132ms cubic-bezier(.16,1,.3,1) both; }
+@keyframes citFactFloat {
+  0%,100% { transform: var(--card-anchor) var(--card-tilt); }
+  50% { transform: var(--card-anchor) translateY(var(--float-distance)) var(--card-tilt); }
+}
+@keyframes citFactExitForward {
+  from { opacity: 1; transform: var(--card-anchor) var(--card-tilt) scale(1); }
+  to { opacity: 0; transform: var(--card-anchor) translateX(-29px) var(--card-tilt) scale(.82); filter: blur(4px); }
+}
+@keyframes citFactExitBackward {
+  from { opacity: 1; transform: var(--card-anchor) var(--card-tilt) scale(1); }
+  to { opacity: 0; transform: var(--card-anchor) translateX(29px) var(--card-tilt) scale(.82); filter: blur(4px); }
+}
+@keyframes citFactEnterForward {
+  from { opacity: 0; transform: var(--card-anchor) translateX(33px) var(--card-tilt) scale(.82); filter: blur(4px); }
+  to { opacity: 1; transform: var(--card-anchor) var(--card-tilt) scale(1); filter: blur(0); }
+}
+@keyframes citFactEnterBackward {
+  from { opacity: 0; transform: var(--card-anchor) translateX(-33px) var(--card-tilt) scale(.82); filter: blur(4px); }
+  to { opacity: 1; transform: var(--card-anchor) var(--card-tilt) scale(1); filter: blur(0); }
+}
+
+/* Slightly narrow desktop: keep floating depth but reduce overlap. */
+@media (max-width: 1180px) and (min-width: 921px) {
+  .cit-home-showcase .cit-product-stage { min-height: 790px; }
+  .cit-floating-facts .cit-fact-card { width: 186px; padding: 13px; }
+  .cit-floating-facts.facts-circuit .fact-slot-1,
+  .cit-floating-facts.facts-map .fact-slot-1,
+  .cit-floating-facts.facts-learn .fact-slot-1 { --card-anchor: translateX(-62%); }
+  .cit-floating-facts.facts-circuit .fact-slot-2,
+  .cit-floating-facts.facts-map .fact-slot-2,
+  .cit-floating-facts.facts-learn .fact-slot-2 { --card-anchor: translateX(62%); }
+}
+
+/* On small layouts the live controls take priority: facts become cards below the window. */
+@media (max-width: 920px) {
+  .cit-home-showcase .cit-product-stage { min-height: 980px !important; }
+  .cit-home-showcase .cit-stage-shadow { bottom: 300px; }
+  .cit-window-footer { height: auto; min-height: 66px; padding-block: 9px; flex-wrap: wrap; }
+  .cit-window-footer-actions { margin-left: auto; }
+  .cit-floating-facts {
+    inset: auto 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .cit-floating-facts .cit-fact-card,
+  .cit-floating-facts.facts-circuit .cit-fact-card,
+  .cit-floating-facts.facts-map .cit-fact-card,
+  .cit-floating-facts.facts-learn .cit-fact-card {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: 80px;
+    padding: 12px 14px;
+    --card-anchor: translateX(0);
+    --card-tilt: rotate(0deg);
+  }
+  .cit-floating-facts .cit-fact-card p { max-width: none; -webkit-line-clamp: 2; }
+}
+@media (max-width: 520px) {
+  .cit-home-showcase .cit-product-stage { min-height: 1030px !important; }
+  .cit-window-footer-actions { width: 100%; margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .cit-preview-swap,
+  .cit-window-footer-status,
+  .cit-floating-facts .cit-fact-card { animation: none !important; transition: none !important; }
+}
+
+
+/* Keep module illustrations readable for visitors who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) and (max-width: 0px) {
+  .preview-map .map-cell,
+  .preview-map .map-group,
+  .preview-map .map-cursor,
+  .preview-gate .gate-wire i,
+  .preview-gate .gate-name span,
+  .preview-gate .gate-led,
+  .preview-ide .ide-wire-bank i,
+  .preview-ide .ide-live i {
+    animation: none !important;
+  }
+
+  .preview-map .cell-1,
+  .preview-map .cell-2,
+  .preview-map .cell-5,
+  .preview-map .cell-6 {
+    background: rgba(250,79,146,.67);
+    box-shadow: 0 7px 18px rgba(250,79,146,.14);
+  }
+
+  .preview-map .group-left { opacity: 1; transform: none; }
+  .preview-map .group-right { opacity: 0; }
+  .preview-map .map-cursor { transform: translate(70px, 0); }
+  .gate-name span:first-child { opacity: 1; transform: none; }
+  .gate-wire i { transform: translateX(29px); opacity: 1; }
+  .gate-led, .ide-live i { opacity: 1; }
+  .ide-wire-bank > span i { transform: translateY(70px); opacity: 1; }
+}
+
+/* =========================================================
+   PHASE 1 — DIRECTIONAL PAGE TRANSITION
+   Digital Electronics <-> Academic Origin <-> About
+   ========================================================= */
+
+.citools-site .cit-main {
+  view-transition-name: cit-marketing-main;
+}
+
+:root[data-cit-page-direction]::view-transition-group(cit-marketing-main) {
+  animation-duration: 540ms;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+
+:root[data-cit-page-direction]::view-transition-old(cit-marketing-main),
+:root[data-cit-page-direction]::view-transition-new(cit-marketing-main) {
+  animation-duration: 540ms;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+
+:root[data-cit-page-direction]::view-transition-old(cit-marketing-main) {
+  z-index: 1;
+}
+
+:root[data-cit-page-direction]::view-transition-new(cit-marketing-main) {
+  z-index: 2;
+}
+
+/* Menuju halaman yang posisinya berada di kanan. */
+:root[data-cit-page-direction="forward"]::view-transition-old(cit-marketing-main) {
+  animation-name: citPageLeaveToLeft;
+}
+
+:root[data-cit-page-direction="forward"]::view-transition-new(cit-marketing-main) {
+  animation-name: citPageEnterFromRight;
+}
+
+/* Kembali menuju halaman yang posisinya berada di kiri. */
+:root[data-cit-page-direction="backward"]::view-transition-old(cit-marketing-main) {
+  animation-name: citPageLeaveToRight;
+}
+
+:root[data-cit-page-direction="backward"]::view-transition-new(cit-marketing-main) {
+  animation-name: citPageEnterFromLeft;
+}
+
+@keyframes citPageEnterFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(76px) scale(.992);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes citPageLeaveToLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-54px) scale(.992);
+  }
+}
+
+@keyframes citPageEnterFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-76px) scale(.992);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes citPageLeaveToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(54px) scale(.992);
+  }
+}
+
+/* Mobile: jarak swipe dibuat lebih pendek supaya tidak terasa berat. */
+@media (max-width: 720px) {
+  :root[data-cit-page-direction]::view-transition-group(cit-marketing-main),
+  :root[data-cit-page-direction]::view-transition-old(cit-marketing-main),
+  :root[data-cit-page-direction]::view-transition-new(cit-marketing-main) {
+    animation-duration: 420ms;
+  }
+
+  @keyframes citPageEnterFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(34px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes citPageLeaveToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+  }
+
+  @keyframes citPageEnterFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-34px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes citPageLeaveToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(24px);
+    }
+  }
+}
+
+/* =========================================================
+   PHASE 2 — DIGITAL ELECTRONICS SIGNATURE MOTION
+   Calm glass surface, living digital signals.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. Hero ribbon: tetap diam secara bentuk, hanya cahaya
+      lembut yang menyapu warna pink-cyan.
+   --------------------------------------------------------- */
+.cit-course-ribbon {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.cit-course-ribbon::after {
+  content: "";
+  position: absolute;
+  inset: -3px -28%;
+  border-radius: inherit;
+  background: linear-gradient(
+    106deg,
+    transparent 31%,
+    rgba(255, 255, 255, .1) 39%,
+    rgba(255, 255, 255, .7) 49%,
+    rgba(255, 255, 255, .12) 58%,
+    transparent 68%
+  );
+  opacity: 0;
+  transform: translateX(-72%);
+  animation: citCourseRibbonSweep 11s cubic-bezier(.22, 1, .36, 1) infinite;
+}
+
+@keyframes citCourseRibbonSweep {
+  0%, 13% {
+    opacity: 0;
+    transform: translateX(-72%);
+  }
+
+  19% {
+    opacity: .52;
+  }
+
+  43% {
+    opacity: .36;
+    transform: translateX(72%);
+  }
+
+  49%, 100% {
+    opacity: 0;
+    transform: translateX(72%);
+  }
+}
+
+/* ---------------------------------------------------------
+   2. Main Digital Signal panel:
+      tidak floating terus-menerus, jadi lebih premium.
+   --------------------------------------------------------- */
+.cit-course-interface {
+  animation: none;
+  translate: 0 0;
+  transform: translateY(0);
+  transition:
+    transform .52s cubic-bezier(.16, 1, .3, 1),
+    box-shadow .52s ease,
+    border-color .38s ease;
+}
+
+.cit-course-interface:hover {
+  transform: translateY(-5px);
+  border-color: rgba(250, 79, 146, .12);
+  box-shadow:
+    0 52px 112px rgba(24, 18, 17, .13),
+    inset 0 1px rgba(255, 255, 255, .98);
+}
+
+/* ---------------------------------------------------------
+   3. Digital Signal orbit:
+      idle lambat, hover sedikit lebih hidup.
+   --------------------------------------------------------- */
+.cit-course-interface .cit-interface-orbit {
+  animation: citInterfaceOrbitSpin 14s linear infinite;
+  will-change: transform;
+}
+
+.cit-course-interface .cit-interface-orbit i:nth-child(1) {
+  filter: saturate(1.06);
+}
+
+.cit-course-interface .cit-interface-orbit i:nth-child(3) {
+  animation-duration: 2.55s;
+}
+
+/* Hover hanya memperkuat glow, tidak mengubah durasi rotasi agar orbit tidak reset */
+.cit-course-interface:hover .cit-interface-orbit {
+  filter: drop-shadow(0 0 18px rgba(250, 79, 146, .10));
+}
+
+.cit-course-interface:hover .cit-interface-orbit i:nth-child(1) {
+  filter: saturate(1.14) brightness(1.04);
+}
+
+.cit-course-interface:hover .cit-interface-orbit i:nth-child(3) {
+  box-shadow: 0 0 30px rgba(250, 79, 146, .62);
+}
+
+/* ---------------------------------------------------------
+   4. Module cards:
+      mempertahankan posisi stagger, lalu hover naik sedikit.
+      Learning Mode tidak lagi meloncat jauh ke atas.
+   --------------------------------------------------------- */
+.cit-module-card {
+  --module-rest-y: 0px;
+  --module-lift: 8px;
+  transform: translateY(var(--module-rest-y));
+  transition:
+    transform .46s cubic-bezier(.16, 1, .3, 1),
+    border-color .35s ease,
+    box-shadow .46s ease;
+}
+
+.cit-module-card.module-logic-lab {
+  --module-rest-y: 28px;
+}
+
+.cit-module-card.module-circuit-ide {
+  --module-rest-y: -10px;
+}
+
+.cit-module-card:is(:hover, :focus-visible) {
+  transform: translateY(calc(var(--module-rest-y) - var(--module-lift))) rotate(.18deg);
+  border-color: color-mix(in srgb, var(--module-accent) 24%, rgba(17, 17, 17, .075));
+  box-shadow:
+    0 38px 82px rgba(29, 22, 22, .115),
+    0 16px 42px color-mix(in srgb, var(--module-accent) 10%, transparent),
+    inset 0 1px rgba(255, 255, 255, .98);
+}
+
+.cit-module-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--module-accent) 34%, transparent);
+  outline-offset: 4px;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .cit-module-preview {
+  border-color: color-mix(in srgb, var(--module-accent) 20%, rgba(17, 17, 17, .08));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .94),
+    0 18px 38px color-mix(in srgb, var(--module-accent) 13%, transparent);
+}
+
+.cit-module-arrow b {
+  transition:
+    transform .38s cubic-bezier(.16, 1, .3, 1),
+    background .3s ease,
+    box-shadow .3s ease;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .cit-module-arrow b {
+  transform: translate(2px, -2px);
+  background: var(--module-accent);
+  box-shadow: 0 12px 25px color-mix(in srgb, var(--module-accent) 22%, transparent);
+}
+
+/* ---------------------------------------------------------
+   5. Module illustration tempo:
+      idle lebih lembut, hover kembali responsif.
+   --------------------------------------------------------- */
+
+/* K-Map: grouping berganti lebih pelan saat idle. */
+.preview-map .map-cell,
+.preview-map .map-group,
+.preview-map .map-cursor {
+  animation-duration: 7.2s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-map .map-cell,
+.cit-module-card:is(:hover, :focus-visible) .preview-map .map-group,
+.cit-module-card:is(:hover, :focus-visible) .preview-map .map-cursor {
+  animation-duration: 5.4s;
+}
+
+/* Learning Mode: signal tenang saat idle, lebih jelas saat diarahkan. */
+.preview-gate .gate-wire i,
+.preview-gate .gate-led {
+  animation-duration: 2.9s;
+}
+
+.preview-gate .gate-wire.wire-output i {
+  animation-delay: .58s;
+}
+
+.preview-gate .gate-led {
+  animation-delay: .82s;
+}
+
+.preview-gate .gate-name span {
+  animation-duration: 7.2s;
+}
+
+.preview-gate .gate-name span:nth-child(2) {
+  animation-delay: 2.4s;
+}
+
+.preview-gate .gate-name span:nth-child(3) {
+  animation-delay: 4.8s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-wire i,
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-led {
+  animation-duration: 2.2s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-wire.wire-output i {
+  animation-delay: .48s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-led {
+  animation-delay: .65s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-name span {
+  animation-duration: 6s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-name span:nth-child(2) {
+  animation-delay: 2s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-gate .gate-name span:nth-child(3) {
+  animation-delay: 4s;
+}
+
+/* Circuit IDE: data stream berjalan stabil, lalu aktif saat hover. */
+.preview-ide .ide-wire-bank i {
+  animation-duration: 2.85s;
+}
+
+.preview-ide .ide-live i {
+  animation-duration: 1.75s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-ide .ide-wire-bank i {
+  animation-duration: 2.05s;
+}
+
+.cit-module-card:is(:hover, :focus-visible) .preview-ide .ide-live i {
+  animation-duration: 1.18s;
+}
+
+/* ---------------------------------------------------------
+   6. Mobile:
+      tidak ada lift berlebihan pada panel/card kecil.
+   --------------------------------------------------------- */
+@media (max-width: 720px) {
+  .cit-course-ribbon::after {
+    animation-duration: 14s;
+  }
+
+  .cit-course-interface:hover {
+    transform: translateY(-2px);
+  }
+
+  .cit-module-card {
+    --module-lift: 4px;
+  }
+}
+
+/* =========================================================
+   PHASE 3 — MODULE CARD TO WORKSPACE TRANSITION
+   Digital Electronics -> K-Map / Learning / Circuit IDE
+   ========================================================= */
+
+/* Accent mengikuti workspace yang dibuka. */
+:root[data-cit-tool="kmap"] {
+  --cit-launch-accent: #fa4f92;
+}
+
+:root[data-cit-tool="learning"] {
+  --cit-launch-accent: #9678ff;
+}
+
+:root[data-cit-tool="deep"] {
+  --cit-launch-accent: #53dce5;
+}
+
+/* Phase 1 menggunakan main page sebagai shared layer.
+   Saat membuka tool, matikan shared layer tersebut agar tidak bertabrakan
+   dengan card/panel yang sedang berubah menjadi workspace. */
+:root[data-cit-tool-transition] .citools-site .cit-main {
+  view-transition-name: none;
+}
+
+/* Sumber transition ketika user klik card module. */
+:root[data-cit-tool-transition="open"] .cit-module-card[data-tool-launching="true"] {
+  view-transition-name: cit-tool-launch-surface;
+}
+
+/* Sumber transition ketika user klik tab panel Digital Signal
+   atau tombol Start K-Map Solver. */
+:root[data-cit-tool-transition="open"] .cit-course-interface[data-tool-launching="true"] {
+  view-transition-name: cit-tool-launch-surface;
+}
+
+/* Tujuan transition saat workspace terbuka:
+   surface marketing berubah menjadi editorial sidebar workspace. */
+:root[data-cit-tool-transition="open"] .cit-tool-page .identity-slab,
+:root[data-cit-tool-transition="close"] .cit-tool-page .identity-slab {
+  view-transition-name: cit-tool-launch-surface;
+}
+
+/* Saat kembali lewat browser Back, sidebar kembali menuju panel utama. */
+:root[data-cit-tool-transition="close"] .cit-course-interface {
+  view-transition-name: cit-tool-launch-surface;
+}
+
+/* Surface morph utama. */
+:root[data-cit-tool-transition]::view-transition-group(cit-tool-launch-surface) {
+  animation-duration: 720ms;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+  overflow: hidden;
+  border-radius: 28px;
+  box-shadow:
+    0 46px 110px rgba(25, 20, 21, .14),
+    0 26px 66px color-mix(in srgb, var(--cit-launch-accent) 15%, transparent);
+}
+
+:root[data-cit-tool-transition]::view-transition-old(cit-tool-launch-surface),
+:root[data-cit-tool-transition]::view-transition-new(cit-tool-launch-surface) {
+  height: 100%;
+  mix-blend-mode: normal;
+  animation-duration: 720ms;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+  animation-fill-mode: both;
+}
+
+:root[data-cit-tool-transition="open"]::view-transition-old(cit-tool-launch-surface) {
+  animation-name: citToolSurfaceOldFade;
+}
+
+:root[data-cit-tool-transition="open"]::view-transition-new(cit-tool-launch-surface) {
+  animation-name: citToolSurfaceNewReveal;
+}
+
+:root[data-cit-tool-transition="close"]::view-transition-old(cit-tool-launch-surface) {
+  animation-name: citToolSurfaceOldFade;
+}
+
+:root[data-cit-tool-transition="close"]::view-transition-new(cit-tool-launch-surface) {
+  animation-name: citToolSurfaceNewReveal;
+}
+
+/* Background page: marketing page keluar lembut, workspace masuk lebih dalam. */
+:root[data-cit-tool-transition="open"]::view-transition-old(root) {
+  animation: citToolMarketingLeave 510ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+:root[data-cit-tool-transition="open"]::view-transition-new(root) {
+  animation: citToolWorkspaceEnter 690ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+:root[data-cit-tool-transition="close"]::view-transition-old(root) {
+  animation: citToolWorkspaceLeave 480ms cubic-bezier(.4, 0, .2, 1) both;
+}
+
+:root[data-cit-tool-transition="close"]::view-transition-new(root) {
+  animation: citToolMarketingReturn 650ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes citToolSurfaceOldFade {
+  from {
+    opacity: 1;
+    filter: saturate(1);
+  }
+
+  to {
+    opacity: 0;
+    filter: saturate(1.08);
+  }
+}
+
+@keyframes citToolSurfaceNewReveal {
+  from {
+    opacity: .18;
+    filter: saturate(1.12);
+  }
+
+  to {
+    opacity: 1;
+    filter: saturate(1);
+  }
+}
+
+@keyframes citToolMarketingLeave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(.986);
+  }
+}
+
+@keyframes citToolWorkspaceEnter {
+  from {
+    opacity: 0;
+    transform: scale(1.012);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes citToolWorkspaceLeave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.008);
+  }
+}
+
+@keyframes citToolMarketingReturn {
+  from {
+    opacity: 0;
+    transform: scale(.988);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mobile: jangan melakukan morph sidebar yang terlalu berat. */
+@media (max-width: 720px) {
+  :root[data-cit-tool-transition]::view-transition-group(cit-tool-launch-surface),
+  :root[data-cit-tool-transition]::view-transition-old(cit-tool-launch-surface),
+  :root[data-cit-tool-transition]::view-transition-new(cit-tool-launch-surface) {
+    animation-duration: 480ms;
+  }
+
+  :root[data-cit-tool-transition="open"]::view-transition-new(root) {
+    animation-duration: 500ms;
+  }
+}
+/* ======================================================================
+   STAGE G1 REBUILD — CINEMATIC HOME INTRO
+   Rebuilt from Stage F backup. This block intentionally does not modify
+   global reduced-motion rules or module/tool pages.
+   ====================================================================== */
+
+/* A quiet page wake-up: the canvas is present immediately, then its depth appears. */
+.cit-home-showcase .cit-background-grid {
+  opacity: 0;
+  transform: scale(1.025);
+  animation: citG1GridWake 1.05s .04s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-ambient-sculpture span:nth-child(1) {
+  opacity: 0;
+  transform: scale(.9) translate3d(24px, 12px, 0);
+  animation: citG1AmbientWake 1.32s .06s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-ambient-sculpture span:nth-child(2),
+.cit-home-showcase .cit-ambient-sculpture span:nth-child(3) {
+  opacity: 0;
+  transform: scale(.88);
+  animation: citG1AmbientWake 1.25s .19s cubic-bezier(.16,1,.3,1) both;
+}
+
+/* Navbar arrives before the headline; it stops moving after the entrance. */
+.cit-home-showcase .cit-navbar {
+  opacity: 0;
+  transform: translateY(-17px);
+  animation: citG1NavDrop .7s .08s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-brand,
+.cit-home-showcase .cit-nav-links > * {
+  opacity: 0;
+  transform: translateY(-7px);
+  animation: citG1NavItem .52s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-brand { animation-delay: .2s; }
+.cit-home-showcase .cit-nav-links > *:nth-child(1) { animation-delay: .28s; }
+.cit-home-showcase .cit-nav-links > *:nth-child(2) { animation-delay: .34s; }
+.cit-home-showcase .cit-nav-links > *:nth-child(3) { animation-delay: .4s; }
+.cit-home-showcase .cit-nav-links > *:nth-child(4) { animation-delay: .46s; }
+.cit-home-showcase .cit-nav-links > *:nth-child(5) { animation-delay: .52s; }
+
+/* Intro utility text is separate from the older generic cit-reveal helper. */
+.cit-home-showcase .cit-g1-rise {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: citG1Rise .68s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-intro-badge { animation-delay: .12s; }
+.cit-home-showcase .cit-intro-eyebrow { animation-delay: .22s; }
+.cit-home-showcase .cit-intro-lead { animation-delay: 1.01s; }
+.cit-home-showcase .cit-intro-actions { animation-delay: 1.12s; }
+
+/* Editorial headline is assembled line by line instead of fading as one bitmap. */
+.cit-home-showcase .cit-cinematic-title {
+  display: grid;
+  justify-items: center;
+  gap: clamp(7px, .85vw, 14px);
+  overflow: visible;
+  margin: 0;
+  padding: 0 0 .075em;
+  color: #111;
+  font-size: clamp(4.15rem, 9vw, 9.35rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+}
+.cit-home-showcase .cit-title-mask {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0 .08em .05em;
+}
+.cit-home-showcase .cit-title-mask.line-3,
+.cit-home-showcase .cit-title-mask.line-4 {
+  margin-inline: -.075em;
+  padding: .025em .15em .17em;
+}
+.cit-home-showcase .cit-title-mask.line-4 {
+  margin-top: -.17em;
+  margin-bottom: -.1em;
+  padding-bottom: .22em;
+}
+.cit-home-showcase .cit-title-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(106%) scale(.988);
+  transform-origin: 50% 100%;
+  animation: citG1TitleLift .84s cubic-bezier(.16,1,.3,1) both;
+  will-change: transform, opacity;
+}
+.cit-home-showcase .cit-title-mask.line-1 .cit-title-line { animation-delay: .3s; }
+.cit-home-showcase .cit-title-mask.line-2 .cit-title-line { animation-delay: .43s; }
+.cit-home-showcase .cit-title-mask.line-3 .cit-title-line { animation-delay: .59s; }
+.cit-home-showcase .cit-title-mask.line-4 .cit-title-line { animation-delay: .72s; }
+.cit-home-showcase .cit-title-primary {
+  padding-inline: .02em;
+  color: #111;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: .985;
+  letter-spacing: -.047em;
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+.cit-home-showcase .cit-title-accent {
+  padding-inline: .045em;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.018em;
+  color: transparent;
+  background: linear-gradient(96deg, #151515 6%, #151515 24%, #f34f8e 54%, #3dd2e0 91%);
+  background-size: 160% 100%;
+  background-position: 98% 50%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: citG1TitleLift .84s cubic-bezier(.16,1,.3,1) both, citG1AccentSweep 1.08s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-title-mask.line-3 .cit-title-accent { animation-delay: .59s, .65s; }
+.cit-home-showcase .cit-title-mask.line-4 .cit-title-accent { animation-delay: .72s, .78s; }
+
+/* Stage arrives after the statement, with the actual live product switching on. */
+.cit-home-showcase .cit-g1-stage-wrap {
+  opacity: 0;
+  transform: translateY(27px);
+  animation: citG1StageWrap .83s 1.08s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-stage-light {
+  opacity: 0;
+  transform: translateX(-50%) scale(.85);
+  animation: citG1StageLight 1.04s 1.05s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-stage-shadow {
+  opacity: 0;
+  transform: translateX(-50%) scale(.76);
+  animation: citG1Shadow .7s 1.39s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .ribbon-one {
+  opacity: 0;
+  animation: citG1RibbonOne .73s 1.13s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .ribbon-two {
+  opacity: 0;
+  animation: citG1RibbonTwo .76s 1.23s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .ribbon-three {
+  opacity: 0;
+  animation: citG1RibbonThree .62s 1.34s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-glass-pearl {
+  opacity: 0;
+  transform: scale(.7);
+  animation: citG1Pearl .62s 1.36s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-product-window {
+  opacity: 0;
+  animation: citG1WindowRise .83s 1.33s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-window-header,
+.cit-home-showcase .cit-product-stage.is-intro .cit-window-label,
+.cit-home-showcase .cit-product-stage.is-intro .cit-window-footer {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: citG1WindowContent .48s 1.68s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-window-canvas .cit-preview-swap {
+  opacity: 0;
+  transform: translateY(12px) scale(.986);
+  animation: citG1PreviewOn .57s 1.68s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-status-dot::before {
+  animation: citG1LivePulse .68s 1.82s cubic-bezier(.16,1,.3,1) 2 both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-wire-active {
+  opacity: 0;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  animation: citG1SignalTrace .72s 1.84s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-window-footer-status strong.is-booting {
+  color: #908983;
+  letter-spacing: .12em;
+  animation: citG1Boot .72s 1.58s ease both;
+}
+
+/* Existing random fact cards are reused; only their first entrance is staged. */
+.cit-home-showcase .cit-product-stage.is-intro .cit-floating-facts.phase-idle .fact-slot-1 {
+  animation: citG1FactIn .54s 1.86s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-floating-facts.phase-idle .fact-slot-2 {
+  animation: citG1FactIn .54s 1.97s cubic-bezier(.16,1,.3,1) both;
+}
+.cit-home-showcase .cit-product-stage.is-intro .cit-floating-facts.phase-idle .fact-slot-3 {
+  animation: citG1FactIn .54s 2.08s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes citG1GridWake { from { opacity: 0; transform: scale(1.025); } to { opacity: .5; transform: scale(1); } }
+@keyframes citG1AmbientWake { from { opacity: 0; transform: scale(.88) translate3d(18px,14px,0); } to { opacity: 1; transform: scale(1) translate3d(0,0,0); } }
+@keyframes citG1NavDrop { from { opacity: 0; transform: translateY(-17px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes citG1NavItem { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes citG1Rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes citG1TitleLift { from { opacity: 0; transform: translateY(106%) scale(.988); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes citG1AccentSweep { from { background-position: 98% 50%; } to { background-position: 0% 50%; } }
+@keyframes citG1StageWrap { from { opacity: 0; transform: translateY(27px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes citG1StageLight { from { opacity: 0; transform: translateX(-50%) scale(.85); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
+@keyframes citG1Shadow { from { opacity: 0; transform: translateX(-50%) scale(.76); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
+@keyframes citG1RibbonOne { from { opacity: 0; transform: translateX(-74px) rotate(-7deg) skewX(-14deg) scale(.96); } to { opacity: 1; transform: rotate(-4deg) skewX(-14deg) scale(1); } }
+@keyframes citG1RibbonTwo { from { opacity: 0; transform: translateX(78px) rotate(9deg) skewX(-16deg) scale(.96); } to { opacity: .74; transform: rotate(6deg) skewX(-16deg) scale(1); } }
+@keyframes citG1RibbonThree { from { opacity: 0; transform: translateY(-12px) rotate(-14deg) scale(.9); } to { opacity: 1; transform: rotate(-14deg) scale(1); } }
+@keyframes citG1Pearl { from { opacity: 0; transform: scale(.7); } 72% { opacity: 1; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+@keyframes citG1WindowRise { from { opacity: 0; transform: translateX(-50%) rotateX(2deg) translateY(40px) scale(.97); } to { opacity: 1; transform: translateX(-50%) rotateX(2deg) translateY(0) scale(1); } }
+@keyframes citG1WindowContent { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes citG1PreviewOn { from { opacity: 0; transform: translateY(12px) scale(.986); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes citG1LivePulse { 0% { transform: scale(.55); opacity: .15; } 55% { transform: scale(1.68); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes citG1SignalTrace { 0% { opacity: 0; stroke-dasharray: 440; stroke-dashoffset: 440; } 15% { opacity: 1; } 92% { stroke-dasharray: 440; stroke-dashoffset: 0; } 100% { opacity: 1; stroke-dasharray: 10 13; stroke-dashoffset: 0; } }
+@keyframes citG1Boot { from { opacity: 0; } to { opacity: 1; } }
+@keyframes citG1FactIn { from { opacity: 0; transform: var(--card-anchor) translateY(18px) var(--card-tilt) scale(.84); filter: blur(3px); } to { opacity: 1; transform: var(--card-anchor) var(--card-tilt) scale(1); filter: blur(0); } }
+
+@media (max-width: 720px) {
+  .cit-home-showcase .cit-cinematic-title { font-size: clamp(3rem, 16vw, 5rem); gap: 7px; }
+  .cit-home-showcase .cit-title-primary { letter-spacing: -.043em; }
+  .cit-home-showcase .cit-title-mask.line-4 { margin-top: -.1em; padding-bottom: .16em; }
+}
+
+
+/* ======================================================================
+   HOME MOTION UPGRADE — AMBIENT CONTINUITY + SCROLL FLOW
+   Extends the existing cinematic intro without touching route motion
+   or tool-workspace visuals.
+   ====================================================================== */
+
+.cit-home-motion-flow {
+  position: relative;
+}
+
+/* After the intro settles, only light and signal layers keep breathing. */
+.cit-home-showcase .cit-product-stage.is-ready .cit-stage-light {
+  animation: citHomeAuraBreathe 9.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .cit-stage-shadow {
+  animation: citHomeShadowBreathe 9.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .cit-glass-pearl {
+  animation: citHomePearlHover 8.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .cit-status-dot::before {
+  animation: citHomeLiveBreath 2.45s ease-in-out infinite;
+}
+
+/* A restrained glass sweep runs inside the existing ribbons only. */
+.cit-home-showcase .cit-ribbon {
+  overflow: hidden;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .cit-ribbon::after {
+  content: "";
+  position: absolute;
+  inset: -5px -36%;
+  border-radius: inherit;
+  background: linear-gradient(
+    106deg,
+    transparent 31%,
+    rgba(255, 255, 255, .04) 41%,
+    rgba(255, 255, 255, .62) 50%,
+    rgba(255, 255, 255, .09) 59%,
+    transparent 68%
+  );
+  transform: translateX(-72%);
+  opacity: 0;
+  animation: citHomeRibbonGlint 9.8s cubic-bezier(.22, 1, .36, 1) infinite;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .ribbon-two::after {
+  animation-delay: -3.15s;
+  animation-duration: 11.2s;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .ribbon-three::after {
+  animation-delay: -5.7s;
+  animation-duration: 12.6s;
+  opacity: .5;
+}
+
+/* The live glass monitor remains calm; interaction deepens its material. */
+.cit-home-showcase .cit-product-window {
+  transition:
+    border-color .44s ease,
+    box-shadow .5s cubic-bezier(.16, 1, .3, 1),
+    background .44s ease;
+}
+
+.cit-home-showcase .cit-product-window:hover {
+  border-color: rgba(250, 79, 146, .14);
+  background: rgba(255, 255, 255, .69);
+  box-shadow:
+    0 62px 132px rgba(31, 25, 25, .135),
+    0 22px 58px rgba(250, 79, 146, .055),
+    inset 0 1px rgba(255, 255, 255, .98);
+}
+
+/* Below-the-fold continuation: sections are revealed only once they are seen. */
+.cit-home-showcase .cit-home-motion-flow.is-motion-observed [data-home-reveal] {
+  opacity: 0;
+  transform: translateY(42px) scale(.992);
+  filter: blur(5px);
+  transition:
+    opacity .78s cubic-bezier(.16, 1, .3, 1),
+    transform .78s cubic-bezier(.16, 1, .3, 1),
+    filter .72s ease;
+}
+
+.cit-home-showcase .cit-home-motion-flow.is-motion-observed [data-home-reveal].is-in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.cit-home-showcase .cit-home-motion-flow.is-motion-observed [data-home-reveal="method"] {
+  transition-delay: 45ms;
+}
+
+.cit-home-showcase .cit-home-motion-flow.is-motion-observed [data-home-reveal="cta"] {
+  transition-delay: 70ms;
+}
+
+/* Small details animate after their parent section has entered, without
+   overriding card hover transforms. */
+.cit-home-showcase .cit-editorial-head {
+  position: relative;
+}
+
+.cit-home-showcase .cit-editorial-head::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: calc(-1 * clamp(22px, 3.2vw, 34px));
+  height: 1px;
+  opacity: 0;
+  background: linear-gradient(90deg, rgba(250,79,146,.2), rgba(65,214,223,.16), transparent 74%);
+}
+
+.cit-home-showcase [data-home-reveal="collection"].is-in-view .cit-editorial-head::after {
+  animation: citHomeRuleDraw .86s .16s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.cit-home-showcase [data-home-reveal="cta"].is-in-view .cit-cta-object {
+  animation: citHomeCtaObjectSettle .82s .18s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes citHomeAuraBreathe {
+  0%, 100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: .84;
+    transform: translateX(-50%) scale(1.045);
+  }
+}
+
+@keyframes citHomeShadowBreathe {
+  0%, 100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: .78;
+    transform: translateX(-50%) scale(.94);
+  }
+}
+
+@keyframes citHomePearlHover {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.025);
+  }
+}
+
+@keyframes citHomeLiveBreath {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 14px var(--cit-cyan);
+  }
+  50% {
+    opacity: .68;
+    transform: scale(.78);
+    box-shadow: 0 0 22px var(--cit-cyan);
+  }
+}
+
+@keyframes citHomeRibbonGlint {
+  0%, 16% {
+    opacity: 0;
+    transform: translateX(-72%);
+  }
+  21% {
+    opacity: .7;
+  }
+  43% {
+    opacity: .26;
+    transform: translateX(72%);
+  }
+  49%, 100% {
+    opacity: 0;
+    transform: translateX(72%);
+  }
+}
+
+@keyframes citHomeRuleDraw {
+  from {
+    opacity: 0;
+    transform: scaleX(.28);
+    transform-origin: left center;
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+@keyframes citHomeCtaObjectSettle {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .cit-home-showcase .cit-home-motion-flow.is-motion-observed [data-home-reveal] {
+    transform: translateY(26px);
+    filter: blur(3px);
+  }
+
+  .cit-home-showcase .cit-product-stage.is-ready .cit-stage-light,
+  .cit-home-showcase .cit-product-stage.is-ready .cit-stage-shadow {
+    animation-duration: 12s;
+  }
+
+  .cit-home-showcase .cit-product-window:hover {
+    box-shadow:
+      0 52px 120px rgba(31, 25, 25, .115),
+      inset 0 1px rgba(255, 255, 255, .98);
+  }
+}
+
+
+/* ======================================================================
+   HM-3 — INTERACTIVE PRODUCT PREVIEW POLISH
+   View-aware accents, sliding tabs, interaction feedback and persisted
+   home motion compatibility. This layer intentionally avoids changing
+   looping animation duration on hover so movement does not jump/reset.
+   ====================================================================== */
+
+/* Every preview has its own laboratory accent language. */
+.cit-home-showcase .cit-product-stage {
+  --cit-preview-accent: #42d5e7;
+  --cit-preview-accent-rgb: 66, 213, 231;
+  --cit-preview-accent-two: #8a77ff;
+  --cit-preview-accent-two-rgb: 138, 119, 255;
+}
+
+.cit-home-showcase .cit-product-stage.selected-map {
+  --cit-preview-accent: #fa4f92;
+  --cit-preview-accent-rgb: 250, 79, 146;
+  --cit-preview-accent-two: #42d5e7;
+  --cit-preview-accent-two-rgb: 66, 213, 231;
+}
+
+.cit-home-showcase .cit-product-stage.selected-learn {
+  --cit-preview-accent: #8a77ff;
+  --cit-preview-accent-rgb: 138, 119, 255;
+  --cit-preview-accent-two: #fa4f92;
+  --cit-preview-accent-two-rgb: 250, 79, 146;
+}
+
+/* Product monitor: interaction strengthens its current mode instead of
+   applying the same pink shadow to every preview. */
+.cit-home-showcase .cit-product-window {
+  isolation: isolate;
+  transition:
+    border-color .42s ease,
+    box-shadow .52s cubic-bezier(.16, 1, .3, 1),
+    background .42s ease;
+}
+
+.cit-home-showcase .cit-product-window::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -1px;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 78% 13%, rgba(var(--cit-preview-accent-rgb), .15), transparent 32%),
+    radial-gradient(circle at 18% 78%, rgba(var(--cit-preview-accent-two-rgb), .09), transparent 34%);
+  transition: opacity .42s ease;
+}
+
+.cit-home-showcase .cit-product-window > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cit-home-showcase .cit-product-window:hover {
+  border-color: rgba(var(--cit-preview-accent-rgb), .23);
+  background: rgba(255, 255, 255, .7);
+  box-shadow:
+    0 64px 138px rgba(31, 25, 25, .14),
+    0 22px 62px rgba(var(--cit-preview-accent-rgb), .12),
+    inset 0 1px rgba(255, 255, 255, .98);
+}
+
+.cit-home-showcase .cit-product-window:hover::before {
+  opacity: 1;
+}
+
+/* A quiet colour wash confirms a selected preview as its content glides in. */
+.cit-home-showcase .cit-window-canvas {
+  isolation: isolate;
+}
+
+.cit-home-showcase .cit-window-canvas::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: .24;
+  background:
+    radial-gradient(circle at 78% 20%, rgba(var(--cit-preview-accent-rgb), .1), transparent 40%),
+    radial-gradient(circle at 24% 72%, rgba(var(--cit-preview-accent-two-rgb), .07), transparent 44%);
+  transition: opacity .44s ease;
+}
+
+.cit-home-showcase .cit-window-canvas > * {
+  z-index: 1;
+}
+
+.cit-home-showcase .cit-product-stage.transition-entering .cit-window-canvas::after {
+  animation: citHm3CanvasConfirm .66s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+/* Tab rail becomes a real mode selector: the glass pill glides between
+   Circuit, Map and Learn while accent follows the selected mode. */
+.cit-home-showcase .cit-window-tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 226px;
+  padding: 5px;
+  overflow: hidden;
+  background: rgba(240, 238, 236, .7);
+  box-shadow: inset 0 1px rgba(255,255,255,.82);
+}
+
+.cit-home-showcase .cit-window-tabs .cit-tab-glider {
+  position: absolute;
+  z-index: 0;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc((100% - 18px) / 3);
+  padding: 0;
+  color: transparent;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 88% 16%, rgba(var(--cit-preview-accent-rgb), .16), transparent 54%),
+    #fff;
+  box-shadow:
+    0 8px 21px rgba(15,15,15,.052),
+    0 6px 17px rgba(var(--cit-preview-accent-rgb), .075);
+  transform: translateX(0);
+  transition:
+    transform .47s cubic-bezier(.16, 1, .3, 1),
+    background .34s ease,
+    box-shadow .34s ease;
+}
+
+.cit-home-showcase .cit-product-stage.selected-map .cit-tab-glider {
+  transform: translateX(calc(100% + 4px));
+}
+
+.cit-home-showcase .cit-product-stage.selected-learn .cit-tab-glider {
+  transform: translateX(calc(200% + 8px));
+}
+
+.cit-home-showcase .cit-window-tabs button {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 7px 12px;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.cit-home-showcase .cit-window-tabs button.active {
+  color: #151515;
+}
+
+.cit-home-showcase .cit-window-tabs button:not(.active):hover {
+  color: color-mix(in srgb, var(--cit-preview-accent) 60%, #151515);
+}
+
+.cit-home-showcase .cit-window-tabs button:disabled {
+  cursor: default;
+  opacity: .74;
+  transform: none;
+}
+
+/* Monitor status and open-action respond to the same selected mode. */
+.cit-home-showcase .cit-status-dot::before {
+  background: var(--cit-preview-accent);
+  box-shadow: 0 0 14px var(--cit-preview-accent);
+  transition: background .32s ease, box-shadow .32s ease;
+}
+
+.cit-home-showcase .cit-window-footer-actions a {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform .25s cubic-bezier(.16,1,.3,1),
+    border-color .25s ease,
+    color .25s ease,
+    box-shadow .28s ease,
+    background .28s ease;
+}
+
+.cit-home-showcase .cit-window-footer-actions a::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(108deg, transparent 20%, rgba(var(--cit-preview-accent-rgb), .11), transparent 76%);
+  transform: translateX(-40%);
+  transition: opacity .28s ease, transform .38s cubic-bezier(.16,1,.3,1);
+}
+
+.cit-home-showcase .cit-window-footer-actions a:hover {
+  border-color: rgba(var(--cit-preview-accent-rgb), .28);
+  box-shadow:
+    0 12px 28px rgba(var(--cit-preview-accent-rgb), .13),
+    inset 0 1px rgba(255,255,255,.88);
+}
+
+.cit-home-showcase .cit-window-footer-actions a:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.cit-home-showcase .cit-window-footer-actions a:active {
+  transform: translateY(1px) scale(.985);
+}
+
+/* Cards remain non-blocking for the live canvas. Hovering the stage simply
+   gives them contextual material depth, without restarting float timelines. */
+.cit-home-showcase .cit-floating-facts .cit-fact-card {
+  transition:
+    border-color .34s ease,
+    background .34s ease,
+    box-shadow .4s ease;
+}
+
+.cit-home-showcase .cit-product-stage.is-ready .cit-product-window:hover ~ .cit-floating-facts.phase-idle .cit-fact-card {
+  border-color: rgba(var(--cit-preview-accent-rgb), .16);
+  background:
+    radial-gradient(circle at 92% 4%, rgba(var(--cit-preview-accent-rgb), .16), transparent 40%),
+    rgba(255,255,255,.82);
+  box-shadow:
+    0 32px 70px rgba(32,26,25,.105),
+    0 13px 30px rgba(var(--cit-preview-accent-rgb), .07),
+    inset 0 1px rgba(255,255,255,.98);
+}
+
+/* Hero calls-to-action now answer the first pointer interaction with a
+   restrained arrow glide and sheen. */
+.cit-home-showcase .cit-showcase-copy .cit-button i,
+.cit-home-showcase .cit-showcase-cta .cit-button i {
+  transition: transform .32s cubic-bezier(.16, 1, .3, 1);
+}
+
+.cit-home-showcase .cit-showcase-copy .cit-button:hover i,
+.cit-home-showcase .cit-showcase-cta .cit-button:hover i {
+  transform: translateX(4px);
+}
+
+.cit-home-showcase .cit-showcase-copy .cit-button-primary::before,
+.cit-home-showcase .cit-showcase-cta .cit-button-primary::before {
+  content: "";
+  position: absolute;
+  inset: -2px -42%;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 37%, rgba(255,255,255,.2) 49%, transparent 61%);
+  transform: translateX(-36%);
+  transition: opacity .25s ease, transform .5s cubic-bezier(.16,1,.3,1);
+}
+
+.cit-home-showcase .cit-showcase-copy .cit-button-primary:hover::before,
+.cit-home-showcase .cit-showcase-cta .cit-button-primary:hover::before {
+  opacity: 1;
+  transform: translateX(36%);
+}
+
+@keyframes citHm3CanvasConfirm {
+  0% {
+    opacity: .12;
+    transform: scale(.99);
+  }
+  48% {
+    opacity: .5;
+  }
+  100% {
+    opacity: .24;
+    transform: scale(1);
+  }
+}
+
+/* Persisted workspace motion preference is honoured on Home as well.
+   Reduced mode preserves all content and active-state changes. */
+.cit-home-showcase.motion-reduced .cit-navbar,
+.cit-home-showcase.motion-reduced .cit-g1-rise,
+.cit-home-showcase.motion-reduced .cit-title-line,
+.cit-home-showcase.motion-reduced .cit-g1-stage-wrap,
+.cit-home-showcase.motion-reduced .cit-product-window,
+.cit-home-showcase.motion-reduced .cit-product-stage .cit-stage-light,
+.cit-home-showcase.motion-reduced .cit-product-stage .cit-stage-shadow,
+.cit-home-showcase.motion-reduced .cit-ribbon,
+.cit-home-showcase.motion-reduced .cit-glass-pearl,
+.cit-home-showcase.motion-reduced .cit-status-dot::before,
+.cit-home-showcase.motion-reduced .cit-floating-facts .cit-fact-card,
+.cit-home-showcase.motion-reduced .cit-preview-swap,
+.cit-home-showcase.motion-reduced .cit-window-footer-status,
+.cit-home-showcase.motion-reduced .cit-tab-glider,
+.cit-home-showcase.motion-reduced .cit-home-motion-flow [data-home-reveal],
+.cit-home-showcase.motion-reduced .cit-cta-object {
+  animation: none !important;
+  transition-duration: .01ms !important;
+}
+
+.cit-home-showcase.motion-reduced .cit-navbar,
+.cit-home-showcase.motion-reduced .cit-g1-rise,
+.cit-home-showcase.motion-reduced .cit-title-line,
+.cit-home-showcase.motion-reduced .cit-g1-stage-wrap,
+.cit-home-showcase.motion-reduced .cit-product-window,
+.cit-home-showcase.motion-reduced .cit-floating-facts .cit-fact-card,
+.cit-home-showcase.motion-reduced .cit-home-motion-flow [data-home-reveal] {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.cit-home-showcase.motion-reduced .cit-title-line,
+.cit-home-showcase.motion-reduced .cit-g1-rise,
+.cit-home-showcase.motion-reduced .cit-g1-stage-wrap,
+.cit-home-showcase.motion-reduced .cit-home-motion-flow [data-home-reveal] {
+  transform: none !important;
+}
+
+.cit-home-showcase.motion-reduced .cit-product-window {
+  transform: translateX(-50%) rotateX(2deg) !important;
+}
+
+.cit-home-showcase.motion-reduced .cit-product-stage .cit-ribbon::after,
+.cit-home-showcase.motion-reduced .cit-product-window::before,
+.cit-home-showcase.motion-reduced .cit-window-canvas::after {
+  animation: none !important;
+}
+
+@media (max-width: 720px) {
+  .cit-home-showcase .cit-window-tabs {
+    min-width: min(218px, 56vw);
+  }
+
+  .cit-home-showcase .cit-product-window:hover {
+    border-color: rgba(var(--cit-preview-accent-rgb), .16);
+    box-shadow:
+      0 52px 120px rgba(31, 25, 25, .115),
+      inset 0 1px rgba(255, 255, 255, .98);
+  }
+
+  .cit-home-showcase .cit-product-stage.is-ready .cit-product-window:hover ~ .cit-floating-facts.phase-idle .cit-fact-card {
+    box-shadow:
+      0 27px 60px rgba(32,26,25,.095),
+      inset 0 1px rgba(255,255,255,.98);
+  }
+}
+
+/* ======================================================================
+   HM-4 — SCROLL CONTINUITY, RESPONSIVE SAFETY & IDLE PERFORMANCE
+   Final home pass: sections sequence cleanly, keyboard focus receives the
+   same product feedback, and off-screen ambient loops are paused without
+   changing the visible design.
+   ====================================================================== */
+
+/* When the cinematic stage leaves the viewport or the tab is hidden, its
+   ambient layers stop consuming animation work. Interaction resumes from
+   the same timeline when the visitor returns. */
+.cit-home-showcase .cit-product-stage.ambient-paused *,
+.cit-home-showcase .cit-product-stage.ambient-paused *::before,
+.cit-home-showcase .cit-product-stage.ambient-paused *::after {
+  animation-play-state: paused !important;
+}
+
+.cit-home-showcase .cit-product-stage.ambient-paused .cit-stage-light,
+.cit-home-showcase .cit-product-stage.ambient-paused .cit-stage-shadow,
+.cit-home-showcase .cit-product-stage.ambient-paused .cit-glass-pearl,
+.cit-home-showcase .cit-product-stage.ambient-paused .cit-fact-card,
+.cit-home-showcase .cit-product-stage.ambient-paused .cit-preview-swap {
+  will-change: auto;
+}
+
+/* Continue the scroll rhythm inside sections. Children enter after their
+   parent surface is available; card hover transforms remain untouched. */
+.cit-home-showcase [data-home-reveal="collection"].is-in-view .cit-subject-card {
+  animation: citHm4MaterialReveal .66s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.cit-home-showcase [data-home-reveal="collection"].is-in-view .cit-subject-card:nth-child(1) {
+  animation-delay: .12s;
+}
+
+.cit-home-showcase [data-home-reveal="collection"].is-in-view .cit-subject-card:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.cit-home-showcase [data-home-reveal="collection"].is-in-view .cit-subject-card:nth-child(3) {
+  animation-delay: .28s;
+}
+
+.cit-home-showcase [data-home-reveal="method"].is-in-view .cit-method-panel {
+  animation: citHm4PanelReveal .64s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.cit-home-showcase [data-home-reveal="method"].is-in-view .cit-method-panel:nth-child(1) {
+  animation-delay: .1s;
+}
+
+.cit-home-showcase [data-home-reveal="method"].is-in-view .cit-method-panel:nth-child(2) {
+  animation-delay: .18s;
+}
+
+.cit-home-showcase [data-home-reveal="method"].is-in-view .cit-method-panel:nth-child(3) {
+  animation-delay: .26s;
+}
+
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > .cit-badge,
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > h2,
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > p,
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > .cit-showcase-actions {
+  animation: citHm4CtaReveal .66s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > .cit-badge { animation-delay: .13s; }
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > h2 { animation-delay: .2s; }
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > p { animation-delay: .28s; }
+.cit-home-showcase [data-home-reveal="cta"].is-in-view > .cit-showcase-actions { animation-delay: .36s; }
+
+/* Keyboard visitors receive the same material confirmation as mouse hover. */
+.cit-home-showcase .cit-product-window:focus-within {
+  border-color: rgba(var(--cit-preview-accent-rgb), .23);
+  background: rgba(255, 255, 255, .7);
+  box-shadow:
+    0 64px 138px rgba(31, 25, 25, .14),
+    0 22px 62px rgba(var(--cit-preview-accent-rgb), .12),
+    inset 0 1px rgba(255, 255, 255, .98);
+}
+
+.cit-home-showcase .cit-product-window:focus-within::before {
+  opacity: 1;
+}
+
+.cit-home-showcase .cit-window-tabs button:focus-visible,
+.cit-home-showcase .cit-window-footer-actions a:focus-visible,
+.cit-home-showcase .cit-showcase-copy .cit-button:focus-visible,
+.cit-home-showcase .cit-showcase-cta .cit-button:focus-visible {
+  outline: 2px solid rgba(var(--cit-preview-accent-rgb, 250, 79, 146), .42);
+  outline-offset: 3px;
+}
+
+@keyframes citHm4MaterialReveal {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes citHm4PanelReveal {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes citHm4CtaReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Sections beneath the first viewport are rendered lazily when supported,
+   keeping the opening hero responsive while preserving their reserved flow. */
+@supports (content-visibility: auto) {
+  .cit-home-showcase .cit-home-scroll-section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 680px;
+  }
+
+  .cit-home-showcase .cit-showcase-cta {
+    contain-intrinsic-size: auto 520px;
+  }
+}
+
+/* Touch layouts retain the cinematic opening, but suppress perpetual card
+   bobbing once facts become a readable stacked list. */
+@media (max-width: 920px) {
+  .cit-home-showcase .cit-floating-facts.phase-idle .cit-fact-card {
+    animation: none;
+  }
+
+  .cit-home-showcase [data-home-reveal="method"].is-in-view .cit-method-panel {
+    animation-name: citHm4MaterialReveal;
+  }
+}
+
+@media (max-width: 520px) {
+  .cit-home-showcase [data-home-reveal="collection"].is-in-view .cit-subject-card,
+  .cit-home-showcase [data-home-reveal="method"].is-in-view .cit-method-panel {
+    animation-duration: .48s;
+  }
+
+  .cit-home-showcase [data-home-reveal="cta"].is-in-view > .cit-badge,
+  .cit-home-showcase [data-home-reveal="cta"].is-in-view > h2,
+  .cit-home-showcase [data-home-reveal="cta"].is-in-view > p,
+  .cit-home-showcase [data-home-reveal="cta"].is-in-view > .cit-showcase-actions {
+    animation-duration: .5s;
+  }
+}
+
+/* Explicit Reduced motion: child sequencing is informationally unnecessary,
+   so section contents remain immediately available. */
+.cit-home-showcase.motion-reduced [data-home-reveal="collection"] .cit-subject-card,
+.cit-home-showcase.motion-reduced [data-home-reveal="method"] .cit-method-panel,
+.cit-home-showcase.motion-reduced [data-home-reveal="cta"] > .cit-badge,
+.cit-home-showcase.motion-reduced [data-home-reveal="cta"] > h2,
+.cit-home-showcase.motion-reduced [data-home-reveal="cta"] > p,
+.cit-home-showcase.motion-reduced [data-home-reveal="cta"] > .cit-showcase-actions {
+  animation: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+}
+
